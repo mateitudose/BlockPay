@@ -1,3 +1,5 @@
+import Dropdown from '@/components/Dropdown'
+
 const Header = () => {
     return (
         <header aria-label="Site Header" class="shadow-sm">
@@ -5,9 +7,7 @@ const Header = () => {
                 <div class="flex items-center justify-between gap-4 lg:gap-10">
                     <div class="flex lg:w-0 lg:flex-1">
                         <a href="#">
-                            <span class="sr-only">Logo</span>
-                            <span class="inline-block h-10 w-32 rounded-lg bg-gray-200"></span>
-                        </a>
+                            <img class="h-10 w-32" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow" />                         </a>
                     </div>
 
                     <nav
@@ -22,12 +22,10 @@ const Header = () => {
 
                     <div class="hidden flex-1 items-center justify-end gap-4 sm:flex">
                         <a
-                            class="rounded-lg bg-gray-100 px-5 py-2 text-sm font-medium text-gray-500"
-                            href=""
+                            class="px-5 py-2"
                         >
-                            Log in
+                            <Dropdown />
                         </a>
-
                         <a
                             class="rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white"
                             href=""
