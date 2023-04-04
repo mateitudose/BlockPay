@@ -1,63 +1,110 @@
-import Dropdown from '@/components/Dropdown'
+import { useState } from 'react'
+import Image from 'next/image'
+import { Dialog } from '@headlessui/react'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import { ArrowRightIcon } from '@heroicons/react/20/solid'
+import logo from "@/public/logo.svg"
+const navigation = [
+    { name: 'Product', href: '#' },
+    { name: 'Features', href: '#' },
+    { name: 'Marketplace', href: '#' },
+    { name: 'Company', href: '#' },
+]
 
-const Header = () => {
+export default function Example() {
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
     return (
-        <header aria-label="Site Header" class="shadow-sm">
-            <div class="mx-auto max-w-screen-xl p-4">
-                <div class="flex items-center justify-between gap-4 lg:gap-10">
-                    <div class="flex lg:w-0 lg:flex-1">
-                        <a href="#">
-                            <img class="h-10 w-32" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow" />                         </a>
-                    </div>
-
-                    <nav
-                        aria-label="Site Nav"
-                        class="hidden gap-8 text-sm font-medium md:flex"
+        <header className="bg-white">
+            <nav className="mx-auto flex max-w-7xl items-center justify-between gap-x-6 p-6 lg:px-8" aria-label="Global">
+                <div className="flex lg:flex-1">
+                    <a href="#" className="-m-1.5 p-1.5">
+                        <span className="sr-only">Your Company</span>
+                        <Image className="h-8 w-auto" src={logo} alt="" />
+                    </a>
+                </div>
+                <div className="hidden lg:flex lg:gap-x-12">
+                    {navigation.map((item) => (
+                        <a key={item.name} href={item.href} className="text-sm font-semibold leading-6 text-gray-900">
+                            {item.name}
+                        </a>
+                    ))}
+                </div>
+                <div className="flex flex-1 items-center justify-end gap-x-6">
+                    <a href="login" className="bg-slate-100 rounded-lg px-3 py-2 hidden lg:block lg:text-sm lg:font-semibold lg:leading-6 lg:text-gray-800">
+                        Login
+                    </a>
+                    <a
+                        href="/register"
+                        className="flex rounded-lg bg-black px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
-                        <a class="text-gray-500" href="">About</a>
-                        <a class="text-gray-500" href="">Blog</a>
-                        <a class="text-gray-500" href="">Projects</a>
-                        <a class="text-gray-500" href="">Contact</a>
-                    </nav>
+                        Get Started <ArrowRightIcon className="ml-2 h-5 w-4" aria-hidden="true" />
 
-                    <div class="hidden flex-1 items-center justify-end gap-4 sm:flex">
-                        <a
-                            class="px-5 py-2"
-                        >
-                            <Dropdown />
+                    </a>
+                </div>
+                <div className="flex lg:hidden">
+                    <button
+                        type="button"
+                        className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+                        onClick={() => setMobileMenuOpen(true)}
+                    >
+                        <span className="sr-only">Open main menu</span>
+                        <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+                    </button>
+                </div>
+            </nav>
+            <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
+                <div className="fixed inset-0 z-10" />
+                <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+                    <div className="flex items-center gap-x-6">
+                        <a href="#" className="-m-1.5 p-1.5">
+                            <span className="sr-only">Your Company</span>
+                            <Image
+                                className="h-8 w-auto"
+                                src={logo}
+                                alt=""
+                            />
                         </a>
                         <a
-                            class="rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white"
-                            href=""
+                            href="#"
+                            className="ml-auto rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                         >
                             Sign up
                         </a>
-                    </div>
-
-                    <div class="lg:hidden">
-                        <button class="rounded-lg bg-gray-100 p-2 text-gray-600" type="button">
-                            <span class="sr-only">Open menu</span>
-                            <svg
-                                aria-hidden="true"
-                                class="h-5 w-5"
-                                fill="none"
-                                stroke="currentColor"
-                                viewbox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path
-                                    d="M4 6h16M4 12h16M4 18h16"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                />
-                            </svg>
+                        <button
+                            type="button"
+                            className="-m-2.5 rounded-md p-2.5 text-gray-700"
+                            onClick={() => setMobileMenuOpen(false)}
+                        >
+                            <span className="sr-only">Close menu</span>
+                            <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                         </button>
                     </div>
-                </div>
-            </div>
+                    <div className="mt-6 flow-root">
+                        <div className="-my-6 divide-y divide-gray-500/10">
+                            <div className="space-y-2 py-6">
+                                {navigation.map((item) => (
+                                    <a
+                                        key={item.name}
+                                        href={item.href}
+                                        className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                                    >
+                                        {item.name}
+                                    </a>
+                                ))}
+                            </div>
+                            <div className="py-6">
+                                <a
+                                    href="#"
+                                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                                >
+                                    Log in
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </Dialog.Panel>
+            </Dialog>
         </header>
     )
 }
-
-export default Header;
