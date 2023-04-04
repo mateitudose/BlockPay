@@ -3,18 +3,10 @@ import Google from '@/public/google_logo.svg'
 import Apple from '@/public/apple_logo.svg'
 import logo from "@/public/logo.svg"
 
-export default function Example() {
+export default function Login() {
     return (
         <>
-            {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-gray-50">
-        <body class="h-full">
-        ```
-      */}
-            <div className="bg-slate-100 h-screen">
+            <div class="h-screen bg-gray-50">
                 <div className="flex min-h-full flex-col items-center justify-center py-12 sm:px-6 lg:px-8">
                     <div className="sm:mx-auto sm:w-full sm:max-w-md">
                         <Image
@@ -62,7 +54,7 @@ export default function Example() {
                                         <div className="w-full border-t border-gray-200" />
                                     </div>
                                     <div className="relative flex justify-center text-sm">
-                                        <span className="bg-white px-3 text-gray-500">or</span>
+                                        <span className="bg-white px-3 text-gray-400">or</span>
                                     </div>
                                 </div>
                             </div>
