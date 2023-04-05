@@ -31,7 +31,7 @@ export default function Example() {
                     ))}
                 </div>
                 <div className="flex flex-1 items-center justify-end gap-x-6">
-                    <a href="login" className="bg-slate-100 rounded-lg px-3 py-2 hidden lg:block lg:text-sm lg:font-semibold lg:leading-6 lg:text-gray-800">
+                    <a href="/login" className="bg-slate-100 rounded-lg px-3 py-2 hidden lg:block lg:text-sm lg:font-semibold lg:leading-6 lg:text-gray-800">
                         Login
                     </a>
                     <a
@@ -65,12 +65,6 @@ export default function Example() {
                                 alt=""
                             />
                         </a>
-                        <a
-                            href="#"
-                            className="ml-auto rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                        >
-                            Sign up
-                        </a>
                         <button
                             type="button"
                             className="-m-2.5 rounded-md p-2.5 text-gray-700"
@@ -93,14 +87,22 @@ export default function Example() {
                                     </a>
                                 ))}
                             </div>
-                            <div className="py-6">
+                            <div className="py-6 grid grid-cols-2 gap-x-10">
                                 <a
-                                    href="#"
-                                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                                    href="/login"
+                                    className="flex bg-slate-100 -mx-3 rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-800 hover:bg-gray-50"
                                 >
-                                    Log in
+                                    Login
+                                </a>
+                                <a
+                                    href="/register"
+                                    className="flex rounded-lg bg-black px-3 py-2 text-sm leading-7 font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                >
+                                    Get Started <ArrowRightIcon className="ml-2 h-full w-4" aria-hidden="true" />
+
                                 </a>
                             </div>
+                            
                         </div>
                     </div>
                 </Dialog.Panel>
