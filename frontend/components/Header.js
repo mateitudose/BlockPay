@@ -4,6 +4,7 @@ import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
 import logo from "@/public/logo.svg"
+
 const navigation = [
     { name: 'Product', href: '#' },
     { name: 'Features', href: '#' },
@@ -11,15 +12,7 @@ const navigation = [
     { name: 'Company', href: '#' },
 ]
 
-
-
-
-
 export default function Header() {
-    // check if user is logged in and stop rendering the login button
-
-
-
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     return (

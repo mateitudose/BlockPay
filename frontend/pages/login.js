@@ -5,8 +5,8 @@ import logo from "@/public/logo.svg"
 import { useState, useEffect } from 'react'
 import toast, { Toaster } from 'react-hot-toast';
 import { supabase } from '@/lib/supabaseClient'
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
 
-const notify = () => toast('Here is your toast.');
 
 
 export default function Login() {
@@ -14,9 +14,19 @@ export default function Login() {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google'
         })
+        if (error) {
+            toast.error('Here is your toast.')
+        }
+        else {
+            toast.success('Here is your toast.')
+        }
     };
 
     const [showChild, setShowChild] = useState(false);
+    const [isPasswordHidden, setPasswordHidden] = useState(true);
+
+
+
     useEffect(() => {
         setShowChild(true);
     }, []);
@@ -97,24 +107,39 @@ export default function Login() {
                                                 id="email"
                                                 className="block w-full rounded-md border-0 pl-3.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                 placeholder="you@example.com"
+                                                required
                                             />
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                                            Password
-                                        </label>
-                                        <div className="mt-2">
-                                            <input
-                                                id="password"
-                                                name="password"
-                                                type="password"
-                                                autoComplete="current-password"
-                                                required
-                                                className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                            />
-                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium leading-6 text-gray-900">
+                                                Password
+                                            </label>
+                                            <div className="relative mt-2">
+                                                <button className="text-gray-400 absolute right-3 inset-y-0 my-auto active:text-gray-600"
+                                                    onClick={() => setPasswordHidden(!isPasswordHidden)}
+                                                >
+                                                    {
+                                                        isPasswordHidden ? (
+                                                            <EyeIcon className='w-6 h-6' />
+                                                        ) : (
+                                                            <EyeSlashIcon className='w-6 h-6' />
+                                                        )
+                                                    }
+                                                </button>
+                                                <input
+                                                    type={isPasswordHidden ? "password" : "text"}
+                                                    placeholder="Enter your password"
+                                                    className="block w-full rounded-md border-0 pl-3.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                    autoComplete="current-password"
+                                                    required
+                                                    id='password'
+                                                    name='password'
+                                                />
+                                            </div>
+                                        </div >
                                     </div>
 
                                     <div className="flex items-center justify-between">
@@ -141,7 +166,6 @@ export default function Login() {
                                         <button
                                             type="submit"
                                             className="flex w-full justify-center rounded-lg bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                            onClick={notify}
                                         >
                                             Sign in
                                         </button>
