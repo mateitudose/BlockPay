@@ -90,7 +90,7 @@ export default function Example() {
                             <div className="pt-8 grid grid-cols-2 gap-6">
                                 <a
                                     href="/login"
-                                    className="relative justify-center flex bg-slate-100 rounded-xl shadow-sm font-semibold text-sm text-center px-3 py-2.5 leading-6 text-gray-800 hover:bg-gray-50"
+                                    className="bg-slate-100 rounded-xl shadow-sm font-semibold text-sm text-center px-3 py-2.5 leading-6 text-gray-800 hover:bg-gray-50"
                                 >
                                     Login
                                 </a>
