@@ -2,128 +2,156 @@ import Image from 'next/image'
 import Google from '@/public/google_logo.svg'
 import Apple from '@/public/apple_logo.svg'
 import logo from "@/public/logo.svg"
+import { useState, useEffect } from 'react'
+import toast, { Toaster } from 'react-hot-toast';
+import { supabase } from '@/lib/supabaseClient'
+
+const notify = () => toast('Here is your toast.');
+
 
 export default function Login() {
-    return (
-        <>
-            <div class="h-screen bg-gray-50">
-                <div className="flex min-h-full flex-col items-center justify-center py-12 sm:px-6 lg:px-8">
-                    <div className="sm:mx-auto sm:w-full sm:max-w-md">
-                        <Image
-                            className="mx-auto h-12 w-auto"
-                            src={logo}
-                            alt="Blockpay"
-                        />
-                    </div>
+    const login = async () => {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'google'
+        })
+    };
 
-                    <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    const [showChild, setShowChild] = useState(false);
+    useEffect(() => {
+        setShowChild(true);
+    }, []);
 
-                        <div className="bg-white px-4 py-8 shadow rounded-xl sm:px-10">
-                            <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
-                            <p className="mt-2 text-center text-sm text-gray-600">
-                                Or{' '}
-                                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                                    start your 14-day free trial
-                                </a>
-                            </p>
-                            <div className="mt-6">
-                                <div className="mt-6 grid grid-rows-2 gap-3">
-                                    <div>
-                                        <a
-                                            href="#"
-                                            className="inline-flex w-full justify-center rounded-lg bg-white px-4 py-2 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0"
-                                        >
-                                            <Image src={Google} alt="google" width={15} height={20} />
-                                            <span className="ml-3 text-gray-500">Sign in with Google</span>
+    if (!showChild) {
+        return null;
+    }
 
-                                        </a>
-                                    </div>
-
-                                    <div>
-                                        <a
-                                            href="#"
-                                            className="inline-flex w-full justify-center rounded-lg bg-white px-4 py-2 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0"
-                                        >
-                                            <Image src={Apple} alt="apple" width={15} height={20} />
-                                            <span className="ml-3 text-gray-500">Sign in with Apple</span>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div className="relative my-6">
-                                    <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                                        <div className="w-full border-t border-gray-200" />
-                                    </div>
-                                    <div className="relative flex justify-center text-sm">
-                                        <span className="bg-white px-3 text-gray-400">or</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <form className="space-y-6" action="#" method="POST">
-                                <div>
-                                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                                        Email address
-                                    </label>
-                                    <div className="mt-2">
-                                        <input
-                                            id="email"
-                                            name="email"
-                                            type="email"
-                                            autoComplete="email"
-                                            required
-                                            className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                                        Password
-                                    </label>
-                                    <div className="mt-2">
-                                        <input
-                                            id="password"
-                                            name="password"
-                                            type="password"
-                                            autoComplete="current-password"
-                                            required
-                                            className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center">
-                                        <input
-                                            id="remember-me"
-                                            name="remember-me"
-                                            type="checkbox"
-                                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                                        />
-                                        <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                                            Remember me
-                                        </label>
-                                    </div>
-
-                                    <div className="text-sm">
-                                        <a href="#" className="font-medium text-black hover:text-neutral-800">
-                                            Forgot your password?
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <button
-                                        type="submit"
-                                        className="flex w-full justify-center rounded-lg bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                    >
-                                        Sign in
-                                    </button>
-                                </div>
-                            </form>
+    if (typeof window === 'undefined') {
+        return <></>;
+    }
+    else {
+        return (
+            <>
+                <Toaster position="top-center"
+                    reverseOrder={false} />
+                <div class="h-screen bg-gray-50">
+                    <div className="flex min-h-full flex-col items-center justify-center py-12 sm:px-6 lg:px-8">
+                        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+                            <Image
+                                className="mx-auto h-12 w-auto"
+                                src={logo}
+                                alt="Blockpay"
+                            />
                         </div>
-                    </div>
-                </div>
-            </div>
-        </>
-    )
+
+                        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+
+                            <div className="bg-white px-4 py-8 shadow rounded-xl sm:px-10">
+                                <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
+                                <p className="mt-2 text-center text-sm text-gray-600">
+                                    Or{' '}
+                                    <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                                        start your 14-day free trial
+                                    </a>
+                                </p>
+                                <div className="mt-6">
+                                    <div className="mt-6 grid grid-rows-2 gap-3">
+                                        <div>
+                                            <button
+                                                href=""
+                                                className="inline-flex w-full justify-center rounded-lg bg-white px-4 py-2 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0"
+                                                onClick={login}
+                                            >
+                                                <Image className='mt-1' src={Google} alt="google" width={15} height={20} />
+                                                <span className="ml-2 text-gray-500">Sign in with Google</span>
+
+                                            </button>
+                                        </div>
+                                        <div>
+                                            <button
+                                                href=""
+                                                className="inline-flex w-full justify-center rounded-lg bg-white px-4 py-2 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0"
+                                            >
+                                                <Image className='mt-0.5' src={Apple} alt="apple" width={14} height={20} />
+                                                <span className="ml-2 text-gray-500">Sign in with Apple</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="relative my-6">
+                                        <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                                            <div className="w-full border-t border-gray-200" />
+                                        </div>
+                                        <div className="relative flex justify-center text-sm">
+                                            <span className="bg-white px-3 text-gray-400">or</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <form className="space-y-6" action="#" method="POST">
+                                    <div>
+                                        <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                                            Email
+                                        </label>
+                                        <div className="mt-2">
+                                            <input
+                                                type="email"
+                                                name="email"
+                                                id="email"
+                                                className="block w-full rounded-md border-0 pl-3.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                placeholder="you@example.com"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                                            Password
+                                        </label>
+                                        <div className="mt-2">
+                                            <input
+                                                id="password"
+                                                name="password"
+                                                type="password"
+                                                autoComplete="current-password"
+                                                required
+                                                className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center">
+                                            <input
+                                                id="remember-me"
+                                                name="remember-me"
+                                                type="checkbox"
+                                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                            />
+                                            <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                                                Remember me
+                                            </label>
+                                        </div>
+
+                                        <div className="text-sm">
+                                            <a href="/password/reset" className="font-medium text-black hover:text-neutral-800">
+                                                Forgot your password?
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <button
+                                            type="submit"
+                                            className="flex w-full justify-center rounded-lg bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                            onClick={notify}
+                                        >
+                                            Sign in
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div >
+                </div >
+            </>
+        )
+    }
 }

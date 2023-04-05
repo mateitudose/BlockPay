@@ -11,7 +11,15 @@ const navigation = [
     { name: 'Company', href: '#' },
 ]
 
-export default function Example() {
+
+
+
+
+export default function Header() {
+    // check if user is logged in and stop rendering the login button
+
+
+
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     return (
