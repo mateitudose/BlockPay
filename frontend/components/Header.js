@@ -36,9 +36,9 @@ export default function Example() {
                     </a>
                     <a
                         href="/register"
-                        className="flex rounded-lg bg-black px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        className="hidden lg:flex lg:text-sm lg:font-semibold lg:leading-6 flex rounded-lg bg-black px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
-                        Get Started <ArrowRightIcon className="ml-2 h-5 w-4" aria-hidden="true" />
+                        Get Started <ArrowRightIcon className="ml-2 w-4" aria-hidden="true" />
 
                     </a>
                 </div>
@@ -87,22 +87,22 @@ export default function Example() {
                                     </a>
                                 ))}
                             </div>
-                            <div className="py-6 grid grid-cols-2 gap-x-10">
+                            <div className="pt-8 grid grid-cols-2 gap-6">
                                 <a
                                     href="/login"
-                                    className="flex bg-slate-100 -mx-3 rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-800 hover:bg-gray-50"
+                                    className="relative justify-center flex bg-slate-100 rounded-xl shadow-sm font-semibold text-sm text-center px-3 py-2.5 leading-6 text-gray-800 hover:bg-gray-50"
                                 >
                                     Login
                                 </a>
                                 <a
                                     href="/register"
-                                    className="flex rounded-lg bg-black px-3 py-2 text-sm leading-7 font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    className="relative justify-center flex rounded-xl bg-black text-center py-2.5 text-sm leading-6 font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                 >
-                                    Get Started <ArrowRightIcon className="ml-2 h-full w-4" aria-hidden="true" />
+                                    Get Started <ArrowRightIcon className="ml-2 w-4" aria-hidden="true" />
 
                                 </a>
                             </div>
-                            
+
                         </div>
                     </div>
                 </Dialog.Panel>
