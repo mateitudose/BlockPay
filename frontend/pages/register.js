@@ -11,7 +11,8 @@ import { useRouter } from 'next/router'
 
 
 export default function Login() {
-    const router = useRouter();
+    const router = useRouter()
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -23,7 +24,7 @@ export default function Login() {
         setPassword(e.target.value);
     };
 
-    const login = async () => {
+    const register = async () => {
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
@@ -36,12 +37,12 @@ export default function Login() {
         }
     };
 
-    const loginEmail = async () => {
-        const { error } = await supabase.auth.signInWithPassword({
+    const registerEmail = async () => {
+        const { error } = await supabase.auth.signUp({
             email: email,
-            password: password, 
+            password: password,
             options: {
-                redirectTo: 'http://localhost:3000/dashboard'
+                emailRedirectTo: 'http://localhost:3000/dashboard'
             }
         });
         if (error) {
@@ -82,7 +83,7 @@ export default function Login() {
                         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
 
                             <div className="bg-white px-4 py-8 shadow rounded-xl sm:px-10">
-                                <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
+                                <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Register your account</h2>
                                 <p className="mt-2 text-center text-sm text-gray-600">
                                     Or{' '}
                                     <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
@@ -95,10 +96,10 @@ export default function Login() {
                                             <button
                                                 href=""
                                                 className="inline-flex w-full justify-center rounded-lg bg-white px-4 py-2 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0"
-                                                onClick={login}
+                                                onClick={register}
                                             >
                                                 <Image className='mt-1' src={Google} alt="google" width={15} height={20} />
-                                                <span className="ml-2 text-gray-500">Sign in with Google</span>
+                                                <span className="ml-2 text-gray-500">Register with Google</span>
 
                                             </button>
                                         </div>
@@ -108,7 +109,7 @@ export default function Login() {
                                                 className="inline-flex w-full justify-center rounded-lg bg-white px-4 py-2 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0"
                                             >
                                                 <Image className='mt-0.5' src={Apple} alt="apple" width={14} height={20} />
-                                                <span className="ml-2 text-gray-500">Sign in with Apple</span>
+                                                <span className="ml-2 text-gray-500">Register with Apple</span>
                                             </button>
                                         </div>
                                     </div>
@@ -196,9 +197,9 @@ export default function Login() {
                                         <button
                                             type="button"
                                             className="flex w-full justify-center rounded-lg bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                            onClick={loginEmail}
+                                            onClick={registerEmail}
                                         >
-                                            Sign in
+                                            Register
                                         </button>
                                     </div>
                                 </form>
