@@ -944,6 +944,13 @@
   dependencies:
     tslib "^2.4.0"
 
+"@tailwindcss/forms@^0.5.3":
+  version "0.5.3"
+  resolved "https://registry.npmjs.org/@tailwindcss/forms/-/forms-0.5.3.tgz"
+  integrity sha512-y5mb86JUoiUgBjY/o6FJSFZSEttfb3Q5gllE4xoKjAAD+vBrnIhE4dViwUuow3va8mpH4s9jyUbUbrRGoRdc2Q==
+  dependencies:
+    mini-svg-data-uri "^1.2.3"
+
 "@types/body-parser@*":
   version "1.19.2"
   resolved "https://registry.npmjs.org/@types/body-parser/-/body-parser-1.19.2.tgz"
@@ -1568,7 +1575,7 @@ mime-types@^2.1.12:
   dependencies:
     mime-db "1.52.0"
 
-mini-svg-data-uri@^1.4.3:
+mini-svg-data-uri@^1.2.3, mini-svg-data-uri@^1.4.3:
   version "1.4.4"
   resolved "https://registry.npmjs.org/mini-svg-data-uri/-/mini-svg-data-uri-1.4.4.tgz"
   integrity sha512-r9deDe9p5FJUPZAk3A59wGH7Ii9YrjjWw0jmw/liSbHl2CHiyXj6FcDXDu2K3TjVAXqiJdaw3xxwlZZr9E6nHg==
@@ -1959,7 +1966,7 @@ tabbable@^6.0.1:
   resolved "https://registry.npmjs.org/tabbable/-/tabbable-6.1.1.tgz"
   integrity sha512-4kl5w+nCB44EVRdO0g/UGoOp3vlwgycUVtkk/7DPyeLZUCuNFFKCFG6/t/DgHLrUPHjrZg6s5tNm+56Q2B0xyg==
 
-tailwindcss@^3, tailwindcss@^3.3.1:
+tailwindcss@^3, tailwindcss@^3.3.1, "tailwindcss@>=3.0.0 || >= 3.0.0-alpha.1":
   version "3.3.1"
   resolved "https://registry.npmjs.org/tailwindcss/-/tailwindcss-3.3.1.tgz"
   integrity sha512-Vkiouc41d4CEq0ujXl6oiGFQ7bA3WEhUZdTgXAhtKxSy49OmKs8rEfQmupsfF0IGW8fv2iQkp1EVUuapCFrZ9g==
