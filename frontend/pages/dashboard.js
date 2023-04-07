@@ -31,7 +31,8 @@ import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { useRouter } from 'next/router';
 import { supabase } from '@/lib/supabaseClient'
 import { toast } from 'react-hot-toast';
-import { useSession } from '@supabase/auth-helpers-react';
+import logo from "@/public/logo.svg"
+import Image from 'next/image'
 const navigation = [
     { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
     { name: 'Team', href: '#', icon: UsersIcon, current: false },
@@ -40,6 +41,7 @@ const navigation = [
     { name: 'Documents', href: '#', icon: DocumentDuplicateIcon, current: false },
     { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },
 ]
+
 const teams = [
     { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
     { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
@@ -75,7 +77,6 @@ export default function Dashboard() {
 
     async function handleNotSignedIn() {
         const user = await supabase.auth.getUser();
-        console.log(user);
         if (!user.data.user) {
             router.push('/login');
         }
@@ -87,10 +88,6 @@ export default function Dashboard() {
         // Redirect to login page or perform other actions after sign out
         router.push('/login');
     };
-
-    useEffect(() => {
-        handleNotSignedIn();
-    }, []);
 
     useEffect(() => {
         const runPrecheck = async () => {
@@ -112,6 +109,7 @@ export default function Dashboard() {
         // You can render a loading indicator, a placeholder, or nothing
         return <div></div>;
     }
+
     return (
         <>
             <div>
@@ -159,9 +157,9 @@ export default function Dashboard() {
                                     {/* Sidebar component, swap this element with another sidebar if you like */}
                                     <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
                                         <div className="flex h-16 shrink-0 items-center">
-                                            <img
+                                            <Image
                                                 className="h-8 w-auto"
-                                                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                                                src={logo}
                                                 alt="Your Company"
                                             />
                                         </div>
@@ -249,9 +247,9 @@ export default function Dashboard() {
                     {/* Sidebar component, swap this element with another sidebar if you like */}
                     <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
                         <div className="flex h-16 shrink-0 items-center">
-                            <img
+                            <Image
                                 className="h-8 w-auto"
-                                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                                src={logo}
                                 alt="Your Company"
                             />
                         </div>
