@@ -51,7 +51,7 @@ export default function Login() {
     };
 
     const register = async () => {
-        const { data, error } = await supabase.auth.signInWithOAuth({
+        const error = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
                 redirectTo: 'http://localhost:3000/dashboard'
@@ -73,6 +73,9 @@ export default function Login() {
         });
         if (error) {
             toast.error(error.message);
+        }
+        else {
+            toast.success('Check your email for the confirmation link!');
         }
     };
 
@@ -191,7 +194,7 @@ export default function Login() {
                                 </div>
 
                                 <div className="flex items-center justify-end">
-                                    
+
 
                                     <div className="text-sm">
                                         <a href="/password/reset" className="font-medium text-black hover:text-neutral-800">

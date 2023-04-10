@@ -50,7 +50,7 @@ export default function Login() {
     };
 
     const login = async () => {
-        const { data, error } = await supabase.auth.signInWithOAuth({
+        const error = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
                 redirectTo: 'http://localhost:3000/dashboard'
@@ -63,7 +63,7 @@ export default function Login() {
     };
 
     const loginEmail = async () => {
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const error = await supabase.auth.signInWithPassword({
             email: email,
             password: password,
         }).then(() => {
