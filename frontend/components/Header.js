@@ -4,6 +4,9 @@ import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
 import logo from "@/public/logo.svg"
+import { supabase } from '@/lib/supabaseClient'
+import { sign } from 'crypto'
+
 
 const navigation = [
     { name: 'Product', href: '#' },
@@ -14,9 +17,22 @@ const navigation = [
 
 export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const [signedIn, setSignedIn] = useState(false)
+
+    async function handleSignedIn() {
+        const user = await supabase.auth.getUser();
+        if (user.data.user !== null) {
+            setSignedIn(true);
+        }
+        else {
+            setSignedIn(false);
+        }
+    }
+
+    handleSignedIn();
 
     return (
-        <header className="bg-white">
+        <header className="absolute inset-x-0 top-0 z-50">
             <nav className="mx-auto flex max-w-7xl items-center justify-between gap-x-6 p-6 lg:px-8" aria-label="Global">
                 <div className="flex lg:flex-1">
                     <a href="#" className="-m-1.5 p-1.5">
@@ -32,16 +48,26 @@ export default function Header() {
                     ))}
                 </div>
                 <div className="flex flex-1 items-center justify-end gap-x-6">
-                    <a href="/login" className="bg-slate-100 rounded-lg px-3 py-2 hidden lg:block lg:text-sm lg:font-semibold lg:leading-6 lg:text-gray-800">
-                        Login
-                    </a>
-                    <a
-                        href="/register"
-                        className="hidden lg:flex lg:text-sm lg:font-semibold lg:leading-6 flex rounded-lg bg-black px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    >
-                        Get Started <ArrowRightIcon className="ml-2 w-4" aria-hidden="true" />
-
-                    </a>
+                    {signedIn ? (
+                        <a
+                            href="/dashboard"
+                            className="hidden lg:flex lg:text-sm lg:font-semibold lg:leading-6 flex rounded-lg bg-black px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        >
+                            Dashboard <ArrowRightIcon className="ml-2 w-4" aria-hidden="true" />
+                        </a>
+                    ) : (
+                        <div className="flex flex-1 items-center justify-end gap-x-6">
+                            <a href="/login" className="bg-slate-100 rounded-lg px-3 py-2 hidden lg:block lg:text-sm lg:font-semibold lg:leading-6 lg:text-gray-800">
+                                Login
+                            </a>
+                            <a
+                                href="/register"
+                                className="hidden lg:flex lg:text-sm lg:font-semibold lg:leading-6 flex rounded-lg bg-black px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            >
+                                Get Started <ArrowRightIcon className="ml-2 w-4" aria-hidden="true" />
+                            </a>
+                        </div>
+                    )}
                 </div>
                 <div className="flex lg:hidden">
                     <button

@@ -27,8 +27,6 @@ async function checkConfirmations(address, tx, callback) {
                 .update([
                     {
                         tx_hash: tx.hash,
-                        from_address: tx.from,
-                        to_address: tx.to,
                         value: tx.value,
                         confirmed: true,
                         confirmations: confirmations,
@@ -37,7 +35,7 @@ async function checkConfirmations(address, tx, callback) {
                 .eq('address', address);
 
             if (error) {
-                console.error(`Error updating transaction as confirmed in database: ${error.message}`);
+                console.log(`Error updating transaction as confirmed in database: ${error.message}`);
             }
 
             callback();
@@ -46,7 +44,7 @@ async function checkConfirmations(address, tx, callback) {
             setTimeout(() => checkConfirmations(address, tx, callback), 3000); // Check again after 3 seconds
         }
     } catch (error) {
-        console.error(`Error checking confirmations: ${error.message}`);
+        console.log(`Error checking confirmations: ${error.message}`);
     }
 }
 
@@ -55,7 +53,7 @@ async function watchAddress(address) {
 
     const subscription = web3.eth.subscribe('pendingTransactions', async (error, txHash) => {
         if (error) {
-            console.error(`Error subscribing to pendingTransactions: ${error.message}`);
+            console.log(`Error subscribing to pendingTransactions: ${error.message}`);
             return;
         }
 
@@ -71,7 +69,7 @@ async function watchAddress(address) {
                     // Unsubscribe from the 'pendingTransactions' event
                     subscription.unsubscribe((error, success) => {
                         if (error) {
-                            console.error(`Error unsubscribing from pendingTransactions: ${error.message}`);
+                            console.log(`Error unsubscribing from pendingTransactions: ${error.message}`);
                             return;
                         }
 
@@ -80,7 +78,7 @@ async function watchAddress(address) {
                 });
             }
         } catch (error) {
-            console.error(`Error fetching transaction data: ${error.message}`);
+            console.log(`Error fetching transaction data: ${error.message}`);
         }
     });
 }
