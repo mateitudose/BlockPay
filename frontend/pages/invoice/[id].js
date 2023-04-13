@@ -22,13 +22,13 @@ export default Transaction;
 export async function getServerSideProps({ params }) {
     const { id } = params;
     const { data, error } = await supabase
-        .from('transactions')
+        .from('invoices')
         .select('*')
         .eq('id', id)
         .single();
 
     if (error) {
-        console.error(error);
+        console.log(error);
         return {
             notFound: true,
         };
