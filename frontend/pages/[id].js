@@ -66,7 +66,7 @@ const Checkout = ({ checkout }) => {
                                 <dd>$0</dd>
                             </div>
 
-                            <div className="flex items-center justify-between border-t border-white border-opacity-10 pt-6 text-black">
+                            <div className="flex items-center justify-between border-t border-gray border-opacity-20 pt-6 text-black">
                                 <dt className="text-base">Total</dt>
                                 <dd className="text-base">${checkout.price_in_usd}</dd>
                             </div>
