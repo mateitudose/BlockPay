@@ -19,13 +19,41 @@ import Avax from "@/public/Crypto/Avax.svg"
 
 import Image from "next/image"
 import CryptoCombobox from './testd';
+import toast, { Toaster } from 'react-hot-toast';
 
 const apiUrl = 'https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd';
 
 
 // Page component
 const Checkout = ({ checkout }) => {
-    const [priceInBNB, setPriceInBNB] = useState(0);
+    const [email, setEmail] = useState('');
+    const [selectedCrypto, setSelectedCrypto] = useState(0);
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
+    };
+
+    function validateEmail(email) {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    }
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        if (!validateEmail(email)) {
+            toast.error('Please enter a valid email address.');
+            return;
+        }
+        if (!email) {
+            toast.error('Please enter a valid email address.');
+            return;
+        }
+        if (!selectedCrypto) {
+            toast.error('Please select a cryptocurrency.');
+            return;
+        }
+        // Continue with payment
+    }
+
     function usdToBNB(usdAmount) {
         return fetch(apiUrl)
             .then(response => response.json())
@@ -42,6 +70,9 @@ const Checkout = ({ checkout }) => {
         .catch(error => console.error(error));
     return (
         <div className="bg-white">
+            <title>Checkout</title>
+            <Toaster position="top-right"
+                reverseOrder={false} />
             {/* Background color split screen for large screens */}
             <div className="fixed left-0 top-0 hidden h-full w-1/2 bg-gray-50/10 lg:block" aria-hidden="true" />
             <div className="fixed right-0 top-0 hidden h-full w-1/2 bg-white lg:block shadow-md shadow-grey" aria-hidden="true" />
@@ -58,9 +89,11 @@ const Checkout = ({ checkout }) => {
                             Order summary
                         </h2>
 
-                        <dl className='pb-6'>
-                            <dt className="text-sm font-medium">Amount due</dt>
-                            <dd className="mt-1 text-3xl font-bold tracking-tight text-black">${checkout.price_in_usd}</dd>
+                        <dl className='py-6 space-y-6 text-sm font-medium'>
+                            <div className="flex items-center justify-between">
+                                <dt className="font-medium"><span className='text-black/50 mr-3'>1x</span>{checkout.product_name}</dt>
+                                <dd>${checkout.price_in_usd}</dd>
+                            </div>
                         </dl>
 
                         <dl className="space-y-6 border-t border-gray border-opacity-20 pt-6 text-sm font-medium">
@@ -74,9 +107,9 @@ const Checkout = ({ checkout }) => {
                                 <dd>$0</dd>
                             </div>
 
-                            <div className="flex items-center justify-between border-t border-gray border-opacity-20 pt-6 text-black">
-                                <dt className="text-base">Total</dt>
-                                <dd className="text-base">${checkout.price_in_usd}</dd>
+                            <div className="flex items-center justify-between border-t border-gray border-opacity-20 pt-6 text-black text-sm">
+                                <dt className="">Total</dt>
+                                <dd className="">${checkout.price_in_usd}</dd>
                             </div>
                             {/* add something down like powered by Blockpay */}
                         </dl>
@@ -97,10 +130,11 @@ const Checkout = ({ checkout }) => {
                                 <h3 id="contact-info-heading" className="text-lg font-medium text-gray-900">
                                     Contact information
                                 </h3>
+                                <div className='text-xs text-black/60'>Enter your email so we can send you an invoice</div>
 
                                 <div>
-                                    <label htmlFor="email" className="mt-6 block text-sm font-medium leading-6 text-gray-900">
-                                        Email <span className='text-red-500'>*</span>
+                                    <label htmlFor="email" className="mt-6 block text-sm font-medium leading-6 text-black/60">
+                                        Email<span className='text-red-500'>*</span>
                                     </label>
                                     <div className="mt-2 w-25">
                                         <input
@@ -109,6 +143,10 @@ const Checkout = ({ checkout }) => {
                                             id="email"
                                             className="block w-full rounded-md border-0 py-1.5 px-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                             placeholder="you@example.com"
+                                            required
+                                            value={email}
+                                            onChange={handleEmailChange}
+                                            autoComplete='email'
                                         />
                                     </div>
                                 </div>
@@ -116,6 +154,7 @@ const Checkout = ({ checkout }) => {
 
                             <div className="mt-10">
                                 <h3 className="text-lg font-medium text-gray-900">Payment method</h3>
+                                <div className='text-xs text-black/60'>Select your preferred cryptocurrency</div>
 
                                 <div className="mt-6">
                                     <label htmlFor="card-number" className="block text-sm font-medium text-gray-700">
@@ -124,6 +163,7 @@ const Checkout = ({ checkout }) => {
                                     <div className="grid gap-x-2 grid-cols-3 sm:col-span-3 mt-2">
                                         <button
                                             className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py-2 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            onClick={() => setSelectedCrypto(1)}
                                         >
                                             <Image
                                                 src={Bitcoin}
@@ -136,6 +176,7 @@ const Checkout = ({ checkout }) => {
                                         </button>
                                         <button
                                             className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            onClick={() => setSelectedCrypto(2)}
                                         >
                                             <Image
                                                 src={Ethereum}
@@ -160,6 +201,7 @@ const Checkout = ({ checkout }) => {
                                         </button>
                                         <button
                                             className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            onClick={() => setSelectedCrypto(3)}
                                         >
                                             <Image
                                                 src={Litecoin}
@@ -172,6 +214,7 @@ const Checkout = ({ checkout }) => {
                                         </button>
                                         <button
                                             className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            onClick={() => setSelectedCrypto(4)}
                                         >
                                             <Image
                                                 src={Avax}
@@ -184,6 +227,7 @@ const Checkout = ({ checkout }) => {
                                         </button>
                                         <button
                                             className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            onClick={() => setSelectedCrypto(5)}
                                         >
                                             <Image
                                                 src={Arbitrum}
@@ -196,6 +240,7 @@ const Checkout = ({ checkout }) => {
                                         </button>
                                         <button
                                             className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            onClick={() => setSelectedCrypto(6)}
                                         >
                                             <Image
                                                 src={Polygon}
@@ -208,6 +253,7 @@ const Checkout = ({ checkout }) => {
                                         </button>
                                         <button
                                             className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            onClick={() => setSelectedCrypto(7)}
                                         >
                                             <Image
                                                 src={Solana}
@@ -232,6 +278,7 @@ const Checkout = ({ checkout }) => {
                                         <button
                                             type="submit"
                                             className="rounded-md border border-transparent bg-indigo-600 w-full py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                                            onClick={handleSubmit}
                                         >
                                             Pay now
                                         </button>
