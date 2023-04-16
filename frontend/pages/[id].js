@@ -1,7 +1,9 @@
 import React from 'react';
 import { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
+
 const fetch = require('node-fetch');
+const { v4: uuidv4 } = require('uuid');
 
 import Bitcoin from "@/public/Crypto/Bitcoin.svg"
 import BitcoinCash from "@/public/Crypto/Bitcoin_Cash.svg"
@@ -18,7 +20,6 @@ import Litecoin from "@/public/Crypto/Litecoin.svg"
 import Avax from "@/public/Crypto/Avax.svg"
 
 import Image from "next/image"
-import CryptoCombobox from './testd';
 import toast, { Toaster } from 'react-hot-toast';
 
 const apiUrl = 'https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd';
@@ -37,7 +38,7 @@ const Checkout = ({ checkout }) => {
         return regex.test(email);
     }
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
         if (!validateEmail(email)) {
             toast.error('Please enter a valid email address.');
@@ -52,22 +53,34 @@ const Checkout = ({ checkout }) => {
             return;
         }
         // Continue with payment
+        const { data, error } = await supabase
+            .from('invoices')
+            .insert({
+                id: uuidv4(),
+                merchant_id: checkout.merchant_id,
+                customer_email: email,
+                created_at: new Date().getTime(),
+                crypto_option: selectedCrypto,
+                price_in_usd: checkout.price_in_usd,
+                value_to_receive: await fetchCryptoPrice(selectedCrypto, checkout.price_in_usd),
+                confirmed: false,
+                status: 'pending',
+            });
+        if (error) {
+            toast.error(error.message);
+        }
     }
 
-    function usdToBNB(usdAmount) {
-        return fetch(apiUrl)
-            .then(response => response.json())
-            .then(data => {
-                const bnbPrice = data.binancecoin.usd;
-                const bnbAmount = usdAmount / bnbPrice;
-                console.log(bnbAmount);
-                return bnbAmount.toFixed(12);
-            })
-            .catch(error => console.error(error));
+    async function fetchCryptoPrice(cryptoId, usdAmount) {
+        const cryptoIds = ['bitcoin', 'ethereum', 'binancecoin', 'litecoin', 'avalanche-2', 'arbitrum', 'matic-network', 'solana'];
+        const url = `https://api.coingecko.com/api/v3/simple/price?ids=${cryptoIds[cryptoId - 1]}&vs_currencies=usd`;
+        const response = await fetch(url);
+        const data = await response.json();
+        const cryptoPrice = data[cryptoIds[cryptoId - 1]].usd;
+        const cryptoAmount = usdAmount / cryptoPrice;
+        return cryptoAmount.toFixed(12);
     }
-    usdToBNB(checkout.price_in_usd)
-        .then(bnbAmount => setPriceInBNB(bnbAmount))
-        .catch(error => console.error(error));
+
     return (
         <div className="bg-white">
             <title>Checkout</title>
@@ -189,6 +202,7 @@ const Checkout = ({ checkout }) => {
                                         </button>
                                         <button
                                             className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            onClick={() => setSelectedCrypto(3)}
                                         >
                                             <Image
                                                 src={BNB}
@@ -201,7 +215,7 @@ const Checkout = ({ checkout }) => {
                                         </button>
                                         <button
                                             className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
-                                            onClick={() => setSelectedCrypto(3)}
+                                            onClick={() => setSelectedCrypto(4)}
                                         >
                                             <Image
                                                 src={Litecoin}
@@ -214,7 +228,7 @@ const Checkout = ({ checkout }) => {
                                         </button>
                                         <button
                                             className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
-                                            onClick={() => setSelectedCrypto(4)}
+                                            onClick={() => setSelectedCrypto(5)}
                                         >
                                             <Image
                                                 src={Avax}
@@ -227,7 +241,7 @@ const Checkout = ({ checkout }) => {
                                         </button>
                                         <button
                                             className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
-                                            onClick={() => setSelectedCrypto(5)}
+                                            onClick={() => setSelectedCrypto(6)}
                                         >
                                             <Image
                                                 src={Arbitrum}
@@ -240,7 +254,7 @@ const Checkout = ({ checkout }) => {
                                         </button>
                                         <button
                                             className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
-                                            onClick={() => setSelectedCrypto(6)}
+                                            onClick={() => setSelectedCrypto(7)}
                                         >
                                             <Image
                                                 src={Polygon}
@@ -253,7 +267,7 @@ const Checkout = ({ checkout }) => {
                                         </button>
                                         <button
                                             className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
-                                            onClick={() => setSelectedCrypto(7)}
+                                            onClick={() => setSelectedCrypto(8)}
                                         >
                                             <Image
                                                 src={Solana}
