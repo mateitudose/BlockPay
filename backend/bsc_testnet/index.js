@@ -9,26 +9,66 @@ const supabase = createClient(
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjb3pkd2pucWNueG55amZheGxtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY4MTA0NDM0OCwiZXhwIjoxOTk2NjIwMzQ4fQ.4_Zc1tsRTnAcI2-Mi6LhiJKQXKsD1TCLw7xW0qQlMQE'
 )
 
+
+async function sendTransaction(destinationAddress, senderPrivateKey, value) {
+    try {
+        const senderAddress = web3.eth.accounts.privateKeyToAccount(senderPrivateKey).address;
+
+        // Check if the destination address is valid
+        if (!web3.utils.isAddress(destinationAddress)) {
+            throw new Error('Invalid destination address');
+        }
+
+        // Set the transaction details
+        const gasPrice = await web3.eth.getGasPrice();
+
+        const tx = {
+            from: senderAddress,
+            to: destinationAddress,
+            value: web3.utils.toWei(value, 'ether'),
+            gasPrice: gasPrice,
+        };
+
+        // Estimate the gas required for the transaction
+        const estimatedGas = await web3.eth.estimateGas(tx);
+        console.log('Estimated gas:', estimatedGas);
+        tx.gas = estimatedGas;
+        tx.value -= (gasPrice * estimatedGas);
+
+        // Sign the transaction
+        const signedTx = await web3.eth.accounts.signTransaction(tx, senderPrivateKey);
+
+        // Send the transaction
+        const txReceipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+        console.log('Transaction hash:', txReceipt.transactionHash);
+
+    } catch (error) {
+        console.error('Error sending transaction:', error.message);
+    }
+}
+
 async function checkConfirmations(address, tx, callback) {
     try {
         // Get the current block number
-        const currentBlockNumber = await web3.eth.getBlockNumber();
+        let currentBlockNumber = await web3.eth.getBlockNumber();
         currentBlockNumber = parseFloat(currentBlockNumber);
         tx.blockNumber = parseFloat(tx.blockNumber);
+        console.log(tx);
 
         // Calculate the number of confirmations
-        const confirmations = currentBlockNumber - tx.blockNumber;
+        let confirmations = currentBlockNumber - tx.blockNumber;
+
 
         if (confirmations >= 12) {
             console.log(`Transaction has ${confirmations} confirmations. Updating database as confirmed...`);
 
             // Update the transaction in the database as confirmed
             const { error } = await supabase
-                .from('transactions')
+                .from('invoices')
                 .update([
                     {
                         tx_hash: tx.hash,
-                        value: tx.value,
+                        value_received: tx.value,
                         confirmed: true,
                         confirmations: confirmations,
                     },
@@ -49,7 +89,7 @@ async function checkConfirmations(address, tx, callback) {
     }
 }
 
-async function watchAddress(address) {
+async function watchAddress(address, merchantAddress, valueToSend) {
     console.log(`Watching for incoming transactions to ${address}...`);
 
     const subscription = web3.eth.subscribe('pendingTransactions', async (error, txHash) => {
@@ -61,12 +101,13 @@ async function watchAddress(address) {
         try {
             const tx = await web3.eth.getTransaction(txHash);
             if (tx.to === address) {
+                console.log(tx);
                 console.log(`Incoming transaction detected: ${tx.hash}`);
                 console.log(`From: ${tx.from}`);
                 console.log(`To: ${tx.to}`);
                 console.log(`Value: ${web3.utils.fromWei(tx.value, 'ether')} BNB`);
 
-                checkConfirmations(address, tx, () => {
+                checkConfirmations(address, tx, async () => {
                     // Unsubscribe from the 'pendingTransactions' event
                     subscription.unsubscribe((error, success) => {
                         if (error) {
@@ -76,6 +117,29 @@ async function watchAddress(address) {
 
                         console.log(`Successfully unsubscribed from pendingTransactions for address ${address}`);
                     });
+
+                    // Retrieve private key from the 'eth_keys' table
+                    const { data, error } = await supabase
+                        .from('eth_keys')
+                        .select('privateKey')
+                        .eq('address', address);
+
+                    if (error) {
+                        console.error(`Error retrieving private key from database: ${error.message}`);
+                        return;
+                    }
+
+                    if (!data || data.length === 0) {
+                        console.error('No private key found for the given address');
+                        return;
+                    }
+
+                    const privateKey = data[0].privateKey;
+
+                    await sendTransaction(merchantAddress, privateKey, valueToSend);
+
+                    console.log(`Successfully sent ${valueToSend} BNB to the merchant address ${merchantAddress}`);
+
                 });
             }
         } catch (error) {
@@ -115,11 +179,30 @@ const channel = supabase
             schema: 'public',
             table: 'invoices',
         },
-        (payload) => {
+        async (payload) => {
+            let merchantID = payload.new.merchant_id;
 
+            // Find the address by the id in profiles
+            const { data: merchantData, error: merchantError } = await supabase
+                .from('profiles')
+                .select('eth_address')
+                .eq('id', merchantID);
+
+            if (merchantError) {
+                console.error(`Error retrieving merchant address from database: ${merchantError.message}`);
+                return;
+            }
+
+            if (!merchantData || merchantData.length === 0) {
+                console.error('No merchant address found for the given merchant id');
+                return;
+            }
+
+            const merchantAddress = merchantData[0].eth_address;
+            console.log(`Merchant address: ${merchantAddress}`);
             generateWallet(payload.new.crypto_option).then(
                 (walletAddress) => {
-                    watchAddress(walletAddress);
+                    watchAddress(walletAddress, merchantAddress, payload.new.value_to_receive);
                 });
         }
     )

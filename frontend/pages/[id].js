@@ -29,7 +29,6 @@ import toast, { Toaster } from 'react-hot-toast';
 const Checkout = ({ checkout }) => {
     const [email, setEmail] = useState('');
     const [selectedCrypto, setSelectedCrypto] = useState(0);
-    let address;
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
     };
@@ -65,6 +64,7 @@ const Checkout = ({ checkout }) => {
                 price_in_usd: checkout.price_in_usd,
                 value_to_receive: await fetchCryptoPrice(selectedCrypto, checkout.price_in_usd),
                 confirmed: false,
+                address: '',
                 status: 'pending',
             });
         if (error) {
