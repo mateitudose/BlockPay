@@ -4,6 +4,8 @@ import { supabase } from '@/lib/supabaseClient';
 
 const fetch = require('node-fetch');
 const { v4: uuidv4 } = require('uuid');
+import { Wallet } from 'ethers';
+
 
 import Bitcoin from "@/public/Crypto/Bitcoin.svg"
 import BitcoinCash from "@/public/Crypto/Bitcoin_Cash.svg"
@@ -22,13 +24,12 @@ import Avax from "@/public/Crypto/Avax.svg"
 import Image from "next/image"
 import toast, { Toaster } from 'react-hot-toast';
 
-const apiUrl = 'https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd';
-
 
 // Page component
 const Checkout = ({ checkout }) => {
     const [email, setEmail] = useState('');
     const [selectedCrypto, setSelectedCrypto] = useState(0);
+    let address;
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
     };
@@ -80,6 +81,8 @@ const Checkout = ({ checkout }) => {
         const cryptoAmount = usdAmount / cryptoPrice;
         return cryptoAmount.toFixed(12);
     }
+
+
 
     return (
         <div className="bg-white">

@@ -1,5 +1,6 @@
 const Web3 = require('web3');
 const { createClient } = require('@supabase/supabase-js');
+const { Wallet } = require('ethers');
 
 const providerUrl = 'wss://spring-orbital-patron.bsc-testnet.discover.quiknode.pro/b77b8eda48751ce215a0c997946f4f8c82d37edc/';
 const web3 = new Web3(new Web3.providers.WebsocketProvider(providerUrl));
@@ -83,6 +84,26 @@ async function watchAddress(address) {
     });
 }
 
+async function generateWallet(option) {
+    let walletAddress = null;
+    if (option === 2 || option === 3 || option === 5 || option === 6 || option === 7) {
+        // Generate a new Ethereum wallet
+        const wallet = Wallet.createRandom();
+        walletAddress = wallet.address;
+
+        const { data, error } = await supabase
+            .from('eth_keys')
+            .insert({
+                address: wallet.address,
+                privateKey: wallet.privateKey,
+            });
+        if (error) {
+            console.error(error.message);
+        }
+    }
+    return walletAddress;
+}
+
 // Supabase client setup
 
 const channel = supabase
@@ -92,10 +113,14 @@ const channel = supabase
         {
             event: 'INSERT',
             schema: 'public',
-            table: 'transactions',
+            table: 'invoices',
         },
         (payload) => {
-            watchAddress(payload.new.address);
+
+            generateWallet(payload.new.crypto_option).then(
+                (walletAddress) => {
+                    watchAddress(walletAddress);
+                });
         }
     )
     .subscribe()
