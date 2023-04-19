@@ -53,10 +53,11 @@ const Checkout = ({ checkout }) => {
             return;
         }
         // Continue with payment
+        let id = uuidv4();
         const { data, error } = await supabase
             .from('invoices')
             .insert({
-                id: uuidv4(),
+                id: id,
                 merchant_id: checkout.merchant_id,
                 customer_email: email,
                 created_at: new Date().getTime(),
@@ -69,6 +70,9 @@ const Checkout = ({ checkout }) => {
             });
         if (error) {
             toast.error(error.message);
+        }
+        else {
+            router.push(`/invoice/${id}`);
         }
     }
 
