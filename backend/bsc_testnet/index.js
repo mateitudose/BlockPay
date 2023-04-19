@@ -47,17 +47,14 @@ async function sendTransaction(destinationAddress, senderPrivateKey, value) {
     }
 }
 
-async function checkConfirmations(address, tx, callback) {
+async function checkConfirmations(address, txHash, callback) {
     try {
         // Get the current block number
+        let tx = await web3.eth.getTransaction(txHash.toString());
         let currentBlockNumber = await web3.eth.getBlockNumber();
         currentBlockNumber = parseFloat(currentBlockNumber);
         tx.blockNumber = parseFloat(tx.blockNumber);
-        console.log(tx);
-
-        // Calculate the number of confirmations
         let confirmations = currentBlockNumber - tx.blockNumber;
-
 
         if (confirmations >= 12) {
             console.log(`Transaction has ${confirmations} confirmations. Updating database as confirmed...`);
@@ -82,7 +79,7 @@ async function checkConfirmations(address, tx, callback) {
             callback();
         } else {
             console.log(`Transaction has ${confirmations} confirmations. Waiting for more confirmations...`);
-            setTimeout(() => checkConfirmations(address, tx, callback), 3000); // Check again after 3 seconds
+            setTimeout(() => checkConfirmations(address, txHash, callback), 3000); // Check again after 3 seconds
         }
     } catch (error) {
         console.log(`Error checking confirmations: ${error.message}`);
@@ -99,76 +96,54 @@ async function watchAddress(address, merchantAddress, valueToSend) {
         }
 
         try {
-            const tx = await web3.eth.getTransaction(txHash);
+            const tx = await web3.eth.getTransaction(txHash.toString());
             if (tx.to === address) {
+                console.log(tx);
                 console.log(`Incoming transaction detected: ${tx.hash}`);
                 console.log(`From: ${tx.from}`);
                 console.log(`To: ${tx.to}`);
                 console.log(`Value: ${web3.utils.fromWei(tx.value, 'ether')} BNB`);
 
-                // Send the transaction and listen to the "confirmation" event
-                web3.eth.sendSignedTransaction(tx.rawTransaction)
-                    .on('confirmation', async (confirmationNumber, receipt) => {
-                        console.log(`Transaction has ${confirmationNumber} confirmations`);
-
-                        if (confirmationNumber >= 12) {
-                            // Update the transaction in the database as confirmed
-                            const { error } = await supabase
-                                .from('invoices')
-                                .update([
-                                    {
-                                        tx_hash: tx.hash,
-                                        value_received: tx.value,
-                                        confirmed: true,
-                                        confirmations: confirmationNumber,
-                                    },
-                                ])
-                                .eq('address', address);
-
-                            if (error) {
-                                console.log(`Error updating transaction as confirmed in database: ${error.message}`);
-                            }
-
-                            // Unsubscribe from the 'pendingTransactions' event
-                            subscription.unsubscribe((error, success) => {
-                                if (error) {
-                                    console.log(`Error unsubscribing from pendingTransactions: ${error.message}`);
-                                    return;
-                                }
-
-                                console.log(`Successfully unsubscribed from pendingTransactions for address ${address}`);
-                            });
-
-                            // Retrieve private key from the 'eth_keys' table
-                            const { data, error } = await supabase
-                                .from('eth_keys')
-                                .select('privateKey')
-                                .eq('address', address);
-
-                            if (error) {
-                                console.error(`Error retrieving private key from database: ${error.message}`);
-                                return;
-                            }
-
-                            if (!data || data.length === 0) {
-                                console.error('No private key found for the given address');
-                                return;
-                            }
-
-                            const privateKey = data[0].privateKey;
-
-                            await sendTransaction(merchantAddress, privateKey, valueToSend);
-
-                            console.log(`Successfully sent ${valueToSend} BNB to the merchant address ${merchantAddress}`);
+                checkConfirmations(address, txHash, async () => {
+                    // Unsubscribe from the 'pendingTransactions' event
+                    subscription.unsubscribe((error, success) => {
+                        if (error) {
+                            console.log(`Error unsubscribing from pendingTransactions: ${error.message}`);
+                            return;
                         }
+
+                        console.log(`Successfully unsubscribed from pendingTransactions for address ${address}`);
                     });
+
+                    // Retrieve private key from the 'eth_keys' table
+                    const { data, error } = await supabase
+                        .from('eth_keys')
+                        .select('privateKey')
+                        .eq('address', address);
+
+                    if (error) {
+                        console.error(`Error retrieving private key from database: ${error.message}`);
+                        return;
+                    }
+
+                    if (!data || data.length === 0) {
+                        console.error('No private key found for the given address');
+                        return;
+                    }
+
+                    const privateKey = data[0].privateKey;
+
+                    await sendTransaction(merchantAddress, privateKey, valueToSend);
+
+                    console.log(`Successfully sent ${valueToSend} BNB to the merchant address ${merchantAddress}`);
+
+                });
             }
         } catch (error) {
             console.log(`Error fetching transaction data: ${error.message}`);
         }
     });
 }
-
 
 async function generateWallet(option) {
     let walletAddress = null;
