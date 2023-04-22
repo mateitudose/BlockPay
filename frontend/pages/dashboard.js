@@ -19,7 +19,7 @@ import {
     BellIcon,
     CalendarIcon,
     ChartPieIcon,
-    Cog6ToothIcon,
+    Cog8ToothIcon,
     DocumentDuplicateIcon,
     FolderIcon,
     HomeIcon,
@@ -262,7 +262,7 @@ export default function Dashboard() {
                                                         href="#"
                                                         className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                                                     >
-                                                        <Cog6ToothIcon
+                                                        <Cog8ToothIcon
                                                             className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
                                                             aria-hidden="true"
                                                         />
@@ -352,7 +352,7 @@ export default function Dashboard() {
                                         href="#"
                                         className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                                     >
-                                        <Cog6ToothIcon
+                                        <Cog8ToothIcon
                                             className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
                                             aria-hidden="true"
                                         />
@@ -438,7 +438,7 @@ export default function Dashboard() {
                                                                     'inline-flex items-center gap-x-1.5 block px-4 py-2 text-sm'
                                                                 )}
                                                             >
-                                                                <Cog6ToothIcon
+                                                                <Cog8ToothIcon
                                                                     className="-ml-0.5 h-5 w-5"
                                                                     aria-hidden="true"
                                                                 />Account settings

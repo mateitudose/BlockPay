@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabaseClient';
 
 const fetch = require('node-fetch');
 const { v4: uuidv4 } = require('uuid');
-import { Wallet } from 'ethers';
+import { useRouter } from 'next/router'
 
 
 import Bitcoin from "@/public/Crypto/Bitcoin.svg"
@@ -20,6 +20,7 @@ import Polygon from "@/public/Crypto/Polygon.svg"
 import Solana from "@/public/Crypto/Solana.svg"
 import Litecoin from "@/public/Crypto/Litecoin.svg"
 import Avax from "@/public/Crypto/Avax.svg"
+import logo from "@/public/logo.svg"
 
 import Image from "next/image"
 import toast, { Toaster } from 'react-hot-toast';
@@ -27,6 +28,7 @@ import toast, { Toaster } from 'react-hot-toast';
 
 // Page component
 const Checkout = ({ checkout }) => {
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [selectedCrypto, setSelectedCrypto] = useState(0);
     const handleEmailChange = (e) => {
@@ -63,10 +65,11 @@ const Checkout = ({ checkout }) => {
                 created_at: new Date().getTime(),
                 crypto_option: selectedCrypto,
                 price_in_usd: checkout.price_in_usd,
-                value_to_receive: await fetchCryptoPrice(selectedCrypto, checkout.price_in_usd),
+                value_to_receive: (await fetchCryptoPrice(selectedCrypto, checkout.price_in_usd)).cryptoAmount,
                 confirmed: false,
                 address: '',
-                status: 'pending',
+                status: 'Awaiting payment',
+                exchange_rate: (await fetchCryptoPrice(selectedCrypto, checkout.price_in_usd)).cryptoPrice,
             });
         if (error) {
             toast.error(error.message);
@@ -83,7 +86,7 @@ const Checkout = ({ checkout }) => {
         const data = await response.json();
         const cryptoPrice = data[cryptoIds[cryptoId - 1]].usd;
         const cryptoAmount = usdAmount / cryptoPrice;
-        return cryptoAmount.toFixed(12);
+        return { cryptoAmount, cryptoPrice };
     }
 
 
@@ -102,12 +105,13 @@ const Checkout = ({ checkout }) => {
 
                 <section
                     aria-labelledby="summary-heading"
-                    className="bg-indigo-900 py-12 text-grey-300 md:px-10 lg:col-start-1 lg:row-start-1 lg:mx-auto lg:w-full lg:max-w-lg lg:bg-transparent lg:px-0 lg:pb-24 lg:pt-0"
+                    className="bg-indigo-900 py-12 text-grey-300 md:px-10 lg:col-start-1 lg:row-start-1 lg:mx-auto lg:w-full lg:max-w-lg lg:bg-transparent lg:px-0 lg:pb-24 lg:pt-0 relative"
                 >
                     <div className="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
                         <h2 id="summary-heading" className="sr-only">
                             Order summary
                         </h2>
+                        <h1></h1>
 
                         <dl className='py-6 space-y-6 text-sm font-medium'>
                             <div className="flex items-center justify-between">
@@ -131,7 +135,7 @@ const Checkout = ({ checkout }) => {
                                 <dt className="">Total</dt>
                                 <dd className="">${checkout.price_in_usd}</dd>
                             </div>
-                            {/* add something down like powered by Blockpay */}
+                            <div className="hidden lg:block absolute bottom-1/4 left-0 opacity-50">Powered by <Image className='w-36 inline-block pb-0.5 ml-1' src={logo}/></div>
                         </dl>
                     </div>
                 </section>
