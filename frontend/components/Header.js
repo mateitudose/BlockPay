@@ -37,7 +37,7 @@ export default function Header() {
                 <div className="flex lg:flex-1">
                     <a href="#" className="-m-1.5 p-1.5">
                         <span className="sr-only">Your Company</span>
-                        <Image className="h-8 w-auto" src={logo} alt="" />
+                        <Image className="h-9 w-auto" src={logo} alt="" />
                     </a>
                 </div>
                 <div className="hidden lg:flex lg:gap-x-12">
@@ -96,7 +96,7 @@ export default function Header() {
                                 <a href="#" className="-m-1.5 p-1.5">
                                     <span className="sr-only">Your Company</span>
                                     <Image
-                                        className="h-8 w-auto"
+                                        className="h-9 w-auto"
                                         src={logo}
                                         alt=""
                                     />

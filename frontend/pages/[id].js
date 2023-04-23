@@ -135,7 +135,7 @@ const Checkout = ({ checkout }) => {
                                 <dt className="">Total</dt>
                                 <dd className="">${checkout.price_in_usd}</dd>
                             </div>
-                            <div className="hidden lg:block absolute bottom-1/4 left-0 opacity-50">Powered by <Image className='w-36 inline-block pb-0.5 ml-1' src={logo}/></div>
+                            <div className="hidden lg:block absolute bottom-1/4 left-0 opacity-50">Powered by <Image className='w-36 inline-block pb-0.5 ml-1' src={logo} /></div>
                         </dl>
                     </div>
                 </section>
