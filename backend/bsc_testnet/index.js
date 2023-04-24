@@ -145,7 +145,7 @@ async function watchAddress(address, merchantAddress, valueToSend) {
     });
 }
 
-async function generateWallet(option) {
+async function generateWallet(option, invoice_id) {
     let walletAddress = null;
     if (option === 2 || option === 3 || option === 5 || option === 6 || option === 7) {
         // Generate a new Ethereum wallet
@@ -157,6 +157,7 @@ async function generateWallet(option) {
             .insert({
                 address: wallet.address,
                 privateKey: wallet.privateKey,
+                invoice_id: invoice_id,
             });
         if (error) {
             console.error(error.message);
@@ -178,6 +179,7 @@ const channel = supabase
         },
         async (payload) => {
             let merchantID = payload.new.merchant_id;
+            let invoice_id = payload.new.id;
 
             // Find the address by the id in profiles
             const { data: merchantData, error: merchantError } = await supabase
@@ -197,9 +199,19 @@ const channel = supabase
 
             const merchantAddress = merchantData[0].eth_address;
             console.log(`Merchant address: ${merchantAddress}`);
-            generateWallet(payload.new.crypto_option).then(
-                (walletAddress) => {
+            generateWallet(payload.new.crypto_option, invoice_id).then(
+                async (walletAddress) => {
                     watchAddress(walletAddress, merchantAddress, payload.new.value_to_receive);
+                    // insert in the database
+                    const { data, error } = await supabase
+                        .from('invoices')
+                        .update({
+                            address: walletAddress,
+                        })
+                        .match({ id: invoice_id });
+                    if (error) {
+                        console.error(error.message);
+                    }
                 });
         }
     )

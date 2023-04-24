@@ -70,6 +70,7 @@ const Checkout = ({ checkout }) => {
                 address: '',
                 status: 'Awaiting payment',
                 exchange_rate: (await fetchCryptoPrice(selectedCrypto, checkout.price_in_usd)).cryptoPrice,
+                product_name: checkout.product_name,
             });
         if (error) {
             toast.error(error.message);
@@ -135,7 +136,12 @@ const Checkout = ({ checkout }) => {
                                 <dt className="">Total</dt>
                                 <dd className="">${checkout.price_in_usd}</dd>
                             </div>
-                            <div className="hidden lg:block absolute bottom-1/4 left-0 opacity-50">Powered by <Image className='w-36 inline-block pb-0.5 ml-1' src={logo} /></div>
+                            <a href="https://blockpay.com" target='_blank'>
+                                <div className="hidden lg:block absolute bottom-0 left-0 opacity-80 grayscale hover:grayscale-0">
+                                    Powered by
+                                    <Image className='w-auto h-6 inline-block pb-0.5 ml-1' src={logo} />
+                                </div>
+                            </a>
                         </dl>
                     </div>
                 </section>
@@ -251,8 +257,9 @@ const Checkout = ({ checkout }) => {
                                             <span>Avax</span>
                                         </button>
                                         <button
-                                            className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            className="opacity-50 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(6)}
+                                            disabled
                                         >
                                             <Image
                                                 src={Arbitrum}
@@ -277,8 +284,9 @@ const Checkout = ({ checkout }) => {
                                             <span>Matic</span>
                                         </button>
                                         <button
-                                            className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            className="opacity-50 py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(8)}
+                                            disabled
                                         >
                                             <Image
                                                 src={Solana}

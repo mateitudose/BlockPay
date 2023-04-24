@@ -27,12 +27,71 @@ import Image from "next/image"
 import toast, { Toaster } from 'react-hot-toast';
 import QRCodeGenerator from '@/components/QRCodeGenerator';
 
+const crypto = [
+    {
+        name: "Bitcoin",
+        icon: Bitcoin,
+        symbol: "BTC",
+    },
+    {
+        name: "Ethereum",
+        icon: Ethereum,
+        symbol: "ETH",
+    },
+    {
+        name: "Binance Coin",
+        icon: BNB,
+        symbol: "BNB",
+    },
+    {
+        name: "Litecoin",
+        icon: Litecoin,
+        symbol: "LTC",
+    },
+    {
+        name: "Avax",
+        icon: Avax,
+        symbol: "AVAX",
+    },
+    {
+        name: "Arbitrum",
+        icon: Arbitrum,
+        symbol: "ARB",
+    },
+    {
+        name: "Polygon",
+        icon: Polygon,
+        symbol: "MATIC",
+    },
+    {
+        name: "Solana",
+        icon: Solana,
+        symbol: "SOL",
+    },
+
+
+]
 
 // Page component
 const Invoice = ({ invoice }) => {
+    const [address, setAddress] = useState(invoice.address);
+    const channel = supabase
+        .channel('table-db-changes')
+        .on(
+            'postgres_changes',
+            {
+                event: 'UPDATE',
+                schema: 'public',
+                table: 'invoices',
+            },
+            (payload) => {
+                setAddress(payload.new.address);
+            }
+        )
+        .subscribe()
+
 
     const [isCopied, setIsCopied] = useState(false);
-
     useEffect(() => {
         if (isCopied) {
             const timer = setTimeout(() => {
@@ -49,7 +108,6 @@ const Invoice = ({ invoice }) => {
             });
         }
     };
-
     return (
         <div className="bg-white">
             <title>Invoice</title>
@@ -169,16 +227,16 @@ const Invoice = ({ invoice }) => {
                                     </div>
                                     <div className="flex items-center justify-center text-black text-md text-center">
 
-                                        <button className='flex items-center align-center justify-center text-center' onClick={() => handleCopyClick(invoice.address)}>
+                                        <button className='flex items-center align-center justify-center text-center' onClick={() => handleCopyClick(address)}>
                                             <Badge
                                                 color="gray"
-                                                text={isCopied ? 'Copied!' : `Send to ${invoice.address}`}
+                                                text={isCopied ? 'Copied!' : `Send to ${address}`}
                                                 icon={<Square2StackIcon className="h-5 w-5" aria-hidden="true" />}
                                             />
                                         </button>
                                     </div>
                                     <div className="flex items-center justify-center">
-                                        <QRCodeGenerator className="flex items-center align-center justify-center" value={`binance_coin:${invoice.address}?value=${parseFloat(invoice.value_to_receive) * 10 ** 18}`} />
+                                        <QRCodeGenerator className="flex items-center align-center justify-center" value={`binance_coin:${address}?value=${parseFloat(invoice.value_to_receive) * 10 ** 18}`} />
                                         <Image src={BNB} alt="BNB" width={62} height={62} className="absolute mr-2" />
                                     </div>
                                 </dl>
