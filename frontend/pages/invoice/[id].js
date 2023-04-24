@@ -5,75 +5,18 @@ import { useRouter } from 'next/router'
 import Badge from '@/components/Badge';
 import Countdown from '@/components/Countdown';
 import UTC from '@/components/UTC';
+import QRCodeGenerator from '@/components/QRCodeGenerator';
 
 import { Square2StackIcon } from '@heroicons/react/24/outline';
 
-import Bitcoin from "@/public/Crypto/Bitcoin.svg"
-import BitcoinCash from "@/public/Crypto/Bitcoin_Cash.svg"
-import Ethereum from "@/public/Crypto/Ethereum.svg"
-import Tether from "@/public/Crypto/Tether.svg"
-import USDC from "@/public/Crypto/Circle_USDC.svg"
-import BNB from "@/public/Crypto/BNB.svg"
-import BUSD from "@/public/Crypto/BUSD.svg"
-import Tron from "@/public/Crypto/Tron.svg"
-import Arbitrum from "@/public/Crypto/Arbitrum.svg"
-import Polygon from "@/public/Crypto/Polygon.svg"
-import Solana from "@/public/Crypto/Solana.svg"
-import Litecoin from "@/public/Crypto/Litecoin.svg"
-import Avax from "@/public/Crypto/Avax.svg"
-import top from "@/public/Crypto/top.png"
-
 import Image from "next/image"
 import toast, { Toaster } from 'react-hot-toast';
-import QRCodeGenerator from '@/components/QRCodeGenerator';
 
-const crypto = [
-    {
-        name: "Bitcoin",
-        icon: Bitcoin,
-        symbol: "BTC",
-    },
-    {
-        name: "Ethereum",
-        icon: Ethereum,
-        symbol: "ETH",
-    },
-    {
-        name: "Binance Coin",
-        icon: BNB,
-        symbol: "BNB",
-    },
-    {
-        name: "Litecoin",
-        icon: Litecoin,
-        symbol: "LTC",
-    },
-    {
-        name: "Avax",
-        icon: Avax,
-        symbol: "AVAX",
-    },
-    {
-        name: "Arbitrum",
-        icon: Arbitrum,
-        symbol: "ARB",
-    },
-    {
-        name: "Polygon",
-        icon: Polygon,
-        symbol: "MATIC",
-    },
-    {
-        name: "Solana",
-        icon: Solana,
-        symbol: "SOL",
-    },
-
-
-]
+import cryptos from '@/components/cryptos.js';
 
 // Page component
 const Invoice = ({ invoice }) => {
+    let crypto = cryptos.find(crypto => crypto.id === invoice.crypto_option);
     const [address, setAddress] = useState(invoice.address);
     const channel = supabase
         .channel('table-db-changes')
@@ -182,14 +125,14 @@ const Invoice = ({ invoice }) => {
                                     <div className="flex items-center justify-between">
                                         <dt className='flex items-center'>
                                             <Image
-                                                src={BNB}
-                                                alt="BNB"
+                                                src={crypto.icon}
+                                                alt={crypto.name}
                                                 width={32}
                                                 height={32}
-                                                className="inline-block rounded-md mr-2 bg-[#F0B90B]"
+                                                className={`inline-block rounded-md mr-2 ${crypto.background_color}`}
                                             />
                                             <div className='flex flex-col'>
-                                                <span className='text-black'>Binance Coin</span>
+                                                <span className='text-black'>{crypto.name}</span>
                                                 <span className='text-black/50 text-xs'>{invoice.id}</span>
                                             </div>
                                         </dt>
@@ -202,12 +145,12 @@ const Invoice = ({ invoice }) => {
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <dt className='opacity-50'>Exchange Rate</dt>
-                                        <dd >${invoice.exchange_rate}</dd>
+                                        <dd>1 {crypto.symbol} = ${invoice.exchange_rate}</dd>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <dt className='opacity-50'>Amount</dt>
                                         <dd>
-                                            {parseFloat(invoice.value_to_receive).toFixed(12)}
+                                            {parseFloat(invoice.value_to_receive).toFixed(12)} {crypto.symbol}
                                         </dd>
                                     </div>
 
@@ -220,7 +163,7 @@ const Invoice = ({ invoice }) => {
                                         <button className='flex items-center align-center justify-center' onClick={() => handleCopyClick(parseFloat(invoice.value_to_receive).toFixed(12))}>
                                             <Badge
                                                 color="gray"
-                                                text={isCopied ? 'Copied!' : `Send ${parseFloat(invoice.value_to_receive).toFixed(8)}`}
+                                                text={isCopied ? 'Copied!' : `Send ${parseFloat(invoice.value_to_receive).toFixed(8)} ${crypto.symbol}`}
                                                 icon={<Square2StackIcon className="h-5 w-5" aria-hidden="true" />}
                                             />
                                         </button>
@@ -236,8 +179,8 @@ const Invoice = ({ invoice }) => {
                                         </button>
                                     </div>
                                     <div className="flex items-center justify-center">
-                                        <QRCodeGenerator className="flex items-center align-center justify-center" value={`binance_coin:${address}?value=${parseFloat(invoice.value_to_receive) * 10 ** 18}`} />
-                                        <Image src={BNB} alt="BNB" width={62} height={62} className="absolute mr-2" />
+                                        <QRCodeGenerator className="flex items-center align-center justify-center" value={`${crypto.qr}:${address}?value=${parseFloat(invoice.value_to_receive) * 10 ** 18}`} />
+                                        <Image src={crypto.icon} alt={crypto.name} width={62} height={62} className="absolute mr-2" />
                                     </div>
                                 </dl>
                             </div>
