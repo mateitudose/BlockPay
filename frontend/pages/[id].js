@@ -108,7 +108,7 @@ const Checkout = ({ checkout }) => {
                     aria-labelledby="summary-heading"
                     className="px-4 pb-12 sm:py-12 text-grey-300 md:px-10 lg:col-start-1 lg:row-start-1 lg:mx-auto lg:w-full lg:max-w-lg lg:bg-transparent lg:px-0 lg:pb-24 lg:pt-0 relative"
                 >
-                    <div className="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
+                    <div className="sm:shadow-none sm:p-0 sm:pb-0 sm:rounded-none shadow-lg rounded-xl p-3 pb-6 mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
                         <h2 id="summary-heading" className="sr-only">
                             Order summary
                         </h2>
@@ -190,7 +190,7 @@ const Checkout = ({ checkout }) => {
                                     </label>
                                     <div className="grid gap-x-2 grid-cols-3 sm:col-span-3 mt-2">
                                         <button
-                                            className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-medium sm:font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py-2 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py-2 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(1)}
                                         >
                                             <Image
@@ -198,12 +198,13 @@ const Checkout = ({ checkout }) => {
                                                 alt="Bitcoin"
                                                 width={18} // Set the image width
                                                 height={18} // Set the image height
-                                                className="sm:mr-2 mr-1 sm:w-6 sm:h-6"
+                                                className="mr-2 sm:w-6 sm:h-6"
                                             />
-                                            <span>Bitcoin</span>
+                                            <span className='block sm:hidden'>BTC</span>
+                                            <span className='hidden sm:block'>Bitcoin</span>
                                         </button>
                                         <button
-                                            className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-medium sm:font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(2)}
                                         >
                                             <Image
@@ -211,12 +212,13 @@ const Checkout = ({ checkout }) => {
                                                 alt="Ethereum"
                                                 width={18} // Set the image width
                                                 height={18} // Set the image height
-                                                className="sm:mr-2 mr-1 sm:w-6 sm:h-6"
+                                                className="mr-2 sm:w-6 sm:h-6"
                                             />
-                                            <span>Ethereum</span>
+                                            <span className='block sm:hidden'>ETH</span>
+                                            <span className='hidden sm:block'>Ethereum</span>
                                         </button>
                                         <button
-                                            className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-medium sm:font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(3)}
                                         >
                                             <Image
@@ -224,12 +226,12 @@ const Checkout = ({ checkout }) => {
                                                 alt="bnb"
                                                 width={18} // Set the image width
                                                 height={18} // Set the image height
-                                                className="sm:mr-2 mr-1 sm:w-6 sm:h-6"
+                                                className="mr-2 sm:w-6 sm:h-6"
                                             />
                                             <span>BNB</span>
                                         </button>
                                         <button
-                                            className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-medium sm:font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(4)}
                                         >
                                             <Image
@@ -237,12 +239,13 @@ const Checkout = ({ checkout }) => {
                                                 alt="Litecoin"
                                                 width={18} // Set the image width
                                                 height={18} // Set the image height
-                                                className="sm:mr-2 mr-1 sm:w-6 sm:h-6"
+                                                className="mr-2 sm:w-6 sm:h-6"
                                             />
-                                            <span>Litecoin</span>
+                                            <span className='block sm:hidden'>LTC</span>
+                                            <span className='hidden sm:block'>Litecoin</span>
                                         </button>
                                         <button
-                                            className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-medium sm:font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(5)}
                                         >
                                             <Image
@@ -250,12 +253,13 @@ const Checkout = ({ checkout }) => {
                                                 alt="Avax"
                                                 width={18} // Set the image width
                                                 height={18} // Set the image height
-                                                className="sm:mr-2 mr-1 sm:w-6 sm:h-6"
+                                                className="mr-2 sm:w-6 sm:h-6"
                                             />
-                                            <span>Avax</span>
+                                            <span className='block sm:hidden'>AVAX</span>
+                                            <span className='hidden sm:block'>Avalanche</span>
                                         </button>
                                         <button
-                                            className="opacity-50 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-medium sm:font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            className="opacity-50 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(6)}
                                             disabled
                                         >
@@ -264,12 +268,13 @@ const Checkout = ({ checkout }) => {
                                                 alt="Arbitrum"
                                                 width={18} // Set the image width
                                                 height={18} // Set the image height
-                                                className="sm:mr-2 mr-1 sm:w-6 sm:h-6"
+                                                className="mr-2 sm:w-6 sm:h-6"
                                             />
-                                            <span>Arbitrum</span>
+                                            <span className='block sm:hidden'>ARB</span>
+                                            <span className='hidden sm:block'>Arbitrum</span>
                                         </button>
                                         <button
-                                            className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-medium sm:font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(7)}
                                         >
                                             <Image
@@ -277,12 +282,13 @@ const Checkout = ({ checkout }) => {
                                                 alt="Matic"
                                                 width={18} // Set the image width
                                                 height={18} // Set the image height
-                                                className="sm:mr-2 mr-1 sm:w-6 sm:h-6"
+                                                className="mr-2 sm:w-6 sm:h-6"
                                             />
-                                            <span>Matic</span>
+                                            <span className='block sm:hidden'>MATIC</span>
+                                            <span className='hidden sm:block'>Polygon</span>
                                         </button>
                                         <button
-                                            className="opacity-50 py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-medium sm:font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            className="opacity-50 py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(8)}
                                             disabled
                                         >
@@ -291,9 +297,10 @@ const Checkout = ({ checkout }) => {
                                                 alt="Solana"
                                                 width={18} // Set the image width
                                                 height={18} // Set the image height
-                                                className="sm:mr-2 mr-1 sm:w-6 sm:h-6"
+                                                className="mr-2 sm:w-6 sm:h-6"
                                             />
-                                            <span>Solana</span>
+                                            <span className='block sm:hidden'>SOL</span>
+                                            <span className='hidden sm:block'>Solana</span>
                                         </button>
                                     </div>
                                     {/* <div className='mt-6'>
