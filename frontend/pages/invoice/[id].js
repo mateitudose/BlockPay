@@ -24,26 +24,37 @@ const Invoice = ({ invoice }) => {
 
     const [address, setAddress] = useState(invoice.address);
     const [status, setStatus] = useState(invoice.status);
-    const channel = supabase
-        .channel('table-db-changes')
-        .on(
-            'postgres_changes',
-            {
-                event: 'UPDATE',
-                schema: 'public',
-                table: 'invoices',
-            },
-            (payload) => {
-                if (payload.new.id === invoice.id) {
-                    setAddress(payload.new.address);
-                    setStatus(payload.new.status);
+    useEffect(() => {
+        const channel = supabase
+            .channel('table-db-changes')
+            .on(
+                'postgres_changes',
+                {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'invoices',
+                },
+                (payload) => {
+                    if (payload.new.id === invoice.id) {
+                        setAddress(payload.new.address);
+                        setStatus(payload.new.status);
+                    }
                 }
-            }
-        )
-        .subscribe()
+            )
+            .subscribe()
+
+        // Clean up on unmount
+        return () => {
+            channel.unsubscribe()
+        }
+    }, [invoice.id]);
+
 
 
     const [isCopied, setIsCopied] = useState(false);
+    const [isCopied2, setIsCopied2] = useState(false);
+
+
     useEffect(() => {
         if (isCopied) {
             const timer = setTimeout(() => {
@@ -60,6 +71,31 @@ const Invoice = ({ invoice }) => {
             });
         }
     };
+    useEffect(() => {
+        if (isCopied2) {
+            const timer = setTimeout(() => {
+                setIsCopied2(false);
+            }, 1000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [isCopied2]);
+    const handleCopyClick2 = (textToCopy) => {
+        if (typeof window !== 'undefined') {
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                setIsCopied2(true);
+            });
+        }
+    };
+    useEffect(() => {
+        let tTime = new Date(invoice.created_at).getTime() + 30 * 60 * 1000;
+        let time = new Date().getTime();
+
+        if (tTime < time) {
+            setStatus("Expired");
+        }
+    }, [invoice.created_at]);
+
     return (
         <div className="bg-white">
             <title>Invoice</title>
@@ -104,7 +140,7 @@ const Invoice = ({ invoice }) => {
                                 <dd className="">${invoice.price_in_usd}</dd>
                             </div>
                             <a href="https://blockpay.com" target='_blank'>
-                                <div className="hidden lg:block absolute bottom-0 left-0 opacity-80 grayscale hover:grayscale-0">
+                                <div className="hidden lg:block absolute bottom-1/4  opacity-80 grayscale hover:grayscale-0">
                                     Powered by
                                     <Image className='w-auto h-6 inline-block pb-0.5 ml-1' src={logo} />
                                 </div>
@@ -131,7 +167,7 @@ const Invoice = ({ invoice }) => {
                                 <dl className='py-6 space-y-6 text-sm font-medium'>
                                     <div className="flex items-center justify-between">
                                         <dt className="font-medium">Status</dt>
-                                        <dd><Badge color={status === 'Confirmed' ? 'green' : 'yellow'} text={status} /></dd>
+                                        <dd><Badge color={status === 'Confirmed' ? 'green' : 'yellow' || status === 'Expired' ? 'red' : 'yellow'} text={status} /></dd>
                                     </div>
                                 </dl>
 
@@ -173,7 +209,7 @@ const Invoice = ({ invoice }) => {
                                         <dd><UTC timestamp={invoice.created_at} /></dd>
                                     </div>
                                     <div className="flex items-center justify-center border-t border-gray border-opacity-20 pt-6 text-black text-md text-center">
-                                        <button className='flex items-center align-center justify-center' onClick={() => handleCopyClick(parseFloat(invoice.value_to_receive).toFixed(12))}>
+                                        <button className='flex items-center align-center justify-center' onClick={() => handleCopyClick(parseFloat(invoice.value_to_receive).toFixed(8))}>
                                             <Badge
                                                 color="gray"
                                                 text={isCopied ? 'Copied!' : `Send ${parseFloat(invoice.value_to_receive).toFixed(8)} ${crypto.symbol}`}
@@ -183,16 +219,16 @@ const Invoice = ({ invoice }) => {
                                     </div>
                                     <div className="flex items-center justify-center text-black text-md text-center">
 
-                                        <button className='flex items-center align-center justify-center text-center' onClick={() => handleCopyClick(address)}>
+                                        <button className='flex items-center align-center justify-center text-center' onClick={() => handleCopyClick2(address)}>
                                             <Badge
                                                 color="gray"
-                                                text={isCopied ? 'Copied!' : `Send to ${address}`}
+                                                text={isCopied2 ? 'Copied!' : `${address}`}
                                                 icon={<Square2StackIcon className="h-5 w-5" aria-hidden="true" />}
                                             />
                                         </button>
                                     </div>
                                     <div className="flex items-center justify-center">
-                                        <QRCodeGenerator className="flex items-center align-center justify-center" value={`${crypto.qr}:${address}?value=${parseFloat(invoice.value_to_receive) * 10 ** 18}`} />
+                                        <QRCodeGenerator className="flex items-center align-center justify-center" value={address} />
                                         <Image src={crypto.icon} alt={crypto.name} width={62} height={62} className="absolute mr-2" />
                                     </div>
                                 </dl>

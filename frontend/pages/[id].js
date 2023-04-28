@@ -101,19 +101,17 @@ const Checkout = ({ checkout }) => {
             <div className="fixed left-0 top-0 hidden h-full w-1/2 bg-gray-50/10 lg:block" aria-hidden="true" />
             <div className="fixed right-0 top-0 hidden h-full w-1/2 bg-white lg:block shadow-md shadow-grey" aria-hidden="true" />
 
-            <div className="mt-28 relative mx-auto grid max-w-7xl grid-cols-1 gap-x-16 lg:grid-cols-2 lg:px-8 lg:pt-16">
+            <div className="sm:mt-28 relative mx-auto grid max-w-7xl grid-cols-1 gap-x-16 lg:grid-cols-2 lg:px-8 lg:pt-16">
                 <h1 className="sr-only">Checkout</h1>
 
                 <section
                     aria-labelledby="summary-heading"
-                    className="bg-indigo-900 py-12 text-grey-300 md:px-10 lg:col-start-1 lg:row-start-1 lg:mx-auto lg:w-full lg:max-w-lg lg:bg-transparent lg:px-0 lg:pb-24 lg:pt-0 relative"
+                    className="px-4 pb-12 sm:py-12 text-grey-300 md:px-10 lg:col-start-1 lg:row-start-1 lg:mx-auto lg:w-full lg:max-w-lg lg:bg-transparent lg:px-0 lg:pb-24 lg:pt-0 relative"
                 >
                     <div className="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
                         <h2 id="summary-heading" className="sr-only">
                             Order summary
                         </h2>
-                        <h1></h1>
-
                         <dl className='py-6 space-y-6 text-sm font-medium'>
                             <div className="flex items-center justify-between">
                                 <dt className="font-medium"><span className='text-black/50 mr-3'>1x</span>{checkout.product_name}</dt>
@@ -137,7 +135,7 @@ const Checkout = ({ checkout }) => {
                                 <dd className="">${checkout.price_in_usd}</dd>
                             </div>
                             <a href="https://blockpay.com" target='_blank'>
-                                <div className="hidden lg:block absolute bottom-0 left-0 opacity-80 grayscale hover:grayscale-0">
+                                <div className="hidden lg:block absolute bottom-1/4  opacity-80 grayscale hover:grayscale-0">
                                     Powered by
                                     <Image className='w-auto h-6 inline-block pb-0.5 ml-1' src={logo} />
                                 </div>
@@ -154,7 +152,7 @@ const Checkout = ({ checkout }) => {
                         Payment and shipping details
                     </h2>
 
-                    <div className="ml-4">
+                    <div className="px-4 sm:ml-4">
                         <div className="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
                             <div>
                                 <h3 id="contact-info-heading" className="text-lg font-medium text-gray-900">
@@ -171,7 +169,7 @@ const Checkout = ({ checkout }) => {
                                             type="email"
                                             name="email"
                                             id="email"
-                                            className="block w-full rounded-md border-0 py-1.5 px-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            className="placeholder:text-sm sm:border-0 sm:text-base block w-full rounded-md border py-1.5 px-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                             placeholder="you@example.com"
                                             required
                                             value={email}
@@ -192,108 +190,108 @@ const Checkout = ({ checkout }) => {
                                     </label>
                                     <div className="grid gap-x-2 grid-cols-3 sm:col-span-3 mt-2">
                                         <button
-                                            className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py-2 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-medium sm:font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py-2 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(1)}
                                         >
                                             <Image
                                                 src={Bitcoin}
                                                 alt="Bitcoin"
-                                                width={24} // Set the image width
-                                                height={24} // Set the image height
-                                                className="mr-2"
+                                                width={18} // Set the image width
+                                                height={18} // Set the image height
+                                                className="sm:mr-2 mr-1 sm:w-6 sm:h-6"
                                             />
                                             <span>Bitcoin</span>
                                         </button>
                                         <button
-                                            className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-medium sm:font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(2)}
                                         >
                                             <Image
                                                 src={Ethereum}
                                                 alt="Ethereum"
-                                                width={24} // Set the image width
-                                                height={24} // Set the image height
-                                                className="mr-2"
+                                                width={18} // Set the image width
+                                                height={18} // Set the image height
+                                                className="sm:mr-2 mr-1 sm:w-6 sm:h-6"
                                             />
                                             <span>Ethereum</span>
                                         </button>
                                         <button
-                                            className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-medium sm:font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(3)}
                                         >
                                             <Image
                                                 src={BNB}
                                                 alt="bnb"
-                                                width={24} // Set the image width
-                                                height={24} // Set the image height
-                                                className="mr-2"
+                                                width={18} // Set the image width
+                                                height={18} // Set the image height
+                                                className="sm:mr-2 mr-1 sm:w-6 sm:h-6"
                                             />
                                             <span>BNB</span>
                                         </button>
                                         <button
-                                            className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-medium sm:font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(4)}
                                         >
                                             <Image
                                                 src={Litecoin}
                                                 alt="Litecoin"
-                                                width={24} // Set the image width
-                                                height={24} // Set the image height
-                                                className="mr-2"
+                                                width={18} // Set the image width
+                                                height={18} // Set the image height
+                                                className="sm:mr-2 mr-1 sm:w-6 sm:h-6"
                                             />
                                             <span>Litecoin</span>
                                         </button>
                                         <button
-                                            className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-medium sm:font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(5)}
                                         >
                                             <Image
                                                 src={Avax}
                                                 alt="Avax"
-                                                width={24} // Set the image width
-                                                height={24} // Set the image height
-                                                className="mr-2"
+                                                width={18} // Set the image width
+                                                height={18} // Set the image height
+                                                className="sm:mr-2 mr-1 sm:w-6 sm:h-6"
                                             />
                                             <span>Avax</span>
                                         </button>
                                         <button
-                                            className="opacity-50 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            className="opacity-50 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-medium sm:font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(6)}
                                             disabled
                                         >
                                             <Image
                                                 src={Arbitrum}
                                                 alt="Arbitrum"
-                                                width={24} // Set the image width
-                                                height={24} // Set the image height
-                                                className="mr-2"
+                                                width={18} // Set the image width
+                                                height={18} // Set the image height
+                                                className="sm:mr-2 mr-1 sm:w-6 sm:h-6"
                                             />
                                             <span>Arbitrum</span>
                                         </button>
                                         <button
-                                            className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-medium sm:font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(7)}
                                         >
                                             <Image
                                                 src={Polygon}
                                                 alt="Matic"
-                                                width={24} // Set the image width
-                                                height={24} // Set the image height
-                                                className="mr-2"
+                                                width={18} // Set the image width
+                                                height={18} // Set the image height
+                                                className="sm:mr-2 mr-1 sm:w-6 sm:h-6"
                                             />
                                             <span>Matic</span>
                                         </button>
                                         <button
-                                            className="opacity-50 py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                                            className="opacity-50 py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-medium sm:font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(8)}
                                             disabled
                                         >
                                             <Image
                                                 src={Solana}
                                                 alt="Solana"
-                                                width={24} // Set the image width
-                                                height={24} // Set the image height
-                                                className="mr-2"
+                                                width={18} // Set the image width
+                                                height={18} // Set the image height
+                                                className="sm:mr-2 mr-1 sm:w-6 sm:h-6"
                                             />
                                             <span>Solana</span>
                                         </button>
@@ -307,7 +305,7 @@ const Checkout = ({ checkout }) => {
                                         </div>
                                     </div> */}
 
-                                    <div className="mt-10 flex justify-end border-t border-gray-200 pt-6">
+                                    <div className="mt-10 font-medium text-center border-t border-gray-200 pt-6 pb-6">
                                         <button
                                             type="submit"
                                             className="rounded-md border border-transparent bg-indigo-600 w-full py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
@@ -315,6 +313,12 @@ const Checkout = ({ checkout }) => {
                                         >
                                             Pay now
                                         </button>
+                                        <a href="https://blockpay.app" target='_blank'>
+                                            <div className="block sm:hidden opacity-80 mt-36 font-medium">
+                                                Powered by
+                                                <Image className='w-auto h-6 inline-block pb-0.5 ml-1.5' src={logo} />
+                                            </div>
+                                        </a>
                                     </div>
                                 </div>
                             </div>

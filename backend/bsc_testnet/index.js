@@ -36,7 +36,7 @@ async function sendTransaction(destinationAddress, senderPrivateKey, value) {
 
         console.log('Estimated gas:', estimatedGasBN.toString());
         tx.gas = estimatedGas.toString();
-    
+
 
         // Calculate total gas cost (gas cost = gas price * gas limit)
         const totalGasCost = gasPriceBN.mul(estimatedGasBN);
@@ -135,8 +135,8 @@ async function watchAddress(address, merchantAddress, valueToSend) {
 
         try {
             const tx = await web3.eth.getTransaction(txHash.toString());
-            if (tx.to === address) {
-                console.log(tx);
+            if (tx.to === address && web3.utils.toBN(tx.value).gte(web3.utils.toWei(valueToSend.toString(), 'ether'))) {
+                console.log(web3.utils.toBN(tx.value), web3.utils.toBN(valueInWei));
                 console.log(`Incoming transaction detected: ${tx.hash}`);
                 console.log(`From: ${tx.from}`);
                 console.log(`To: ${tx.to}`);
