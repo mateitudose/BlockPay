@@ -6,6 +6,7 @@ import Badge from '@/components/Badge';
 import Countdown from '@/components/Countdown';
 import UTC from '@/components/UTC';
 import QRCodeGenerator from '@/components/QRCodeGenerator';
+import logo from "@/public/logo.svg"
 
 import { Square2StackIcon } from '@heroicons/react/24/outline';
 
@@ -14,10 +15,15 @@ import toast, { Toaster } from 'react-hot-toast';
 
 import cryptos from '@/components/cryptos.js';
 
+// rainbow kit
+// import { ConnectButton } from '@rainbow-me/rainbowkit';
+
 // Page component
 const Invoice = ({ invoice }) => {
     let crypto = cryptos.find(crypto => crypto.id === invoice.crypto_option);
+
     const [address, setAddress] = useState(invoice.address);
+    const [status, setStatus] = useState(invoice.status);
     const channel = supabase
         .channel('table-db-changes')
         .on(
@@ -28,7 +34,10 @@ const Invoice = ({ invoice }) => {
                 table: 'invoices',
             },
             (payload) => {
-                setAddress(payload.new.address);
+                if (payload.new.id === invoice.id) {
+                    setAddress(payload.new.address);
+                    setStatus(payload.new.status);
+                }
             }
         )
         .subscribe()
@@ -94,7 +103,12 @@ const Invoice = ({ invoice }) => {
                                 <dt className="">Total</dt>
                                 <dd className="">${invoice.price_in_usd}</dd>
                             </div>
-                            {/* add something down like powered by Blockpay */}
+                            <a href="https://blockpay.com" target='_blank'>
+                                <div className="hidden lg:block absolute bottom-0 left-0 opacity-80 grayscale hover:grayscale-0">
+                                    Powered by
+                                    <Image className='w-auto h-6 inline-block pb-0.5 ml-1' src={logo} />
+                                </div>
+                            </a>
                         </dl>
                     </div>
                 </section>
@@ -117,7 +131,7 @@ const Invoice = ({ invoice }) => {
                                 <dl className='py-6 space-y-6 text-sm font-medium'>
                                     <div className="flex items-center justify-between">
                                         <dt className="font-medium">Status</dt>
-                                        <dd><Badge color="yellow" text="Awaiting Payment" /></dd>
+                                        <dd><Badge color={status === 'Confirmed' ? 'green' : 'yellow'} text={status} /></dd>
                                     </div>
                                 </dl>
 
@@ -158,7 +172,6 @@ const Invoice = ({ invoice }) => {
                                         <dt className='opacity-50'>Invoice Created</dt>
                                         <dd><UTC timestamp={invoice.created_at} /></dd>
                                     </div>
-
                                     <div className="flex items-center justify-center border-t border-gray border-opacity-20 pt-6 text-black text-md text-center">
                                         <button className='flex items-center align-center justify-center' onClick={() => handleCopyClick(parseFloat(invoice.value_to_receive).toFixed(12))}>
                                             <Badge
@@ -189,6 +202,7 @@ const Invoice = ({ invoice }) => {
                 </section>
             </div>
         </div>
+
     );
 };
 

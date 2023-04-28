@@ -21,19 +21,41 @@ async function sendTransaction(destinationAddress, senderPrivateKey, value) {
 
         // Set the transaction details
         const gasPrice = await web3.eth.getGasPrice();
+        const gasPriceBN = web3.utils.toBN(gasPrice);
 
         const tx = {
             from: senderAddress,
             to: destinationAddress,
-            value: web3.utils.toWei(value, 'ether'),
             gasPrice: gasPrice,
         };
 
         // Estimate the gas required for the transaction
         const estimatedGas = await web3.eth.estimateGas(tx);
-        console.log('Estimated gas:', estimatedGas);
-        tx.gas = estimatedGas;
-        tx.value -= (gasPrice * estimatedGas);
+
+        const estimatedGasBN = web3.utils.toBN(estimatedGas).muln(110).divn(100);
+
+        console.log('Estimated gas:', estimatedGasBN.toString());
+        tx.gas = estimatedGas.toString();
+    
+
+        // Calculate total gas cost (gas cost = gas price * gas limit)
+        const totalGasCost = gasPriceBN.mul(estimatedGasBN);
+
+        // Check if the sender's balance is enough
+        const senderBalance = await web3.eth.getBalance(senderAddress);
+        console.log('Sender balance:', senderBalance);
+
+
+        if (web3.utils.toBN(senderBalance).lt(totalGasCost)) {
+            throw new Error('Sender balance is too low for the gas cost');
+        }
+
+        // Set the transaction value (value - total gas cost)
+        let transactionValue = web3.utils.toBN(web3.utils.toWei(value, 'ether')).sub(totalGasCost);
+        if (transactionValue.isNeg()) {
+            throw new Error('The value after subtracting the gas cost is negative');
+        }
+        tx.value = transactionValue;
 
         // Sign the transaction
         const signedTx = await web3.eth.accounts.signTransaction(tx, senderPrivateKey);
@@ -46,6 +68,7 @@ async function sendTransaction(destinationAddress, senderPrivateKey, value) {
         console.error('Error sending transaction:', error.message);
     }
 }
+
 
 async function checkConfirmations(address, txHash, callback) {
     try {
@@ -68,6 +91,7 @@ async function checkConfirmations(address, txHash, callback) {
                         value_received: tx.value,
                         confirmed: true,
                         confirmations: confirmations,
+                        status: 'Confirmed',
                     },
                 ])
                 .eq('address', address);
@@ -79,6 +103,20 @@ async function checkConfirmations(address, txHash, callback) {
             callback();
         } else {
             console.log(`Transaction has ${confirmations} confirmations. Waiting for more confirmations...`);
+
+            if (!isNaN(confirmations)) {
+                const { error } = await supabase
+                    .from('invoices')
+                    .update([
+                        {
+                            status: `Awaiting confirmation ${confirmations}/12`
+                        },
+                    ])
+                    .eq('address', address);
+                if (error)
+                    console.log(error);
+            }
+
             setTimeout(() => checkConfirmations(address, txHash, callback), 3000); // Check again after 3 seconds
         }
     } catch (error) {
@@ -178,41 +216,43 @@ const channel = supabase
             table: 'invoices',
         },
         async (payload) => {
-            let merchantID = payload.new.merchant_id;
-            let invoice_id = payload.new.id;
+            if (payload.new.crypto_option == 3) {
+                let merchantID = payload.new.merchant_id;
+                let invoice_id = payload.new.id;
 
-            // Find the address by the id in profiles
-            const { data: merchantData, error: merchantError } = await supabase
-                .from('profiles')
-                .select('eth_address')
-                .eq('id', merchantID);
+                // Find the address by the id in profiles
+                const { data: merchantData, error: merchantError } = await supabase
+                    .from('profiles')
+                    .select('eth_address')
+                    .eq('id', merchantID);
 
-            if (merchantError) {
-                console.error(`Error retrieving merchant address from database: ${merchantError.message}`);
-                return;
+                if (merchantError) {
+                    console.error(`Error retrieving merchant address from database: ${merchantError.message}`);
+                    return;
+                }
+
+                if (!merchantData || merchantData.length === 0) {
+                    console.error('No merchant address found for the given merchant id');
+                    return;
+                }
+
+                const merchantAddress = merchantData[0].eth_address;
+                console.log(`Merchant address: ${merchantAddress}`);
+                generateWallet(payload.new.crypto_option, invoice_id).then(
+                    async (walletAddress) => {
+                        watchAddress(walletAddress, merchantAddress, payload.new.value_to_receive);
+                        // insert in the database
+                        const { data, error } = await supabase
+                            .from('invoices')
+                            .update({
+                                address: walletAddress,
+                            })
+                            .match({ id: invoice_id });
+                        if (error) {
+                            console.error(error.message);
+                        }
+                    });
             }
-
-            if (!merchantData || merchantData.length === 0) {
-                console.error('No merchant address found for the given merchant id');
-                return;
-            }
-
-            const merchantAddress = merchantData[0].eth_address;
-            console.log(`Merchant address: ${merchantAddress}`);
-            generateWallet(payload.new.crypto_option, invoice_id).then(
-                async (walletAddress) => {
-                    watchAddress(walletAddress, merchantAddress, payload.new.value_to_receive);
-                    // insert in the database
-                    const { data, error } = await supabase
-                        .from('invoices')
-                        .update({
-                            address: walletAddress,
-                        })
-                        .match({ id: invoice_id });
-                    if (error) {
-                        console.error(error.message);
-                    }
-                });
         }
     )
     .subscribe()

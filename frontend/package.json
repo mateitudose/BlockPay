@@ -14,11 +14,12 @@
     "@heroicons/react": "^2.0.17",
     "@nextui-org/react": "^1.0.0-beta.12",
     "@prisma/client": "^4.12.0",
+    "@rainbow-me/rainbowkit": "^0.12.9",
     "@supabase/auth-helpers-nextjs": "^0.5.7",
     "@supabase/auth-helpers-react": "^0.3.1",
     "@supabase/supabase-js": "^2.14.0",
     "@tailwindcss/forms": "^0.5.3",
-    "ethers": "^6.3.0",
+    "ethers": "^5.7.2",
     "flowbite-react": "^0.4.2",
     "framer-motion": "^10.12.4",
     "next": "^13.3.1",
@@ -26,7 +27,8 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "wagmi": "^0.12.12"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.2",
