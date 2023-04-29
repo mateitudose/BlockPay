@@ -108,11 +108,13 @@ const Checkout = ({ checkout }) => {
                     aria-labelledby="summary-heading"
                     className="px-4 pb-12 lg:py-12 text-grey-300 lg:px-10 lg:col-start-1 lg:row-start-1 lg:mx-auto lg:w-full lg:max-w-lg lg:bg-transparent lg:px-0 lg:pb-24 lg:pt-0 relative"
                 >
-                    <div className="lg:shadow-none lg:p-0 lg:pb-0 lg:rounded-none shadow-lg rounded-xl p-3 pb-6 mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
+                    <div className="lg:shadow-none lg:p-0 lg:pb-0 lg:rounded-none shadow-lg rounded-xl p-3 pb-6 mx-auto max-w-2xl px-6 lg:max-w-none lg:px-0">
                         <h2 id="summary-heading" className="sr-only">
                             Order summary
                         </h2>
                         <dl className='py-6 space-y-6 text-sm font-medium'>
+                            <span className='text-base'>Order details</span>
+
                             <div className="flex items-center justify-between">
                                 <dt className="font-medium"><span className='text-black/50 mr-3'>1x</span>{checkout.product_name}</dt>
                                 <dd>${checkout.price_in_usd}</dd>
@@ -135,7 +137,7 @@ const Checkout = ({ checkout }) => {
                                 <dd className="">${checkout.price_in_usd}</dd>
                             </div>
                             <a href="https://blockpay.com" target='_blank'>
-                                <div className="hidden lg:block absolute bottom-1/4  opacity-80 grayscale hover:grayscale-0">
+                                <div className="hidden lg:block fixed bottom-1/4 opacity-80 grayscale hover:grayscale-0">
                                     Powered by
                                     <Image className='w-auto h-6 inline-block pb-0.5 ml-1' src={logo} />
                                 </div>
