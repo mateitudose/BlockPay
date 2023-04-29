@@ -8,6 +8,7 @@ const QRCodeGenerator = ({ value, imageSrc }) => {
     useEffect(() => {
         QRCode.toCanvas(canvasRef.current, value, {
             errorCorrectionLevel: 'H',
+            margin: 2,
             quality: 1,
             width: 256,
             height: 256,
@@ -20,7 +21,7 @@ const QRCodeGenerator = ({ value, imageSrc }) => {
 
     return (
         <div>
-            <canvas ref={canvasRef} />
+            <canvas className='shadow-lg rounded-md' ref={canvasRef} />
         </div>
     );
 };

@@ -101,14 +101,14 @@ const Checkout = ({ checkout }) => {
             <div className="fixed left-0 top-0 hidden h-full w-1/2 bg-gray-50/10 lg:block" aria-hidden="true" />
             <div className="fixed right-0 top-0 hidden h-full w-1/2 bg-white lg:block shadow-md shadow-grey" aria-hidden="true" />
 
-            <div className="sm:mt-28 relative mx-auto grid max-w-7xl grid-cols-1 gap-x-16 lg:grid-cols-2 lg:px-8 lg:pt-16">
+            <div className="lg:mt-28 relative mx-auto grid max-w-7xl grid-cols-1 gap-x-16 lg:grid-cols-2 lg:px-8 lg:pt-16">
                 <h1 className="sr-only">Checkout</h1>
 
                 <section
                     aria-labelledby="summary-heading"
-                    className="px-4 pb-12 sm:py-12 text-grey-300 md:px-10 lg:col-start-1 lg:row-start-1 lg:mx-auto lg:w-full lg:max-w-lg lg:bg-transparent lg:px-0 lg:pb-24 lg:pt-0 relative"
+                    className="px-4 pb-12 lg:py-12 text-grey-300 lg:px-10 lg:col-start-1 lg:row-start-1 lg:mx-auto lg:w-full lg:max-w-lg lg:bg-transparent lg:px-0 lg:pb-24 lg:pt-0 relative"
                 >
-                    <div className="sm:shadow-none sm:p-0 sm:pb-0 sm:rounded-none shadow-lg rounded-xl p-3 pb-6 mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
+                    <div className="lg:shadow-none lg:p-0 lg:pb-0 lg:rounded-none shadow-lg rounded-xl p-3 pb-6 mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
                         <h2 id="summary-heading" className="sr-only">
                             Order summary
                         </h2>
@@ -152,7 +152,7 @@ const Checkout = ({ checkout }) => {
                         Payment and shipping details
                     </h2>
 
-                    <div className="px-4 sm:ml-4">
+                    <div className="px-4 lg:ml-4">
                         <div className="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
                             <div>
                                 <h3 id="contact-info-heading" className="text-lg font-medium text-gray-900">
@@ -169,7 +169,7 @@ const Checkout = ({ checkout }) => {
                                             type="email"
                                             name="email"
                                             id="email"
-                                            className="placeholder:text-sm sm:border-0 sm:text-base block w-full rounded-md border py-1.5 px-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            className="placeholder:text-sm lg:border-0 lg:text-base block w-full rounded-md border py-1.5 px-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 lg:text-sm lg:leading-6"
                                             placeholder="you@example.com"
                                             required
                                             value={email}
@@ -188,7 +188,7 @@ const Checkout = ({ checkout }) => {
                                     <label htmlFor="card-number" className="block text-sm font-medium text-gray-700">
                                         Crypto
                                     </label>
-                                    <div className="grid gap-x-2 grid-cols-3 sm:col-span-3 mt-2">
+                                    <div className="grid gap-x-2 grid-cols-3 lg:col-span-3 mt-2">
                                         <button
                                             className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py-2 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(1)}
@@ -198,10 +198,10 @@ const Checkout = ({ checkout }) => {
                                                 alt="Bitcoin"
                                                 width={18} // Set the image width
                                                 height={18} // Set the image height
-                                                className="mr-2 sm:w-6 sm:h-6"
+                                                className="mr-2 lg:w-6 lg:h-6"
                                             />
-                                            <span className='block sm:hidden'>BTC</span>
-                                            <span className='hidden sm:block'>Bitcoin</span>
+                                            <span className='block lg:hidden'>BTC</span>
+                                            <span className='hidden lg:block'>Bitcoin</span>
                                         </button>
                                         <button
                                             className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
@@ -212,10 +212,10 @@ const Checkout = ({ checkout }) => {
                                                 alt="Ethereum"
                                                 width={18} // Set the image width
                                                 height={18} // Set the image height
-                                                className="mr-2 sm:w-6 sm:h-6"
+                                                className="mr-2 lg:w-6 lg:h-6"
                                             />
-                                            <span className='block sm:hidden'>ETH</span>
-                                            <span className='hidden sm:block'>Ethereum</span>
+                                            <span className='block lg:hidden'>ETH</span>
+                                            <span className='hidden lg:block'>Ethereum</span>
                                         </button>
                                         <button
                                             className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
@@ -226,7 +226,7 @@ const Checkout = ({ checkout }) => {
                                                 alt="bnb"
                                                 width={18} // Set the image width
                                                 height={18} // Set the image height
-                                                className="mr-2 sm:w-6 sm:h-6"
+                                                className="mr-2 lg:w-6 lg:h-6"
                                             />
                                             <span>BNB</span>
                                         </button>
@@ -239,10 +239,10 @@ const Checkout = ({ checkout }) => {
                                                 alt="Litecoin"
                                                 width={18} // Set the image width
                                                 height={18} // Set the image height
-                                                className="mr-2 sm:w-6 sm:h-6"
+                                                className="mr-2 lg:w-6 lg:h-6"
                                             />
-                                            <span className='block sm:hidden'>LTC</span>
-                                            <span className='hidden sm:block'>Litecoin</span>
+                                            <span className='block lg:hidden'>LTC</span>
+                                            <span className='hidden lg:block'>Litecoin</span>
                                         </button>
                                         <button
                                             className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
@@ -253,10 +253,10 @@ const Checkout = ({ checkout }) => {
                                                 alt="Avax"
                                                 width={18} // Set the image width
                                                 height={18} // Set the image height
-                                                className="mr-2 sm:w-6 sm:h-6"
+                                                className="mr-2 lg:w-6 lg:h-6"
                                             />
-                                            <span className='block sm:hidden'>AVAX</span>
-                                            <span className='hidden sm:block'>Avalanche</span>
+                                            <span className='block lg:hidden'>AVAX</span>
+                                            <span className='hidden lg:block'>Avalanche</span>
                                         </button>
                                         <button
                                             className="opacity-50 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
@@ -268,10 +268,10 @@ const Checkout = ({ checkout }) => {
                                                 alt="Arbitrum"
                                                 width={18} // Set the image width
                                                 height={18} // Set the image height
-                                                className="mr-2 sm:w-6 sm:h-6"
+                                                className="mr-2 lg:w-6 lg:h-6"
                                             />
-                                            <span className='block sm:hidden'>ARB</span>
-                                            <span className='hidden sm:block'>Arbitrum</span>
+                                            <span className='block lg:hidden'>ARB</span>
+                                            <span className='hidden lg:block'>Arbitrum</span>
                                         </button>
                                         <button
                                             className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
@@ -282,10 +282,10 @@ const Checkout = ({ checkout }) => {
                                                 alt="Matic"
                                                 width={18} // Set the image width
                                                 height={18} // Set the image height
-                                                className="mr-2 sm:w-6 sm:h-6"
+                                                className="mr-2 lg:w-6 lg:h-6"
                                             />
-                                            <span className='block sm:hidden'>MATIC</span>
-                                            <span className='hidden sm:block'>Polygon</span>
+                                            <span className='block lg:hidden'>MATIC</span>
+                                            <span className='hidden lg:block'>Polygon</span>
                                         </button>
                                         <button
                                             className="opacity-50 py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
@@ -297,10 +297,10 @@ const Checkout = ({ checkout }) => {
                                                 alt="Solana"
                                                 width={18} // Set the image width
                                                 height={18} // Set the image height
-                                                className="mr-2 sm:w-6 sm:h-6"
+                                                className="mr-2 lg:w-6 lg:h-6"
                                             />
-                                            <span className='block sm:hidden'>SOL</span>
-                                            <span className='hidden sm:block'>Solana</span>
+                                            <span className='block lg:hidden'>SOL</span>
+                                            <span className='hidden lg:block'>Solana</span>
                                         </button>
                                     </div>
                                     {/* <div className='mt-6'>
@@ -321,7 +321,7 @@ const Checkout = ({ checkout }) => {
                                             Pay now
                                         </button>
                                         <a href="https://blockpay.app" target='_blank'>
-                                            <div className="block sm:hidden opacity-80 mt-36 font-medium">
+                                            <div className="block lg:hidden opacity-80 mt-36 font-medium">
                                                 Powered by
                                                 <Image className='w-auto h-6 inline-block pb-0.5 ml-1.5' src={logo} />
                                             </div>

@@ -105,14 +105,14 @@ const Invoice = ({ invoice }) => {
             <div className="fixed left-0 top-0 hidden h-full w-1/2 bg-gray-50/10 lg:block" aria-hidden="true" />
             <div className="fixed right-0 top-0 hidden h-full w-1/2 bg-white lg:block shadow-md shadow-grey" aria-hidden="true" />
 
-            <div className="mt-28 relative mx-auto grid max-w-7xl grid-cols-1 gap-x-16 lg:grid-cols-2 lg:px-8 lg:pt-16">
+            <div className="lg:mt-28 relative mx-auto grid max-w-7xl grid-cols-1 gap-x-16 lg:grid-cols-2 lg:px-8 lg:pt-16">
                 <h1 className="sr-only">invoice</h1>
 
                 <section
                     aria-labelledby="summary-heading"
-                    className="bg-gray-50/10 py-12 text-grey-300 md:px-10 lg:col-start-1 lg:row-start-1 lg:mx-auto lg:w-full lg:max-w-lg lg:bg-transparent lg:px-0 lg:pb-24 lg:pt-0"
+                    className="px-4 pb-12 lg:py-12 text-grey-300 lg:px-10 lg:col-start-1 lg:row-start-1 lg:mx-auto lg:w-full lg:max-w-lg lg:bg-transparent lg:px-0 lg:pb-24 lg:pt-0 relative"
                 >
-                    <div className="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
+                    <div className="lg:shadow-none lg:p-0 lg:pb-0 lg:rounded-none shadow-lg rounded-xl p-3 pb-6 mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
                         <h2 id="summary-heading" className="sr-only">
                             Order summary
                         </h2>
@@ -157,7 +157,7 @@ const Invoice = ({ invoice }) => {
                         Payment and shipping details
                     </h2>
 
-                    <div className="ml-4">
+                    <div className="px-4 lg:ml-4">
                         <div className="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
                             <div>
                                 <h2 id="summary-heading" className="sr-only">
@@ -231,6 +231,12 @@ const Invoice = ({ invoice }) => {
                                         <QRCodeGenerator className="flex items-center align-center justify-center" value={address} />
                                         <Image src={crypto.icon} alt={crypto.name} width={62} height={62} className="absolute mr-2" />
                                     </div>
+                                    <a href="https://blockpay.app" target='_blank'>
+                                        <div className="text-center mb-6 block lg:hidden opacity-80 mt-36 font-medium">
+                                            Powered by
+                                            <Image className='w-auto h-6 inline-block pb-0.5 ml-1.5' src={logo} />
+                                        </div>
+                                    </a>
                                 </dl>
                             </div>
                         </div>
