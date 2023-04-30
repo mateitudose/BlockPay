@@ -27,6 +27,9 @@ const Invoice = ({ invoice }) => {
     const router = useRouter();
     const [address, setAddress] = useState(invoice.address);
     const [status, setStatus] = useState(invoice.status);
+    const [shouldRender, setShouldRender] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
     useEffect(() => {
         const channel = supabase
             .channel('table-db-changes')
@@ -106,23 +109,21 @@ const Invoice = ({ invoice }) => {
             if (result) {
                 // If precheck passes, set shouldRender to true
                 setShouldRender(true);
-                // update in the database
-                const { data, error } = await supabase
-                    .from('invoices')
-                    .update({ voided: true })
-                    .match({ id: invoice.id });
+                setIsLoading(false);
             }
             else {
-                // If precheck fails, handle it accordingly
-                // For example, you can show an error message, redirect, etc.
+                setIsLoading(false);
             }
         };
 
         runPrecheck();
     }, []);
 
-    const [shouldRender, setShouldRender] = useState(false);
-
+    if (isLoading) {
+        return (
+            <div />
+        ); // This will be rendered while data is loading
+    }
     if (shouldRender) {
         return (
             <div className="bg-white">
@@ -201,7 +202,7 @@ const Invoice = ({ invoice }) => {
 
     else {
         return (
-            <div className="bg-white">
+            <div className="bg-white h-screen lg:overflow-hidden">
                 <title>Invoice</title>
                 <Toaster position="top-right"
                     reverseOrder={false} />
@@ -209,7 +210,7 @@ const Invoice = ({ invoice }) => {
                 <div className="fixed left-0 top-0 hidden h-full w-1/2 bg-gray-50/10 lg:block" aria-hidden="true" />
                 <div className="fixed right-0 top-0 hidden h-full w-1/2 bg-white lg:block shadow-md shadow-grey" aria-hidden="true" />
 
-                <div className="lg:mt-28 relative mx-auto grid max-w-7xl grid-cols-1 gap-x-16 lg:grid-cols-2 lg:px-8 lg:pt-16">
+                <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-x-16 lg:grid-cols-2 lg:px-8 lg:pt-16">
                     <h1 className="sr-only">invoice</h1>
 
                     <section
@@ -322,6 +323,16 @@ const Invoice = ({ invoice }) => {
                                                 />
                                             </button>
                                         </div>
+                                        <div className="flex flex-col items-center justify-center py-2 text-black text-opacity-50 text-xs font-normal">
+                                            <span className='mb-4 text-center'>
+                                                Scan the QR code or copy and paste the payment details into your wallet.
+                                            </span>
+                                            <span className='text-center'>
+                                                <span className='text-red-500'>*</span>We only support crypto transactions through the <span className={`p-1 ${crypto.background_color} rounded-md text-white`}>BSC chain</span>. Transactions sent to other chains will not be detected and will result in a loss of crypto.
+                                            </span>
+                                        </div>
+
+
                                         <div className="flex items-center justify-center text-black text-md text-center">
 
                                             <button className='flex items-center align-center justify-center text-center' onClick={() => handleCopyClick2(address)}>
