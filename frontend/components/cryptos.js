@@ -20,7 +20,6 @@ const cryptos = [
         symbol: "BTC",
         chain: "Bitcoin Mainnet",
         background_color: "bg-[#f7931a]",
-        qr: "bitcoin"
     },
     {
         id: 2,
@@ -29,7 +28,6 @@ const cryptos = [
         symbol: "ETH",
         chain: "Ethereum Mainnet",
         background_color: "bg-[#627EEA]",
-        qr: "ethereum"
     },
     {
         id: 3,
@@ -38,7 +36,6 @@ const cryptos = [
         symbol: "BNB",
         chain: "Binance Smart Chain Mainnet",
         background_color: "bg-[#F0B90B]",
-        qr: "binance_coin"
     },
     {
         id: 4,
@@ -47,7 +44,6 @@ const cryptos = [
         symbol: "LTC",
         chain: "Litecoin Mainnet",
         background_color: "bg-[#bebebe]",
-        qr: "litecoin"
     },
     {
         id: 5,

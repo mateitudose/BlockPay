@@ -202,7 +202,7 @@ const Invoice = ({ invoice }) => {
 
     else {
         return (
-            <div className="bg-white h-screen lg:overflow-hidden">
+            <div className="bg-white">
                 <title>Invoice</title>
                 <Toaster position="top-right"
                     reverseOrder={false} />
@@ -325,10 +325,12 @@ const Invoice = ({ invoice }) => {
                                         </div>
                                         <div className="flex flex-col items-center justify-center py-2 text-black text-opacity-50 text-xs font-normal">
                                             <span className='mb-4 text-center'>
-                                                Scan the QR code or copy and paste the payment details into your wallet.
+                                                Scan the QR code or copy and paste the payment details into your wallet of choice.
                                             </span>
                                             <span className='text-center'>
-                                                <span className='text-red-500'>*</span>We only support crypto transactions through the <span className={`p-1 ${crypto.background_color} rounded-md text-white`}>BSC chain</span>. Transactions sent to other chains will not be detected and will result in a loss of crypto.
+                                                <span className='text-red-500'>*</span>
+                                                We only support crypto transactions through the&nbsp;
+                                                <span className={`inline-block p-1 ${crypto.background_color} rounded-md text-white`}>{crypto.chain}</span>. Transactions sent to other chains will not be detected and will result in a loss of crypto.
                                             </span>
                                         </div>
 
