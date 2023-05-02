@@ -194,7 +194,7 @@ const Checkout = ({ checkout }) => {
                                         Crypto
                                     </label>
                                     <div className="grid gap-x-2 grid-cols-3 lg:col-span-3 mt-2">
-                                        <button
+                                        {/* <button
                                             className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py-2 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(1)}
                                         >
@@ -207,7 +207,7 @@ const Checkout = ({ checkout }) => {
                                             />
                                             <span className='block lg:hidden'>BTC</span>
                                             <span className='hidden lg:block'>Bitcoin</span>
-                                        </button>
+                                        </button> */}
                                         <button
                                             className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(2)}
@@ -235,7 +235,7 @@ const Checkout = ({ checkout }) => {
                                             />
                                             <span>BNB</span>
                                         </button>
-                                        <button
+                                        {/* <button
                                             className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(4)}
                                         >
@@ -248,7 +248,7 @@ const Checkout = ({ checkout }) => {
                                             />
                                             <span className='block lg:hidden'>LTC</span>
                                             <span className='hidden lg:block'>Litecoin</span>
-                                        </button>
+                                        </button> */}
                                         <button
                                             className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                                             onClick={() => setSelectedCrypto(5)}
