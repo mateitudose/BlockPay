@@ -37,7 +37,6 @@ async function sendTransaction(destinationAddress, senderPrivateKey, value) {
         console.log('Estimated gas:', estimatedGasBN.toString());
         tx.gas = estimatedGas.toString();
 
-
         // Calculate total gas cost (gas cost = gas price * gas limit)
         const totalGasCost = gasPriceBN.mul(estimatedGasBN);
 
