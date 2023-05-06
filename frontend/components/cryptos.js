@@ -77,6 +77,51 @@ const cryptos = [
         chain: "Solana Mainnet",
         background_color: "bg-[#000]",
     },
+    {
+        id: 9,
+        name: 'USDT (ERC-20)',
+        icon: Tether,
+    },
+    {
+        id: 10,
+        name: 'USDT (TRC-20)',
+        icon: Tether,
+    },
+    {
+        id: 11,
+        name: 'USDT (BEP-20)',
+        icon: Tether,
+    },
+    {
+        id: 12,
+        name: 'USDC (ERC-20)',
+        icon: USDC,
+    },
+    {
+        id: 13,
+        name: 'USDC (TRC-20)',
+        icon: USDC,
+    },
+    {
+        id: 14,
+        name: 'USDC (BEP-20)',
+        icon: USDC,
+    },
+    {
+        id: 15,
+        name: 'BUSD (ERC-20)',
+        icon: BUSD,
+    },
+    {
+        id: 16,
+        name: 'BUSD (TRC-20)',
+        icon: BUSD,
+    },
+    {
+        id: 17,
+        name: 'BUSD (BEP-20)',
+        icon: BUSD,
+    },
 ]
 
 export default cryptos

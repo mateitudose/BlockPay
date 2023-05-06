@@ -1,10 +1,10 @@
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 pragma solidity 0.8.19;
 
 contract Subscriptions is Ownable {
-    address public owner = 0x9E4e16151f9fB31f9943eEAbF02C3d41Bf4aBe55; // to change
     address public autoPayer = 0x9E4e16151f9fB31f9943eEAbF02C3d41Bf4aBe55; // to change
     uint256 public index;
     uint256 public totalPlans;
@@ -17,6 +17,7 @@ contract Subscriptions is Ownable {
         uint256 planCost;
         uint256 frequency;
         uint256 referralPercentage;
+        uint256 earnings;
         IERC20 token;
     }
 
@@ -39,20 +40,25 @@ contract Subscriptions is Ownable {
     event Paid(address indexed subscriber, uint256 indexed planID);
     event UserIDChanged(address indexed subscriber, uint256 indexed planID, bytes32 oldUserIDHash, bytes32 newUserIDHash);
 
-
-
-    function createPlan(uint256 cost, uint256 frequency, uint256 referralPercentage,address tokenAddress) public {
-        plans[totalPlans] = Plan(totalPlans, msg.sender, tokenAddress, 0, cost, frequency, referralPercentage,IERC20(tokenAddress));
+    // createPlan
+    function createPlan(uint256 cost, uint256 frequency, uint256 referralPercentage, address tokenAddress) public nonReentrant {
+        require(referralPercentage >= 0 && referralPercentage <= 100);
+        require(cost > 0 && frequency > 0);
+        require(tokenAddress != address(0));
+        plans[totalPlans] = Plan(totalPlans, msg.sender, tokenAddress, 0, cost, frequency, referralPercentage, 0, IERC20(tokenAddress));
         totalPlans++;
     }
 
-    function deletePlan(uint256 planID) public {
+
+    // deletePlan
+    function deletePlan(uint256 planID) public nonReentrant {
         require(msg.sender == plans[planID].manager);
         delete plans[planID];
     }
 
+
     // subscribe
-    function subscribe(uint256 planID, bytes32 userIDHash, address referral) public {
+    function subscribe(uint256 planID, bytes32 userIDHash, address referral) public nonReentrant {
         Plan storage plan = plans[planID];
         IERC20 token = plan.token;
         uint256 planCost = plan.planCost;
@@ -71,8 +77,10 @@ contract Subscriptions is Ownable {
         token.transferFrom(msg.sender, address(this), planCost);
 
         if (referral != address(0) && referral != msg.sender) {
-            token.transferFrom(address(this), referral, (planCost * referralPercentage) / 100);
+            token.transfer(referral, (planCost * referralPercentage) / 100);
         }
+
+        plan.earnings += planCost - ((planCost * referralPercentage) / 100);
 
         subscriptions[msg.sender].subscriber = msg.sender;
         subscriptions[msg.sender].start[planID] = block.timestamp;
@@ -85,18 +93,22 @@ contract Subscriptions is Ownable {
         numberToAddress[index] = msg.sender;
         index++;
         plans[planID].subscribers++;
+
         emit Subscribed(msg.sender, planID);
     }
 
+
     // cancel
-    function cancel(uint256 planID) public {
-        require(subscriptions[msg.sender].subscriber != address(0));
+    function cancel(uint256 planID) public nonReentrant {
         require(subscriptions[msg.sender].subscriber[planID] == msg.sender);
         require(subscriptions[msg.sender].isActive[planID] == true);
+
         subscriptions[msg.sender].isActive[planID] = false;
         plans[planID].subscribers--;
+
         emit Canceled(msg.sender, planID);
     }
+
 
     // pay
     function pay(uint256 planID, address _subscriber) internal {
@@ -111,19 +123,24 @@ contract Subscriptions is Ownable {
             token.allowance(_subscriber, address(this)) >= planCost,
         );
         require(
+            token.balanceOf(_subscriber) >= planCost,
+        );
+        require(
             subscription.subscriber != address(0) && subscription.subscriber == msg.sender,
         );
         require(
             subscription.nextPayment[planID] <= block.timestamp,
         );
 
-        token.transferFrom(msg.sender, address(this), planCost);
+        token.transferFrom(_subscriber, address(this), planCost);
+        plan.earnings += planCost;
         subscription.nextPayment[planID] = block.timestamp + frequency;
         emit Paid(msg.sender, planID);
     }
 
+
     // changeuserID
-    function changeUserID(uint256 planID, bytes32 userIDHash) public {
+    function changeUserID(uint256 planID, bytes32 userIDHash) public nonReentrant {
         require(subscriptions[msg.sender].subscriber != address(0), "Subscriber does not exist");
         require(subscriptions[msg.sender].subscriber == msg.sender, "Sender is not the subscriber");
         require(userIDs[userIDHash] == address(0), "userIDHash is already in use");
@@ -133,16 +150,15 @@ contract Subscriptions is Ownable {
         
         subscriptions[msg.sender].userIDHash[planID] = userIDHash;
         userIDs[userIDHash] = msg.sender;
+
         emit UserIDChanged(msg.sender, planID, oldUserIDHash, userIDHash);
     }
 
 
     // checkDue
     function checkDue(uint256 planID, address _subscriber) public view returns (bool) {
-        Subscription storage subscription = subscriptions[_subscriber];
-        Plan storage plan = plans[planID];
         require(_subscriber != address(0));
-        return block.timestamp < subscription.nextPayment[planID] ? true : false;
+        return block.timestamp < subscriptions[_subscriber].nextPayment[planID] ? true : false;
     }
 
 
@@ -153,9 +169,33 @@ contract Subscriptions is Ownable {
             subscriptions[_subscriber].subscriber != address(0),
             "This subscription does not exist"
         );
+        require(
+            subscriptions[_subscriber].subscriber == _subscriber,
+            "Sender is not the subscriber"
+        );
+        require(
+            subscriptions[_subscriber].isActive[planID] == true,
+            "This subscription is not active"
+        );
         require(!checkDue(planID, _subscriber));
+
         pay(planID, _subscriber);
     }
 
+
     // withdraw
+    function withdraw(uint256 planID, bool withdrawFromAllPlans) public nonReentrant {
+        require(msg.sender == plans[planID].manager);
+        if (withdrawFromAllPlans) {
+            for (uint256 i = 0; i < totalPlans; i++) {
+                if(msg.sender == plans[i].manager) {
+                    plans[i].token.transfer(msg.sender, plans[i].earnings);
+                    plans[i].earnings = 0;
+                }
+            }
+        } else {
+            plans[planID].token.transfer(msg.sender, plans[planID].earnings);
+            plans[planID].earnings = 0;
+        }
+    }
 }

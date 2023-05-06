@@ -1,46 +1,80 @@
-import { useState } from 'react';
-import { supabase } from '@/lib/supabaseClient'
-import toast, { Toaster } from 'react-hot-toast';
+import { useState } from 'react'
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
+import { Combobox } from '@headlessui/react'
+import Image from 'next/image'
+import cryptos from '@/components/cryptos.js';
 
+function classNames(...classes) {
+    return classes.filter(Boolean).join(' ')
+}
 
+export default function Example() {
+    const [query, setQuery] = useState('')
+    const [selectedCrypto, setSelectedCrypto] = useState(null)
 
-export default function Test() {
-    const [address, setAddress] = useState('');
+    const filteredCrypto =
+        query === ''
+            ? cryptos
+            : cryptos.filter((crypto) => {
+                return crypto.name.toLowerCase().includes(query.toLowerCase())
+            })
 
-    const handleFormSubmit = async () => {
-        const { data, error } = await supabase
-            .from('profiles')
-            .update({ eth_address: address })
-            .match({ id: (await supabase.auth.getUser()).data.user.id })
-        if (error) {
-            toast.error(error.message)
-
-        } else {
-            toast.success('Your Ethereum address has been updated!')
-        }
-    }
     return (
-        <div>
-            <Toaster />
-            <label htmlFor="email" className="mt-10 ml-10 block text-sm font-medium leading-6 text-gray-900">
-                Your Ethereum Address
-            </label>
-            <div className="ml-10 mt-2">
-                <input
-                    type="text"
-                    className="block w-1/2 rounded-lg border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    placeholder="0x0000000000000000000000000000000000000000"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+        <Combobox as="div" value={selectedCrypto} onChange={setSelectedCrypto}>
+            <Combobox.Label className="block text-sm font-medium leading-6 text-gray-900">Assigned to</Combobox.Label>
+            <div className="relative mt-2">
+                <Combobox.Input
+                    className="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-12 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    onChange={(event) => setQuery(event.target.value)}
+                    displayValue={(crypto) => crypto?.name}
                 />
+                <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
+                    <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                </Combobox.Button>
+
+                {filteredCrypto.length > 0 && (
+                    <Combobox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                        {filteredCrypto.map((crypto) => (
+                            <Combobox.Option
+                                key={crypto.id}
+                                value={crypto}
+                                className={({ active }) =>
+                                    classNames(
+                                        'relative cursor-default select-none py-2 pl-3 pr-9',
+                                        active ? 'bg-indigo-600 text-white' : 'text-gray-900'
+                                    )
+                                }
+                            >
+                                {({ active, selected }) => (
+                                    <>
+                                        <div className="flex items-center">
+                                            <Image
+                                                src={crypto.icon}
+                                                alt=""
+                                                width={18} // Set the image width
+                                                height={18} // Set the image height
+                                                className="lg:w-6 lg:h-6"
+                                            />
+                                            <span className={classNames('ml-2 truncate', selected && 'font-semibold')}>{crypto.name}</span>
+                                        </div>
+
+                                        {selected && (
+                                            <span
+                                                className={classNames(
+                                                    'absolute inset-y-0 right-0 flex items-center pr-4',
+                                                    active ? 'text-white' : 'text-indigo-600'
+                                                )}
+                                            >
+                                                <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                            </span>
+                                        )}
+                                    </>
+                                )}
+                            </Combobox.Option>
+                        ))}
+                    </Combobox.Options>
+                )}
             </div>
-            <button
-                type="button"
-                className="ml-10 mt-4 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                onClick={handleFormSubmit}
-            >
-                Submit
-            </button>
-        </div>
+        </Combobox>
     )
 }
