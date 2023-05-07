@@ -306,7 +306,7 @@ const Invoice = ({ invoice }) => {
                                         <div className="flex items-center justify-between">
                                             <dt className='opacity-50'>Amount</dt>
                                             <dd>
-                                                {parseFloat(invoice.value_to_receive).toFixed(12)} {crypto.symbol}
+                                                {parseFloat(parseFloat(invoice.value_to_receive).toFixed(12))} {crypto.symbol}
                                             </dd>
                                         </div>
 
@@ -314,23 +314,25 @@ const Invoice = ({ invoice }) => {
                                             <dt className='opacity-50'>Invoice Created</dt>
                                             <dd><UTC timestamp={invoice.created_at} /></dd>
                                         </div>
-                                        <div className="flex items-center justify-center border-t border-gray border-opacity-20 pt-6 text-black text-md text-center">
-                                            <button className='flex items-center align-center justify-center' onClick={() => handleCopyClick(parseFloat(invoice.value_to_receive).toFixed(8))}>
-                                                <Badge
-                                                    color="gray"
-                                                    text={isCopied ? 'Copied!' : `Send ${parseFloat(invoice.value_to_receive).toFixed(8)} ${crypto.symbol}`}
-                                                    icon={<Square2StackIcon className="h-5 w-5" aria-hidden="true" />}
-                                                />
-                                            </button>
+                                        <div className="flex flex-col items-center justify-center border-t border-gray border-opacity-20 pt-6 text-black text-md text-center">
+                                            <div className="mb-4">
+                                                <Badge color="red" text={`Sending the funds through a different chain other than the Binance Smart Chain (BEP20) will result in your funds being permanently lost.`} />
+                                            </div>
+
+                                            <div className="flex items-center align-center justify-center">
+                                                <button onClick={() => handleCopyClick(parseFloat(parseFloat(invoice.value_to_receive).toFixed(8)))}>
+                                                    <Badge
+                                                        color="gray"
+                                                        text={isCopied ? 'Copied!' : `Send ${parseFloat(parseFloat(invoice.value_to_receive).toFixed(8))} ${crypto.symbol}`}
+                                                        icon={<Square2StackIcon className="h-5 w-5" aria-hidden="true" />}
+                                                    />
+                                                </button>
+                                            </div>
                                         </div>
+
                                         <div className="flex flex-col items-center justify-center py-2 text-black text-opacity-50 text-xs font-normal">
                                             <span className='mb-4 text-center'>
                                                 Scan the QR code or copy and paste the payment details into your wallet of choice.
-                                            </span>
-                                            <span className='text-center'>
-                                                <span className='text-red-500'>*</span>
-                                                We only support crypto transactions through the&nbsp;
-                                                <span className={`inline-block p-1 ${crypto.background_color} rounded-md text-white`}>{crypto.chain}</span>. Transactions sent to other chains will not be detected and will result in a loss of crypto.
                                             </span>
                                         </div>
 

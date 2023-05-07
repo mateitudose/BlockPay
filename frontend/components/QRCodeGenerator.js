@@ -10,8 +10,8 @@ const QRCodeGenerator = ({ value, imageSrc }) => {
             errorCorrectionLevel: 'H',
             margin: 2,
             quality: 1,
-            width: 256,
-            height: 256,
+            width: 4096,
+            height: 4096,
         }, (error) => {
             if (error) {
                 console.error(error);
@@ -21,7 +21,7 @@ const QRCodeGenerator = ({ value, imageSrc }) => {
 
     return (
         <div>
-            <canvas className='shadow-lg rounded-md' ref={canvasRef} />
+            <canvas className='shadow-lg rounded-md max-w-[16rem] max-h-[16rem]' ref={canvasRef} />
         </div>
     );
 };

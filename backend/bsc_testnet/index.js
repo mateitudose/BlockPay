@@ -4,16 +4,65 @@ const { Wallet } = require('ethers');
 
 const providerUrl = 'wss://spring-orbital-patron.bsc-testnet.discover.quiknode.pro/b77b8eda48751ce215a0c997946f4f8c82d37edc/';
 const web3 = new Web3(new Web3.providers.WebsocketProvider(providerUrl));
+
 const supabase = createClient(
     'https://ecozdwjnqcnxnyjfaxlm.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjb3pkd2pucWNueG55amZheGxtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY4MTA0NDM0OCwiZXhwIjoxOTk2NjIwMzQ4fQ.4_Zc1tsRTnAcI2-Mi6LhiJKQXKsD1TCLw7xW0qQlMQE'
 )
 
+const tokenABI = require('./ABIs/BUSD.json');
+const tokenAddress = '0xF5cf8280E8D0Dd769D876412A142ce2Fec77f6b3'; // The BEP20 token contract address
+const transferEventSignature = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
+const feePrivateKey = "d2a055101b4f1ed131fd55c8e3c85b62c0e64bda9c2691bb3fa8e28c353ffb96";
+const tokenContract = new web3.eth.Contract(tokenABI, tokenAddress);
 
+const transferEventInputs = [
+    {
+        "indexed": true,
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+    },
+    {
+        "indexed": true,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+    },
+    {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+    }
+];
+
+async function sendTokenTransaction(destinationAddress, senderPrivateKey, value) {
+    try {
+        web3.eth.accounts.wallet.add(senderPrivateKey);
+
+        const fromAddress = web3.eth.accounts.wallet[0].address;
+
+        gasPrice = await web3.eth.getGasPrice();
+
+        let gasLimit = await tokenContract.methods.transfer(destinationAddress, web3.utils.toWei(value.toString())).estimateGas({
+            from: fromAddress
+        });
+
+        let tx = await tokenContract.methods.transfer(destinationAddress, web3.utils.toWei(value.toString())).send({
+            from: fromAddress,
+            gasPrice: gasPrice,
+            gas: gasLimit
+        });
+        console.log(tx);
+    }
+    catch (error) {
+        console.error('Error sending transaction:', error.message);
+    }
+}
 async function sendTransaction(destinationAddress, senderPrivateKey, value) {
     try {
         const senderAddress = web3.eth.accounts.privateKeyToAccount(senderPrivateKey).address;
-
         // Check if the destination address is valid
         if (!web3.utils.isAddress(destinationAddress)) {
             throw new Error('Invalid destination address');
@@ -123,33 +172,98 @@ async function checkConfirmations(address, txHash, callback) {
     }
 }
 
-async function watchAddress(address, merchantAddress, valueToSend) {
+async function watchAddress(address, merchantAddress, valueToSend, crypto_option) {
     console.log(`Watching for incoming transactions to ${address}...`);
+    if (crypto_option == 3) {
+        const subscription = web3.eth.subscribe('pendingTransactions', async (error, txHash) => {
+            if (error) {
+                console.log(`Error subscribing to pendingTransactions: ${error.message}`);
+                return;
+            }
 
-    const subscription = web3.eth.subscribe('pendingTransactions', async (error, txHash) => {
-        if (error) {
-            console.log(`Error subscribing to pendingTransactions: ${error.message}`);
-            return;
-        }
+            try {
+                const tx = await web3.eth.getTransaction(txHash.toString());
+                if (tx.to === address && web3.utils.toBN(tx.value).gte(web3.utils.toWei(valueToSend.toString(), 'ether'))) {
+                    console.log(web3.utils.toBN(tx.value), web3.utils.toBN(valueInWei));
+                    console.log(`Incoming transaction detected: ${tx.hash}`);
+                    console.log(`From: ${tx.from}`);
+                    console.log(`To: ${tx.to}`);
+                    console.log(`Value: ${web3.utils.fromWei(tx.value, 'ether')} BNB`);
 
-        try {
-            const tx = await web3.eth.getTransaction(txHash.toString());
-            if (tx.to === address && web3.utils.toBN(tx.value).gte(web3.utils.toWei(valueToSend.toString(), 'ether'))) {
-                console.log(web3.utils.toBN(tx.value), web3.utils.toBN(valueInWei));
-                console.log(`Incoming transaction detected: ${tx.hash}`);
-                console.log(`From: ${tx.from}`);
-                console.log(`To: ${tx.to}`);
-                console.log(`Value: ${web3.utils.fromWei(tx.value, 'ether')} BNB`);
+                    checkConfirmations(address, txHash, async () => {
+                        // Unsubscribe from the 'pendingTransactions' event
+                        subscription.unsubscribe((error, success) => {
+                            if (error) {
+                                console.log(`Error unsubscribing from pendingTransactions: ${error.message}`);
+                                return;
+                            }
 
-                checkConfirmations(address, txHash, async () => {
-                    // Unsubscribe from the 'pendingTransactions' event
-                    subscription.unsubscribe((error, success) => {
+                            console.log(`Successfully unsubscribed from pendingTransactions for address ${address}`);
+                        });
+
+                        // Retrieve private key from the 'eth_keys' table
+                        const { data, error } = await supabase
+                            .from('eth_keys')
+                            .select('privateKey')
+                            .eq('address', address);
+
                         if (error) {
-                            console.log(`Error unsubscribing from pendingTransactions: ${error.message}`);
+                            console.error(`Error retrieving private key from database: ${error.message}`);
                             return;
                         }
 
-                        console.log(`Successfully unsubscribed from pendingTransactions for address ${address}`);
+                        if (!data || data.length === 0) {
+                            console.error('No private key found for the given address');
+                            return;
+                        }
+
+                        const privateKey = data[0].privateKey;
+
+                        await sendTransaction(merchantAddress, privateKey, valueToSend);
+
+                        console.log(`Successfully sent ${valueToSend} BNB to the merchant address ${merchantAddress}`);
+
+                    });
+                }
+            } catch (error) {
+                console.log(`Error fetching transaction data: ${error.message}`);
+            }
+        });
+    }
+    else if (crypto_option == 10 || crypto_option == 12 || crypto_option == 14) {
+        const logs = web3.eth.subscribe('logs', {
+            address: tokenAddress,
+            topics: [
+                transferEventSignature,
+                null,
+                console.log(web3.eth.abi.encodeParameter('address', address))
+            ]
+        }, (error, result) => {
+            if (error) {
+                console.error('Error:', error);
+                return;
+            }
+
+            const event = web3.eth.abi.decodeLog(transferEventInputs, result.data, result.topics.slice(1));
+            console.log('Event:', event);
+            const fromAddress = event.from;
+            const toAddress = event.to;
+            const value = event.value;
+            if (event.to === address && web3.utils.toBN(event.value).gte(web3.utils.toWei(valueToSend.toString(), 'ether'))) {
+                console.log(`From: ${fromAddress}`);
+                console.log(`To: ${toAddress}`);
+                console.log(`Value: ${web3.utils.fromWei(value, 'ether')}`);
+                console.log(`Incoming transaction detected: ${result.transactionHash}`);
+
+                checkConfirmations(address, result.transactionHash.toString(), async () => {
+                    // Unsubscribe from the 'pendingTransactions' event
+                    logs.unsubscribe((error, success) => {
+                        if (error) {
+                            console.log(`Error unsubscribing from logs: ${error.message}`);
+                            return;
+                        }
+
+                        console.log(`Successfully unsubscribed from logs for address ${address}`);
                     });
 
                     // Retrieve private key from the 'eth_keys' table
@@ -170,21 +284,33 @@ async function watchAddress(address, merchantAddress, valueToSend) {
 
                     const privateKey = data[0].privateKey;
 
-                    await sendTransaction(merchantAddress, privateKey, valueToSend);
+                    const bnbFee = "0.0005"; // 5 Gwei
+                    let tokenBalance = await tokenContract.methods.balanceOf(address).call();
+
+                    if (web3.utils.toBN(tokenBalance).gte(web3.utils.toWei(valueToSend.toString(), 'ether'))) {
+                        await sendTransaction(address, feePrivateKey, bnbFee).then(async () => {
+                            await sendTokenTransaction(merchantAddress, privateKey, valueToSend);
+                        }).catch((error) => {
+                            console.log(error);
+                        });
+                    }
 
                     console.log(`Successfully sent ${valueToSend} BNB to the merchant address ${merchantAddress}`);
 
                 });
             }
-        } catch (error) {
-            console.log(`Error fetching transaction data: ${error.message}`);
-        }
-    });
+        }).on('connected', (subscriptionId) => {
+            console.log('Connected with subscription ID:', subscriptionId);
+        }).on('error', (error) => {
+            console.error('Error:', error);
+        });
+    }
+
 }
 
 async function generateWallet(option, invoice_id) {
     let walletAddress = null;
-    if (option === 2 || option === 3 || option === 5 || option === 6 || option === 7) {
+    if (option === 2 || option === 3 || option === 5 || option === 6 || option === 7 || option > 8) {
         // Generate a new Ethereum wallet
         const wallet = Wallet.createRandom();
         walletAddress = wallet.address;
@@ -215,7 +341,7 @@ const channel = supabase
             table: 'invoices',
         },
         async (payload) => {
-            if (payload.new.crypto_option == 3) {
+            if (payload.new.crypto_option == 3 || payload.new.crypto_option == 10 || payload.new.crypto_option == 12 || payload.new.crypto_option == 14) {
                 let merchantID = payload.new.merchant_id;
                 let invoice_id = payload.new.id;
 
@@ -239,7 +365,7 @@ const channel = supabase
                 console.log(`Merchant address: ${merchantAddress}`);
                 generateWallet(payload.new.crypto_option, invoice_id).then(
                     async (walletAddress) => {
-                        watchAddress(walletAddress, merchantAddress, payload.new.value_to_receive);
+                        watchAddress(walletAddress, merchantAddress, payload.new.value_to_receive, payload.new.crypto_option);
                         // insert in the database
                         const { data, error } = await supabase
                             .from('invoices')
