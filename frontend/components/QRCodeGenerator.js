@@ -1,23 +1,41 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import QRCode from 'qrcode';
 
 
-const QRCodeGenerator = ({ value, imageSrc }) => {
+const QRCodeGenerator = ({ value }) => {
     const canvasRef = useRef();
+    const [size, setSize] = useState(256);
 
     useEffect(() => {
-        QRCode.toCanvas(canvasRef.current, value, {
-            errorCorrectionLevel: 'H',
-            margin: 2,
-            quality: 1,
-            width: 4096,
-            height: 4096,
-        }, (error) => {
-            if (error) {
-                console.error(error);
-            }
-        });
-    }, [value]);
+        const updateQRCode = (width, height) => {
+            QRCode.toCanvas(
+                canvasRef.current,
+                value,
+                {
+                    errorCorrectionLevel: 'H',
+                    margin: 2,
+                    quality: 1,
+                    width,
+                    height,
+                },
+                (error) => {
+                    if (error) {
+                        console.error(error);
+                    }
+                }
+            );
+        };
+
+        updateQRCode(size, size);
+
+        // Set a timer to update the size after 3 seconds (3000 milliseconds)
+        const timer = setTimeout(() => {
+            setSize(1024);
+        }, 500);
+
+        // Clean up the timer when the component is unmounted or the value changes
+        return () => clearTimeout(timer);
+    }, [value, size]);
 
     return (
         <div>

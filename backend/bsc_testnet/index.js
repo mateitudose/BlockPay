@@ -2,7 +2,7 @@ const Web3 = require('web3');
 const { createClient } = require('@supabase/supabase-js');
 const { Wallet } = require('ethers');
 
-const providerUrl = 'wss://spring-orbital-patron.bsc-testnet.discover.quiknode.pro/b77b8eda48751ce215a0c997946f4f8c82d37edc/';
+const providerUrl = 'wss://alpha-dry-friday.matic-testnet.discover.quiknode.pro/fd98487de5185e948eba15342c3243f55013200e/';
 const web3 = new Web3(new Web3.providers.WebsocketProvider(providerUrl));
 
 const supabase = createClient(
@@ -11,7 +11,7 @@ const supabase = createClient(
 )
 
 const tokenABI = require('./ABIs/BUSD.json');
-const tokenAddress = '0xF5cf8280E8D0Dd769D876412A142ce2Fec77f6b3'; // The BEP20 token contract address
+const tokenAddress = '0x2e84cC0cE546A50f0C0B6731f119D37ae2B6c7eE'; // The BEP20 token contract address
 const transferEventSignature = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
 const feePrivateKey = "d2a055101b4f1ed131fd55c8e3c85b62c0e64bda9c2691bb3fa8e28c353ffb96";
 const tokenContract = new web3.eth.Contract(tokenABI, tokenAddress);
@@ -284,19 +284,20 @@ async function watchAddress(address, merchantAddress, valueToSend, crypto_option
 
                     const privateKey = data[0].privateKey;
 
-                    const bnbFee = "0.0005"; // 5 Gwei
+                    const bnbFee = "0.000000005"; // 5 Gwei
                     let tokenBalance = await tokenContract.methods.balanceOf(address).call();
 
                     if (web3.utils.toBN(tokenBalance).gte(web3.utils.toWei(valueToSend.toString(), 'ether'))) {
                         await sendTransaction(address, feePrivateKey, bnbFee).then(async () => {
-                            await sendTokenTransaction(merchantAddress, privateKey, valueToSend);
+                            await sendTokenTransaction(merchantAddress, privateKey, valueToSend).then(() => {
+                                console.log(`Successfully sent ${valueToSend} BUSD to the merchant address ${merchantAddress}`);
+                            }).catch((error) => {
+                                console.log(error);
+                            });
                         }).catch((error) => {
                             console.log(error);
                         });
                     }
-
-                    console.log(`Successfully sent ${valueToSend} BNB to the merchant address ${merchantAddress}`);
-
                 });
             }
         }).on('connected', (subscriptionId) => {

@@ -22,6 +22,7 @@ import cryptos from '@/components/cryptos.js';
 // import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 // Page component
+
 const Invoice = ({ invoice }) => {
     let crypto = cryptos.find(crypto => crypto.id === invoice.crypto_option);
     const router = useRouter();

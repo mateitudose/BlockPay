@@ -98,16 +98,14 @@ const Checkout = ({ checkout }) => {
         return { cryptoAmount, cryptoPrice };
     }
 
-
-
     return (
         <div className="bg-white">
             <title>Checkout</title>
             <Toaster position="top-right"
                 reverseOrder={false} />
             {/* Background color split screen for large screens */}
-            <div className="fixed left-0 top-0 hidden h-full w-1/2 bg-gray-50/10 lg:block" aria-hidden="true" />
-            <div className="fixed right-0 top-0 hidden h-full w-1/2 bg-white lg:block shadow-md shadow-grey" aria-hidden="true" />
+            <div className="fixed left-0 top-0 hidden h-full w-1/2 bg-gray-50/25 lg:block" aria-hidden="true" />
+            <div className="fixed right-0 top-0 hidden h-full w-1/2 bg-white lg:block drop-shadow shadow-lg shadow-grey" aria-hidden="true" />
 
             <div className="lg:mt-28 relative mx-auto grid max-w-7xl grid-cols-1 gap-x-16 lg:grid-cols-2 lg:px-8 lg:pt-16">
                 <h1 className="sr-only">Checkout</h1>
@@ -120,10 +118,18 @@ const Checkout = ({ checkout }) => {
                         <h2 id="summary-heading" className="sr-only">
                             Order summary
                         </h2>
-                        <dl className='py-6 space-y-6 text-sm font-medium'>
-                            <span className='text-base'>Order details</span>
+                        <dl className='space-y-6 text-sm font-medium'>
+                            <div class="flex items-center pb-6">
+                                <img
+                                    class="drop-shadow inline-block h-8 w-8 rounded-full"
+                                    src={checkout.store_logo}
+                                    alt="Store logo"
+                                />
+                                <span class="text-base ml-2">{checkout.store_name}</span>
+                            </div>
+                            <span class="text-base block">Order details</span>
 
-                            <div className="flex items-center justify-between">
+                            <div className="pb-6 flex items-center justify-between">
                                 <dt className="font-medium"><span className='text-black/50 mr-3'>1x</span>{checkout.product_name}</dt>
                                 <dd>${checkout.price_in_usd}</dd>
                             </div>
@@ -205,10 +211,10 @@ const Checkout = ({ checkout }) => {
                                         </button>
                                     </label>
                                     {!showChains ? (
-                                        <div className="grid gap-x-2 grid-cols-3 lg:col-span-3 mt-2">
+                                        <div className="grid gap-x-3 grid-cols-3 lg:col-span-3 mt-2">
                                             {
                                                 /* <button
-                                            className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py-2 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 transform transition-transform duration-300 hover:scale-105"
+                                            className="mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py-2 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                             onClick={() => setSelectedCrypto(1)}
                                         >
                                             <Image
@@ -223,9 +229,10 @@ const Checkout = ({ checkout }) => {
                                              </button> */
                                             }
                                             <button
-                                                className="drop-shadow shadow-[#53ae94] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#53ae94] bg-white px-4 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 transform transition-transform duration-300 hover:scale-105"
+                                                className="drop-shadow shadow-[#53ae94] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#53ae94] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                 onClick={() => {
                                                     setSelectedCrypto(9), setShowChains(true)
+                                                    document.activeElement.blur();
                                                 }}
                                             >
                                                 <Image
@@ -238,8 +245,11 @@ const Checkout = ({ checkout }) => {
                                                 <span>USDT</span>
                                             </button>
                                             <button
-                                                className="drop-shadow shadow-[#F0B90B] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#F0B90B] bg-white px-4 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 transform transition-transform duration-300 hover:scale-105"
-                                                onClick={() => { setSelectedCrypto(10), setShowChains(true) }}
+                                                className="drop-shadow shadow-[#F0B90B] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#F0B90B] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
+                                                onClick={() => {
+                                                    setSelectedCrypto(10), setShowChains(true)
+                                                    document.activeElement.blur();
+                                                }}
                                             >
                                                 <Image
                                                     src={BUSD}
@@ -251,8 +261,11 @@ const Checkout = ({ checkout }) => {
                                                 <span>BUSD</span>
                                             </button>
                                             <button
-                                                className="drop-shadow shadow-[#2775ca] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#2775ca] bg-white px-4 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 transform transition-transform duration-300 hover:scale-105"
-                                                onClick={() => { setSelectedCrypto(11), setShowChains(true) }}
+                                                className="drop-shadow shadow-[#2775ca] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#2775ca] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
+                                                onClick={() => {
+                                                    setSelectedCrypto(11), setShowChains(true)
+                                                    document.activeElement.blur();
+                                                }}
                                             >
                                                 <Image
                                                     src={USDC}
@@ -264,7 +277,7 @@ const Checkout = ({ checkout }) => {
                                                 <span>USDC</span>
                                             </button>
                                             <button
-                                                className="drop-shadow shadow-[#627EEA] mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#627EEA] bg-white px-4 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 transform transition-transform duration-300 hover:scale-105"
+                                                className="drop-shadow shadow-[#627EEA] mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#627EEA] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                 onClick={() => setSelectedCrypto(2)}
                                             >
                                                 <Image
@@ -278,7 +291,7 @@ const Checkout = ({ checkout }) => {
                                                 <span className='hidden lg:block'>Ethereum</span>
                                             </button>
                                             <button
-                                                className="drop-shadow shadow-[#F0B90B] mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#F0B90B] bg-white px-4 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 transform transition-transform duration-300 hover:scale-105"
+                                                className="drop-shadow shadow-[#F0B90B] mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#F0B90B] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                 onClick={() => setSelectedCrypto(3)}
                                             >
                                                 <Image
@@ -292,7 +305,7 @@ const Checkout = ({ checkout }) => {
                                             </button>
                                             {
                                                 /* <button
-                                                    className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 transform transition-transform duration-300 hover:scale-105"
+                                                    className="py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-gray-300 bg-white px-4 py- shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                     onClick={() => setSelectedCrypto(4)}
                                                 >
                                                     <Image
@@ -307,7 +320,7 @@ const Checkout = ({ checkout }) => {
                                                 </button> */
                                             }
                                             <button
-                                                className="drop-shadow shadow-[#E84142] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#E84142] bg-white px-4 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 transform transition-transform duration-300 hover:scale-105"
+                                                className="drop-shadow shadow-[#E84142] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#E84142] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                 onClick={() => setSelectedCrypto(5)}
                                             >
                                                 <Image
@@ -321,7 +334,7 @@ const Checkout = ({ checkout }) => {
                                                 <span className='hidden lg:block'>Avalanche</span>
                                             </button>
                                             <button
-                                                className="drop-shadow shadow-[#12AAFF] mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#12AAFF] bg-white px-4 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 transform transition-transform duration-300 hover:scale-105"
+                                                className="drop-shadow shadow-[#12AAFF] mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#12AAFF] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                 onClick={() => setSelectedCrypto(6)}
                                             >
                                                 <Image
@@ -335,7 +348,7 @@ const Checkout = ({ checkout }) => {
                                                 <span className='hidden lg:block'>Arbitrum</span>
                                             </button>
                                             <button
-                                                className="drop-shadow shadow-[#7b3fe4] mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#7b3fe4] bg-white px-4 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 transform transition-transform duration-300 hover:scale-105"
+                                                className="drop-shadow shadow-[#7b3fe4] mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#7b3fe4] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                 onClick={() => setSelectedCrypto(7)}
                                             >
                                                 <Image
@@ -349,7 +362,7 @@ const Checkout = ({ checkout }) => {
                                                 <span className='hidden lg:block'>Polygon</span>
                                             </button>
                                             <button
-                                                className="drop-shadow shadow-[#14F195] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#14F195] bg-white px-4 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 transform transition-transform duration-300 hover:scale-105"
+                                                className="drop-shadow shadow-[#14F195] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#14F195] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                 onClick={() => setSelectedCrypto(8)}
                                             >
                                                 <Image
@@ -367,7 +380,7 @@ const Checkout = ({ checkout }) => {
                                     ) : (
                                         <div className="grid gap-x-4 grid-cols-2 lg:col-span-2 mt-2">
                                             <button
-                                                className="drop-shadow shadow-[#627EEA] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#627EEA] bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 transform transition-transform duration-300 hover:scale-105"
+                                                className="drop-shadow shadow-[#627EEA] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#627EEA] bg-white px-4 py- shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                 onClick={() => {
                                                     if (selectedCrypto == 9) {
                                                         setSelectedCrypto(9)
@@ -391,7 +404,7 @@ const Checkout = ({ checkout }) => {
                                                 <span>ERC-20</span>
                                             </button>
                                             <button
-                                                className="drop-shadow shadow-[#F0B90B] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#F0B90B] bg-white px-4 py- shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 transform transition-transform duration-300 hover:scale-105"
+                                                className="drop-shadow shadow-[#F0B90B] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#F0B90B] bg-white px-4 py- shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                 onClick={() => {
                                                     if (selectedCrypto == 9) {
                                                         setSelectedCrypto(10)
