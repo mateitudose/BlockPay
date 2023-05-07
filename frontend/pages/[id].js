@@ -87,7 +87,7 @@ const Checkout = ({ checkout }) => {
 
     async function fetchCryptoPrice(cryptoId, usdAmount) {
         if (cryptoId > 8) {
-            return { cryptoAmount: usdAmount, cryptoPrice: 1.00 };
+            return { cryptoAmount: usdAmount, cryptoPrice: "1.00" };
         }
         const cryptoIds = ['bitcoin', 'ethereum', 'binancecoin', 'litecoin', 'avalanche-2', 'arbitrum', 'matic-network', 'solana'];
         const url = `https://api.coingecko.com/api/v3/simple/price?ids=${cryptoIds[cryptoId - 1]}&vs_currencies=usd`;

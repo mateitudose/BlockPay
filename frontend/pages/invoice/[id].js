@@ -9,7 +9,8 @@ import QRCodeGenerator from '@/components/QRCodeGenerator';
 import logo from "@/public/logo.svg"
 
 import {
-    Square2StackIcon,
+    ClipboardDocumentIcon,
+    ClipboardDocumentCheckIcon,
     ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
 
@@ -324,8 +325,8 @@ const Invoice = ({ invoice }) => {
                                                 <button onClick={() => handleCopyClick(parseFloat(parseFloat(invoice.value_to_receive).toFixed(8)))}>
                                                     <Badge
                                                         color="gray"
-                                                        text={isCopied ? 'Copied!' : `Send ${parseFloat(parseFloat(invoice.value_to_receive).toFixed(8))} ${crypto.symbol}`}
-                                                        icon={<Square2StackIcon className="h-5 w-5" aria-hidden="true" />}
+                                                        text={`Send ${parseFloat(parseFloat(invoice.value_to_receive).toFixed(8))} ${crypto.symbol}`}
+                                                        icon={!isCopied ? (<ClipboardDocumentIcon className="h-5 w-5" aria-hidden="true" />) : (<ClipboardDocumentCheckIcon className="h-5 w-5" aria-hidden="true" />)}
                                                     />
                                                 </button>
                                             </div>
@@ -343,8 +344,8 @@ const Invoice = ({ invoice }) => {
                                             <button className='flex items-center align-center justify-center text-center' onClick={() => handleCopyClick2(address)}>
                                                 <Badge
                                                     color="gray"
-                                                    text={isCopied2 ? 'Copied!' : `${address}`}
-                                                    icon={<Square2StackIcon className="h-5 w-5" aria-hidden="true" />}
+                                                    text={address}
+                                                    icon={!isCopied2 ? (<ClipboardDocumentIcon className="h-5 w-5" aria-hidden="true" />) : (<ClipboardDocumentCheckIcon className="h-5 w-5" aria-hidden="true" />)}
                                                 />
                                             </button>
                                         </div>
