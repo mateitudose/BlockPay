@@ -3,33 +3,69 @@ import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { SessionContextProvider } from '@supabase/auth-helpers-react'
 import { useState } from 'react'
 
-// import '@rainbow-me/rainbowkit/styles.css';
-// import {
-//   getDefaultWallets,
-//   RainbowKitProvider,
-// } from '@rainbow-me/rainbowkit';
-// import { configureChains, createClient, WagmiConfig } from 'wagmi';
-// import { mainnet, polygon, optimism, arbitrum } from 'wagmi/chains';
-// import { publicProvider } from 'wagmi/providers/public';
+import '@rainbow-me/rainbowkit/styles.css';
+import {
+  RainbowKitProvider,
+} from '@rainbow-me/rainbowkit';
+import { connectorsForWallets } from '@rainbow-me/rainbowkit';
+import {
+  injectedWallet,
+  rainbowWallet,
+  metaMaskWallet,
+  coinbaseWallet,
+  walletConnectWallet,
+  argentWallet,
+  braveWallet,
+  ledgerWallet,
+  imTokenWallet,
+  mewWallet,
+  rabbyWallet,
+  safeWallet,
+  trustWallet,
+} from '@rainbow-me/rainbowkit/wallets';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { mainnet, bsc, polygonMumbai } from 'wagmi/chains';
+import { publicProvider } from 'wagmi/providers/public';
 
-// const { chains, provider } = configureChains(
-//   [mainnet, polygon, optimism, arbitrum],
-//   [
-//     publicProvider()
-//   ]
-// );
+const { chains, provider } = configureChains(
+  [mainnet, bsc, polygonMumbai],
+  [
+    publicProvider()
+  ]
+);
 
-// const { connectors } = getDefaultWallets({
-//   appName: 'Blockpay',
-//   projectId: '87888ec0893c8a00b74c61dadf385811',
-//   chains
-// });
+let projectId = '87888ec0893c8a00b74c61dadf385811'
+const connectors = connectorsForWallets([
+  {
+    groupName: 'Popular',
+    wallets: [
+      injectedWallet({ chains }),
+      metaMaskWallet({ projectId, chains }),
+      rabbyWallet({ chains }),
+      walletConnectWallet({ projectId, chains }),
+    ],
+  },
+  {
+    groupName: 'Other',
+    wallets: [
+      ledgerWallet({ projectId, chains, infuraId: "b423b299acdd4f03abd9357cddf16096" }),
+      rainbowWallet({ projectId, chains }),
+      trustWallet({ projectId, chains }),
+      coinbaseWallet({ appName: "Blockpay", chains }),
+      argentWallet({ projectId, chains }),
+      braveWallet({ chains }),
+      imTokenWallet({ projectId, chains }),
+      mewWallet({ chains }),
+      safeWallet({ chains }),
+    ],
+  },
+]);
 
-// const wagmiClient = createClient({
-//   autoConnect: true,
-//   connectors,
-//   provider
-// })
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors,
+  provider
+})
 
 export default function App({ Component, pageProps }) {
   let options = {
@@ -40,13 +76,13 @@ export default function App({ Component, pageProps }) {
   const [supabase] = useState(() => createBrowserSupabaseClient(options))
 
   return (
-    // <WagmiConfig client={wagmiClient}>
-    //   <RainbowKitProvider chains={chains}>
-    <SessionContextProvider supabaseClient={supabase} initialSession={pageProps.initialSession}>
-      <Component {...pageProps} />
-    </SessionContextProvider>
-    //   </RainbowKitProvider>
-    // </WagmiConfig>
+    <WagmiConfig client={wagmiClient}>
+      <RainbowKitProvider chains={chains} >
+        <SessionContextProvider supabaseClient={supabase} initialSession={pageProps.initialSession}>
+          <Component {...pageProps} />
+        </SessionContextProvider>
+      </RainbowKitProvider>
+    </WagmiConfig>
 
   )
 }

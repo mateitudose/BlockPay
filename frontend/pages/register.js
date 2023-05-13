@@ -10,9 +10,10 @@ import { useRouter } from 'next/router'
 
 
 
-export default function Login() {
+export default function Register() {
     const router = useRouter()
 
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -42,6 +43,10 @@ export default function Login() {
         runPrecheck();
     }, []);
 
+    const handleUsernameChange = (e) => {
+        setUsername(e.target.value);
+    };
+
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
     };
@@ -65,6 +70,7 @@ export default function Login() {
 
     const registerEmail = async () => {
         const { data, error } = await supabase.auth.signUp({
+            username: username,
             email: email,
             password: password,
             options: {
@@ -82,12 +88,12 @@ export default function Login() {
     const [isPasswordHidden, setPasswordHidden] = useState(true);
 
     if (!shouldRender) {
-        // You can render a loading indicator, a placeholder, or nothing
         return <div></div>;
     }
 
     return (
         <>
+            <title>Register | Blockpay</title>
             <Toaster position="top-right"
                 reverseOrder={false} />
             <div className="h-screen bg-gray-50">
@@ -106,8 +112,8 @@ export default function Login() {
                             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Register your account</h2>
                             <p className="mt-2 text-center text-sm text-gray-600">
                                 Or{' '}
-                                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                                    start your 14-day free trial
+                                <a href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+                                    login into your existing account
                                 </a>
                             </p>
                             <div className="mt-6">
@@ -143,6 +149,23 @@ export default function Login() {
                                 </div>
                             </div>
                             <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
+                                <div>
+                                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                                        Username
+                                    </label>
+                                    <div className="mt-2">
+                                        <input
+                                            type="username"
+                                            name="username"
+                                            id="username"
+                                            className="block w-full rounded-md border-0 pl-3.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            placeholder="blockpayuser"
+                                            required
+                                            value={username}
+                                            onChange={handleUsernameChange}
+                                        />
+                                    </div>
+                                </div>
                                 <div>
                                     <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                                         Email
@@ -193,20 +216,10 @@ export default function Login() {
                                     </div >
                                 </div>
 
-                                <div className="flex items-center justify-end">
-
-
-                                    <div className="text-sm">
-                                        <a href="/password/reset" className="font-medium text-black hover:text-neutral-800">
-                                            Forgot your password?
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div>
+                                <div className='pt-8'>
                                     <button
                                         type="button"
-                                        className="flex w-full justify-center rounded-lg bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        className="shadow-lg flex w-full justify-center rounded-lg bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                         onClick={registerEmail}
                                     >
                                         Register

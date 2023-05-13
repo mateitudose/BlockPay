@@ -98,8 +98,8 @@ export default function Login() {
                             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
                             <p className="mt-2 text-center text-sm text-gray-600">
                                 Or{' '}
-                                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                                    start your 14-day free trial
+                                <a href="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
+                                    register a new account
                                 </a>
                             </p>
                             <div className="mt-6">
@@ -198,7 +198,7 @@ export default function Login() {
                                 <div>
                                     <button
                                         type="button"
-                                        className="flex w-full justify-center rounded-lg bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        className="shadow-lg flex w-full justify-center rounded-lg bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                         onClick={loginEmail}
                                     >
                                         Sign in

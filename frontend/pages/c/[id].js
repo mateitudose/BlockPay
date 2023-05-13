@@ -119,15 +119,15 @@ const Checkout = ({ checkout }) => {
                             Order summary
                         </h2>
                         <dl className='space-y-6 text-sm font-medium'>
-                            <div class="flex items-center pb-6">
+                            <div className="flex items-center pb-6">
                                 <img
-                                    class="drop-shadow inline-block h-8 w-8 rounded-full"
+                                    className="drop-shadow inline-block h-8 w-8 rounded-full"
                                     src={checkout.store_logo}
                                     alt="Store logo"
                                 />
-                                <span class="text-base ml-2">{checkout.store_name}</span>
+                                <span className="text-base ml-2">{checkout.store_name}</span>
                             </div>
-                            <span class="text-base block">Order details</span>
+                            <span className="text-base block">Order details</span>
 
                             <div className="pb-6 flex items-center justify-between">
                                 <dt className="font-medium"><span className='text-black/50 mr-3'>1x</span>{checkout.product_name}</dt>

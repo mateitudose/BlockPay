@@ -1,17 +1,3 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
 import { Fragment, useState, useEffect, use } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
@@ -102,7 +88,17 @@ export default function Dashboard() {
         const getUser = async () => {
             try {
                 const user = await await supabase.auth.getUser();
-                setEmail(user.data.user.email);
+                const { data, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', user.data.user.id);
+                if (error) {
+                    throw error;
+                } else {
+                    setEmail(data[0].email);
+                    setUsername(data[0].username);
+                }
+
             } catch (error) {
                 console.error(error);
             }
@@ -408,7 +404,12 @@ export default function Dashboard() {
                                     {/* Profile dropdown */}
                                     <Menu as="div" className="relative inline-block text-left lg:pr-4">
                                         <div>
-                                            <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                            <Menu.Button className="inline-flex w-full justify-center gap-x-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                                <span className="inline-block h-5 w-5 overflow-hidden rounded-full bg-gray-100">
+                                                    <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                                                    </svg>
+                                                </span>
                                                 {username}
                                                 <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
                                             </Menu.Button>
