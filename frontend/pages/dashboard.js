@@ -3,16 +3,9 @@ import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
     Bars3Icon,
     BellIcon,
-    CalendarIcon,
-    ChartPieIcon,
     Cog8ToothIcon,
-    DocumentDuplicateIcon,
-    FolderIcon,
-    HomeIcon,
-    UsersIcon,
     XMarkIcon,
     ArrowRightOnRectangleIcon,
-    ScaleIcon,
     WindowIcon,
     BuildingStorefrontIcon,
     BanknotesIcon,
@@ -28,7 +21,6 @@ import {
     from '@heroicons/react/20/solid'
 import { useRouter } from 'next/router';
 import { supabase } from '@/lib/supabaseClient'
-import { toast } from 'react-hot-toast';
 import logo from "@/public/logo.svg"
 import Image from 'next/image'
 import TimeGreeting from '@/components/TimeGreeting';

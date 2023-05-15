@@ -22,7 +22,7 @@ const UTC = ({ timestamp }) => {
         const formattedDate = dateFormatter.format(date);
 
         setLocalDate(`${formattedTime} - ${formattedDate}`);
-    }, [timestamp]);
+    }, [timestamp]); x
 
     return <span>{localDate}</span>;
 };
