@@ -13,6 +13,10 @@ import {
     XMarkIcon,
     ArrowRightOnRectangleIcon,
     ScaleIcon,
+    WindowIcon,
+    BuildingStorefrontIcon,
+    BanknotesIcon,
+    CreditCardIcon
 } from '@heroicons/react/24/outline'
 import {
     ChevronDownIcon,
@@ -20,7 +24,6 @@ import {
     BuildingOfficeIcon,
     CheckCircleIcon,
     ChevronRightIcon,
-    BanknotesIcon,
 }
     from '@heroicons/react/20/solid'
 import { useRouter } from 'next/router';
@@ -29,15 +32,10 @@ import { toast } from 'react-hot-toast';
 import logo from "@/public/logo.svg"
 import Image from 'next/image'
 import TimeGreeting from '@/components/TimeGreeting';
-
+import Badge from '@/components/Badge';
 
 const navigation = [
-    { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-    { name: 'Team', href: '#', icon: UsersIcon, current: false },
-    { name: 'Projects', href: '#', icon: FolderIcon, current: false },
-    { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-    { name: 'Documents', href: '#', icon: DocumentDuplicateIcon, current: false },
-    { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },
+    { name: 'Dashboard', href: '#', icon: WindowIcon, current: true },
 ]
 
 const teams = [
@@ -45,15 +43,14 @@ const teams = [
     { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
     { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
 ]
-const userNavigation = [
-    { name: 'Your profile', href: '#' },
-    { name: 'Sign out', href: '#', },
-]
+
 
 const cards = [
-    { name: 'Account balance', href: '#', icon: ScaleIcon, amount: '$30,659.45' },
-    // More items...
+    { name: 'Total Revenue', href: '#', icon: BanknotesIcon, amount: '$30,659.45', change: 12 },
+    { name: 'Orders', href: '#', icon: BuildingStorefrontIcon, amount: '1,257', change: 0 },
+    { name: 'Subscription Revenue', href: '#', icon: CreditCardIcon, amount: '$12,557.44', change: -3 },
 ]
+
 const transactions = [
     {
         id: 1,
@@ -140,6 +137,15 @@ export default function Dashboard() {
     if (!shouldRender) {
         // You can render a loading indicator, a placeholder, or nothing
         return <div></div>;
+    }
+
+    function changeColor(n) {
+        if (n > 0)
+            return "green";
+        else if (n < 0)
+            return "red";
+        else
+            return "yellow";
     }
 
     return (
@@ -275,10 +281,10 @@ export default function Dashboard() {
                 </Transition.Root>
 
                 {/* Static sidebar for desktop */}
-                <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+                <div className="shadow-lg hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
                     {/* Sidebar component, swap this element with another sidebar if you like */}
                     <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
-                        <div className="flex h-16 shrink-0 items-center">
+                        <div className="mt-4 flex h-16 shrink-0 items-center">
                             <Image
                                 className="h-8 w-auto"
                                 src={logo}
@@ -498,7 +504,7 @@ export default function Dashboard() {
                         </div>
                     </div>
 
-                    <main className="py-10 bg-neutral-100 h-full relative">
+                    <main className="py-10 bg-slate-50/80 h-screen relative">
                         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"><main className="flex-1 pb-8">
                             {/* Page header */}
                             <div className="bg-white shadow rounded-lg">
@@ -564,7 +570,7 @@ export default function Dashboard() {
 
                             <div className="mt-8">
                                 <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-                                    <h2 className="text-lg font-medium leading-6 text-gray-900">Overview</h2>
+                                    <h2 className="text-lg font-medium leading-6 text-gray-900">Cashflow</h2>
                                     <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                                         {/* Card */}
                                         {cards.map((card) => (
@@ -579,8 +585,12 @@ export default function Dashboard() {
                                                                 <dt className="truncate text-sm font-medium text-gray-500">{card.name}</dt>
                                                                 <dd>
                                                                     <div className="text-lg font-medium text-gray-900">{card.amount}</div>
+
                                                                 </dd>
                                                             </dl>
+                                                        </div>
+                                                        <div className='mt-4 text-sm'>
+                                                            <Badge color={changeColor(card.change)} text={`${card.change}%`} />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -701,14 +711,10 @@ export default function Dashboard() {
                                                                     {transaction.currency}
                                                                 </td>
                                                                 <td className="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 md:block">
-                                                                    <span
-                                                                        className={classNames(
-                                                                            statusStyles[transaction.status],
-                                                                            'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium capitalize'
-                                                                        )}
-                                                                    >
-                                                                        {transaction.status}
-                                                                    </span>
+
+                                                                    <div className="text-sm">
+                                                                        <Badge color="green" text={transaction.status} />
+                                                                    </div>
                                                                 </td>
                                                                 <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
                                                                     <time dateTime={transaction.datetime}>{transaction.date}</time>
