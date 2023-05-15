@@ -51,24 +51,29 @@ const cards = [
     { name: 'Subscription Revenue', href: '#', icon: CreditCardIcon, amount: '$12,557.44', change: -3 },
 ]
 
-const transactions = [
-    {
-        id: 1,
-        name: 'Payment to Molly Sanders',
-        href: '#',
-        amount: '$20,000',
-        currency: 'USD',
-        status: 'success',
-        date: 'July 11, 2020',
-        datetime: '2020-07-11',
-    },
-    // More transactions...
-]
-const statusStyles = {
-    success: 'bg-green-100 text-green-800',
-    processing: 'bg-yellow-100 text-yellow-800',
-    failed: 'bg-gray-100 text-gray-800',
-}
+let transactions = []
+
+
+const UTC = (timestamp) => {
+    const date = new Date(timestamp);
+
+    const timeFormatter = new Intl.DateTimeFormat('default', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+    });
+
+    const dateFormatter = new Intl.DateTimeFormat('default', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    });
+
+    const formattedTime = timeFormatter.format(date);
+    const formattedDate = dateFormatter.format(date);
+
+    return (`${formattedTime} - ${formattedDate}`);
+};
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -80,6 +85,7 @@ export default function Dashboard() {
     const router = useRouter();
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
+    const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
         const getUser = async () => {
@@ -101,7 +107,42 @@ export default function Dashboard() {
             }
         };
 
+        const getInvoices = async () => {
+            try {
+                const user = await await supabase.auth.getUser();
+                const { data, error } = await supabase
+                    .from('invoices')
+                    .select('*')
+                    .eq('merchant_id', user.data.user.id);
+                if (error) {
+                    throw error;
+                } else {
+                    if (data) {
+                        console.log(data);
+                        for (let i = 0; i < data.length; i++) {
+                            transactions.push({
+                                id: i,
+                                name: data[i].customer_email,
+                                href: '#',
+                                amount: data[i].value_to_receive,
+                                currency: 'USD',
+                                status: data[i].status,
+                                date: UTC(data[i].created_at),
+                                datetime: UTC(data[i].created_at),
+                            })
+                        }
+                        setLoaded(true);
+                    }
+                }
+
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
         getUser();
+        getInvoices();
+
     }, []);
 
     async function handleNotSignedIn() {
@@ -144,6 +185,17 @@ export default function Dashboard() {
             return "green";
         else if (n < 0)
             return "red";
+        else
+            return "yellow";
+    }
+
+    function changeStatus(status) {
+        if (status === "Awaiting payment")
+            return "yellow";
+        else if (status === "Voided")
+            return "red";
+        else if (status === "Confirmed")
+            return "green";
         else
             return "yellow";
     }
@@ -613,7 +665,7 @@ export default function Dashboard() {
                                 {/* Activity list (smallest breakpoint only) */}
                                 <div className="shadow sm:hidden">
                                     <ul role="list" className="mt-2 divide-y divide-gray-200 overflow-hidden shadow sm:hidden">
-                                        {transactions.map((transaction) => (
+                                        {loaded && transactions.map((transaction) => (
                                             <li key={transaction.id}>
                                                 <a href={transaction.href} className="block bg-white px-4 py-4 hover:bg-gray-50">
                                                     <span className="flex items-center space-x-4">
@@ -668,7 +720,7 @@ export default function Dashboard() {
                                                                 className="bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900"
                                                                 scope="col"
                                                             >
-                                                                Transaction
+                                                                Invoices
                                                             </th>
                                                             <th
                                                                 className="bg-gray-50 px-6 py-3 text-right text-sm font-semibold text-gray-900"
@@ -713,7 +765,7 @@ export default function Dashboard() {
                                                                 <td className="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 md:block">
 
                                                                     <div className="text-sm">
-                                                                        <Badge color="green" text={transaction.status} />
+                                                                        <Badge color={changeStatus(transaction.status)} text={transaction.status} />
                                                                     </div>
                                                                 </td>
                                                                 <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
