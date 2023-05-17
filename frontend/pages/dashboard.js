@@ -195,6 +195,7 @@ export default function Dashboard() {
     return (
         <>
             <div>
+                <title>Dashboard | Blockpay</title> 
                 <Transition.Root show={sidebarOpen} as={Fragment}>
                     <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
                         <Transition.Child
@@ -305,7 +306,7 @@ export default function Dashboard() {
                                                 </li>
                                                 <li className="mt-auto">
                                                     <a
-                                                        href="#"
+                                                        href="/settings"
                                                         className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                                                     >
                                                         <Cog8ToothIcon
@@ -395,7 +396,7 @@ export default function Dashboard() {
                                 </li>
                                 <li className="mt-auto">
                                     <a
-                                        href="#"
+                                        href="/settings"
                                         className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                                     >
                                         <Cog8ToothIcon
@@ -483,7 +484,7 @@ export default function Dashboard() {
                                                     <Menu.Item>
                                                         {({ active }) => (
                                                             <a
-                                                                href="#"
+                                                                href="/settings"
                                                                 className={classNames(
                                                                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                                                     'inline-flex items-center gap-x-1.5 block px-4 py-2 text-sm'
@@ -618,7 +619,7 @@ export default function Dashboard() {
                                     <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                                         {/* Card */}
                                         {cards.map((card) => (
-                                            <div key={card.name} className="overflow-hidden rounded-lg bg-white shadow">
+                                            <div href={card.href} key={card.name} className="overflow-hidden rounded-lg bg-white shadow">
                                                 <div className="p-5">
                                                     <div className="flex items-center">
                                                         <div className="flex-shrink-0">
@@ -629,20 +630,12 @@ export default function Dashboard() {
                                                                 <dt className="truncate text-sm font-medium text-gray-500">{card.name}</dt>
                                                                 <dd>
                                                                     <div className="text-lg font-medium text-gray-900">{card.amount}</div>
-
                                                                 </dd>
                                                             </dl>
                                                         </div>
                                                         <div className='mt-4 text-sm'>
                                                             <Badge color={changeColor(card.change)} text={`${card.change}%`} />
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div className="bg-gray-50 px-5 py-3">
-                                                    <div className="text-sm">
-                                                        <a href={card.href} className="font-medium text-cyan-700 hover:text-cyan-900">
-                                                            View all
-                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
