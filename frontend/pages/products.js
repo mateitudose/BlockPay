@@ -21,7 +21,7 @@ import logo from "@/public/logo.svg"
 import Image from 'next/image'
 const { v4: uuidv4 } = require('uuid');
 import Badge from '@/components/Badge';
-import { toast } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 
 
 const navigation = [
@@ -72,6 +72,18 @@ export default function Dashboard() {
     const [username, setUsername] = useState('');
     const [loaded, setLoaded] = useState(false);
     const [open, setOpen] = useState(false);
+    const [openEdit, setOpenEdit] = useState(false);
+    const [productName, setProductName] = useState('');
+    const [price, setPrice] = useState('');
+    const [currentID, setCurrentID] = useState('');
+
+    const handleProductNameChange = (e) => {
+        setProductName(e.target.value);
+    };
+
+    const handlePriceChange = (e) => {
+        setPrice(e.target.value);
+    }
 
     useEffect(() => {
         const getUser = async () => {
@@ -104,7 +116,7 @@ export default function Dashboard() {
                     throw error;
                 } else {
                     if (data) {
-                        console.log(data);
+                        products = [];
                         for (let i = 0; i < data.length; i++) {
                             products.push({
                                 id: i,
@@ -153,10 +165,13 @@ export default function Dashboard() {
             });
         if (error) {
             toast.error(error.message);
+        } else {
+            toast.success(`Product ${product_name} added`);
         }
     };
 
     const updateProduct = async (id, name, price) => {
+        console.log(id, name, price);
         const { data, error } = await supabase
             .from('checkout')
             .update({
@@ -166,6 +181,20 @@ export default function Dashboard() {
             .eq('id', id);
         if (error) {
             toast.error(error.message);
+        } else {
+            toast.success('Product updated');
+        }
+    };
+
+    const deleteProduct = async (id) => {
+        const { data, error } = await supabase
+            .from('checkout')
+            .delete()
+            .eq('id', id);
+        if (error) {
+            toast.error(error.message);
+        } else {
+            toast.success('Product deleted');
         }
     };
 
@@ -213,7 +242,10 @@ export default function Dashboard() {
     return (
         <>
             <div>
+                <Toaster position="top-right"
+                    reverseOrder={false} />
                 <title>Products | Blockpay</title>
+                {/* Add product */}
                 <Transition.Root show={open} as={Fragment}>
                     <Dialog as="div" className="relative z-50" onClose={setOpen}>
                         <Transition.Child
@@ -278,6 +310,8 @@ export default function Dashboard() {
                                                                         className="pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                                         placeholder="Name"
                                                                         required
+                                                                        value={productName}
+                                                                        onChange={handleProductNameChange}
                                                                     />
                                                                 </div>
                                                             </div>
@@ -300,6 +334,8 @@ export default function Dashboard() {
                                                                     placeholder="0.00"
                                                                     aria-describedby="price-currency"
                                                                     required
+                                                                    value={price}
+                                                                    onChange={handlePriceChange}
                                                                 />
                                                                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                                                                     <span className="text-gray-500 sm:text-sm" id="price-currency">
@@ -313,8 +349,144 @@ export default function Dashboard() {
                                                         <button
                                                             type="button"
                                                             className="flex-1 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                                            onClick={async () => {
+                                                                await addProduct(productName, price);
+                                                                setOpen(false);
+                                                            }}
                                                         >
                                                             Add product
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </Dialog.Panel>
+                                    </Transition.Child>
+                                </div>
+                            </div>
+                        </div>
+                    </Dialog>
+                </Transition.Root>
+
+                {/* Edit product*/}
+                <Transition.Root show={openEdit} as={Fragment}>
+                    <Dialog as="div" className="relative z-50" onClose={setOpenEdit}>
+                        <Transition.Child
+                            as={Fragment}
+                            enter="ease-in-out duration-500"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100"
+                            leave="ease-in-out duration-500"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                        >
+                            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                        </Transition.Child>
+
+                        <div className="fixed inset-0 overflow-hidden">
+                            <div className="absolute inset-0 overflow-hidden">
+                                <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+                                    <Transition.Child
+                                        as={Fragment}
+                                        enter="transform transition ease-in-out duration-500 sm:duration-700"
+                                        enterFrom="translate-x-full"
+                                        enterTo="translate-x-0"
+                                        leave="transform transition ease-in-out duration-500 sm:duration-700"
+                                        leaveFrom="translate-x-0"
+                                        leaveTo="translate-x-full"
+                                    >
+                                        <Dialog.Panel className="pointer-events-auto relative w-96">
+                                            <Transition.Child
+                                                as={Fragment}
+                                                enter="ease-in-out duration-500"
+                                                enterFrom="opacity-0"
+                                                enterTo="opacity-100"
+                                                leave="ease-in-out duration-500"
+                                                leaveFrom="opacity-100"
+                                                leaveTo="opacity-0"
+                                            >
+                                                <div className="absolute left-0 top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4">
+                                                    <button
+                                                        type="button"
+                                                        className="rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                                                        onClick={() => setOpenEdit(false)}
+                                                    >
+                                                        <span className="sr-only">Close panel</span>
+                                                        <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                                                    </button>
+                                                </div>
+                                            </Transition.Child>
+                                            <div className="h-full overflow-y-auto bg-white p-8">
+                                                <div className="space-y-6 pb-16">
+                                                    <div>
+                                                        <div className="mt-4">
+                                                            <h2 className='my-4 font-medium'>Product Details</h2>
+                                                            <div>
+                                                                <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
+                                                                    Product name
+                                                                </label>
+                                                                <div className="mt-2">
+                                                                    <input
+                                                                        type="text"
+                                                                        name="name"
+                                                                        id="Name"
+                                                                        className="pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                        placeholder="Name"
+                                                                        required
+                                                                        value={productName}
+                                                                        onChange={handleProductNameChange}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div>
+                                                            <label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">
+                                                                Price
+                                                            </label>
+                                                            <div className="relative mt-2 rounded-md shadow-sm">
+                                                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                                                    <span className="text-gray-500 sm:text-sm">$</span>
+                                                                </div>
+                                                                <input
+                                                                    type="number"
+                                                                    name="price"
+                                                                    id="price"
+                                                                    className="block w-full rounded-md border lg:border-0 py-1.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                    placeholder="0.00"
+                                                                    aria-describedby="price-currency"
+                                                                    required
+                                                                    value={price}
+                                                                    onChange={handlePriceChange}
+                                                                />
+                                                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                                                    <span className="text-gray-500 sm:text-sm" id="price-currency">
+                                                                        USD
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex justify-between space-x-2">
+                                                        <button
+                                                            type="button"
+                                                            className="flex-1 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                                            onClick={async () => {
+                                                                await updateProduct(currentID, productName, price);
+                                                                setOpenEdit(false);
+                                                            }}
+                                                        >
+                                                            Update product
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="flex-1 rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                                                            onClick={async () => {
+                                                                await deleteProduct(currentID);
+                                                                setOpenEdit(false);
+                                                            }}
+                                                        >
+                                                            Delete product
                                                         </button>
                                                     </div>
                                                 </div>
@@ -555,7 +727,7 @@ export default function Dashboard() {
 
                             {/* Separator */}
                             <div className="h-6 w-px bg-gray-200 lg:hidden" aria-hidden="true" />
-                           
+
                             <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6 lg:pl-4">
                                 <form className="relative flex flex-1" action="#" method="GET">
                                     <label htmlFor="search-field" className="sr-only">
@@ -740,11 +912,27 @@ export default function Dashboard() {
                                                                     USD
                                                                 </span>
                                                             </td>
-                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{product.id_hash}</td>
+                                                            <button
+                                                                className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 hover:underline hover:cursor-pointer"
+                                                                onClick={() => {
+                                                                    navigator.clipboard.writeText(`https://onblockpay.io/c/${product.id_hash}`);
+                                                                    toast.success('Copied link to clipboard!');
+                                                                }}
+                                                            >
+                                                                onblockpay.io/c/{product.id_hash}
+                                                            </button>
                                                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                                                <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                                                                    Edit<span className="sr-only">, {product.name}</span>
-                                                                </a>
+                                                                <button
+                                                                    className="text-indigo-600 hover:text-indigo-900"
+                                                                    onClick={() => {
+                                                                        setCurrentID(product.id_hash);
+                                                                        setProductName(product.name);
+                                                                        setPrice(product.price);
+                                                                        setOpenEdit(true);
+                                                                    }}
+                                                                >
+                                                                    Edit
+                                                                </button>
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -756,8 +944,8 @@ export default function Dashboard() {
                             </div>
                         </div>
                     </main>
-                </div>
-            </div>
+                </div >
+            </div >
         </>
     )
 }

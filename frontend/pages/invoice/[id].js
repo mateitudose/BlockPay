@@ -72,6 +72,7 @@ const Invoice = ({ invoice }) => {
             return () => clearTimeout(timer);
         }
     }, [isCopied]);
+    
     const handleCopyClick = (textToCopy) => {
         if (typeof window !== 'undefined') {
             navigator.clipboard.writeText(textToCopy).then(() => {
@@ -79,6 +80,7 @@ const Invoice = ({ invoice }) => {
             });
         }
     };
+
     useEffect(() => {
         if (isCopied2) {
             const timer = setTimeout(() => {

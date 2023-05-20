@@ -25,7 +25,9 @@ import { supabase } from '@/lib/supabaseClient'
 import logo from "@/public/logo.svg"
 import Image from 'next/image'
 import TimeGreeting from '@/components/TimeGreeting';
-import Badge from '@/components/Badge';
+import Badge from '@/components/Badge'; 
+import toast, { Toaster } from 'react-hot-toast';
+
 
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: WindowIcon, current: true },
@@ -197,6 +199,8 @@ export default function Dashboard() {
     return (
         <>
             <div>
+                <Toaster position="top-right"
+                    reverseOrder={false} />
                 <title>Dashboard | Blockpay</title>
                 <Transition.Root show={sidebarOpen} as={Fragment}>
                     <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
