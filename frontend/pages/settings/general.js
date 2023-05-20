@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Dialog, Switch } from '@headlessui/react'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import {
@@ -11,6 +11,7 @@ import {
     EyeIcon,
     EyeSlashIcon,
 } from '@heroicons/react/24/outline'
+import { supabase } from '@/lib/supabaseClient';
 
 import BitcoinIcon from '@/components/BitcoinIcon'
 
@@ -37,6 +38,7 @@ export default function Example() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [isPasswordHidden, setPasswordHidden] = useState(true);
     const [username, setUsername] = useState('');
+    const [newUsername, setNewUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -52,14 +54,37 @@ export default function Example() {
         setPassword(e.target.value);
     };
 
+    useEffect(() => {
+        const getUser = async () => {
+            try {
+                const user = await supabase.auth.getUser();
+                const { data, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', user.data.user.id);
+                if (error) {
+                    throw error;
+                } else {
+                    setEmail(data[0].email);
+                    setUsername(data[0].username);
+                }
+                console.log(username);
+
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        getUser();
+    }, []);
+
     const handleSave = async (e) => {
         e.preventDefault();
         const user = await supabase.auth.getUser();
-        if (username !== '') {
+        if (newUsername !== '') {
             const { data, error } = await supabase
                 .from('profiles')
                 .update({
-                    username: username,
+                    username: newUsername,
                 })
                 .eq({ 'id': user.data.user.id });
             if (error) {
@@ -214,8 +239,8 @@ export default function Example() {
                                                         name="username"
                                                         id="username"
                                                         className="pl-2.5 block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                                                        placeholder="blockpayuser"
-                                                        value={username}
+                                                        placeholder={username ? username : 'blockpayuser'}
+                                                        value={newUsername}
                                                         onChange={handleUsernameChange}
                                                     />
                                                 </div>
