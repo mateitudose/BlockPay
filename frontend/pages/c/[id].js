@@ -81,7 +81,7 @@ const Checkout = ({ checkout }) => {
             toast.error(error.message);
         }
         else {
-            router.push(`/invoice/${id}`);
+            router.push(`/i/${id}`);
         }
     }
 
