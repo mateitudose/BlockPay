@@ -197,6 +197,7 @@ export default function Dashboard() {
             toast.error(error.message);
         } else {
             toast.success('Product deleted');
+            router.reload();
         }
     };
 
