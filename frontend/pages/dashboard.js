@@ -114,7 +114,7 @@ export default function Dashboard() {
                     throw error;
                 } else {
                     if (data) {
-                        console.log(data);
+                        transactions = [];
                         for (let i = 0; i < data.length; i++) {
                             transactions.push({
                                 id: i,
