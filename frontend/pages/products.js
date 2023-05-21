@@ -167,6 +167,7 @@ export default function Dashboard() {
             toast.error(error.message);
         } else {
             toast.success(`Product ${product_name} added`);
+            router.reload();
         }
     };
 
@@ -183,6 +184,7 @@ export default function Dashboard() {
             toast.error(error.message);
         } else {
             toast.success('Product updated');
+            router.reload();
         }
     };
 
@@ -608,7 +610,7 @@ export default function Dashboard() {
                                                 </li>
                                                 <li className="mt-auto">
                                                     <a
-                                                        href="/settings"
+                                                        href="/settings/general"
                                                         className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                                                     >
                                                         <Cog8ToothIcon
@@ -698,7 +700,7 @@ export default function Dashboard() {
                                 </li>
                                 <li className="mt-auto">
                                     <a
-                                        href="/settings"
+                                        href="/settings/general"
                                         className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                                     >
                                         <Cog8ToothIcon
@@ -786,7 +788,7 @@ export default function Dashboard() {
                                                     <Menu.Item>
                                                         {({ active }) => (
                                                             <a
-                                                                href="/settings"
+                                                                href="/settings/general"
                                                                 className={classNames(
                                                                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                                                     'inline-flex items-center gap-x-1.5 block px-4 py-2 text-sm'
@@ -902,7 +904,7 @@ export default function Dashboard() {
                                                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                                                                 {product.name}
                                                             </td>
-                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{product.id_hash}</td>
+                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 font-mono">{product.id_hash}</td>
                                                             <td className="whitespace-nowrap px-3 py-4 text-sm text-black font-medium">
                                                                 <span className='text-gray-500'>
                                                                     $
@@ -913,7 +915,7 @@ export default function Dashboard() {
                                                                 </span>
                                                             </td>
                                                             <button
-                                                                className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 hover:underline hover:cursor-pointer"
+                                                                className="font-mono whitespace-nowrap px-3 py-4 text-sm text-gray-500 hover:underline hover:cursor-pointer"
                                                                 onClick={() => {
                                                                     navigator.clipboard.writeText(`https://onblockpay.io/c/${product.id_hash}`);
                                                                     toast.success('Copied link to clipboard!');

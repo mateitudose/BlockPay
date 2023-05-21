@@ -7,7 +7,11 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        mono: ["Menlo"],
+      },
+    },
     plugins: [
       require('@tailwindcss/forms')
     ],
