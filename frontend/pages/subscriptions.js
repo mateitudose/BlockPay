@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect, use } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
     Bars3Icon,
@@ -7,33 +7,28 @@ import {
     XMarkIcon,
     ArrowRightOnRectangleIcon,
     WindowIcon,
-    BuildingStorefrontIcon,
-    BanknotesIcon,
-    CreditCardIcon,
     Square3Stack3DIcon,
     CurrencyDollarIcon,
 } from '@heroicons/react/24/outline'
+
 import {
     ChevronDownIcon,
     MagnifyingGlassIcon,
-    BuildingOfficeIcon,
-    CheckCircleIcon,
-    ChevronRightIcon,
-}
-    from '@heroicons/react/20/solid'
+} from '@heroicons/react/20/solid'
+
 import { useRouter } from 'next/router';
 import { supabase } from '@/lib/supabaseClient'
 import logo from "@/public/logo.svg"
 import Image from 'next/image'
-import TimeGreeting from '@/components/TimeGreeting';
-import Badge from '@/components/Badge'; 
+const { v4: uuidv4 } = require('uuid');
+import Badge from '@/components/Badge';
 import toast, { Toaster } from 'react-hot-toast';
 
 
 const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: WindowIcon, current: true },
+    { name: 'Dashboard', href: '/dashboard', icon: WindowIcon, current: false },
     { name: 'Products', href: '/products', icon: Square3Stack3DIcon, current: false },
-    { name: 'Subscriptions', href: '/subscriptions', icon: CurrencyDollarIcon, current: false },
+    { name: 'Subscriptions', href: '/subscriptions', icon: CurrencyDollarIcon, current: true },
 ]
 
 const teams = [
@@ -42,14 +37,7 @@ const teams = [
     { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
 ]
 
-
-const cards = [
-    { name: 'Total Revenue', href: '#', icon: BanknotesIcon, amount: '$30,659.45', change: 12 },
-    { name: 'Orders', href: '#', icon: BuildingStorefrontIcon, amount: '1,257', change: 0 },
-    { name: 'Subscription Revenue', href: '#', icon: CreditCardIcon, amount: '$12,557.44', change: -3 },
-]
-
-let transactions = []
+let products = [];
 
 
 const UTC = (timestamp) => {
@@ -77,6 +65,7 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
+
 export default function Dashboard() {
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const [shouldRender, setShouldRender] = useState(false);
@@ -84,6 +73,19 @@ export default function Dashboard() {
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [loaded, setLoaded] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [openEdit, setOpenEdit] = useState(false);
+    const [productName, setProductName] = useState('');
+    const [price, setPrice] = useState('');
+    const [currentID, setCurrentID] = useState('');
+
+    const handleProductNameChange = (e) => {
+        setProductName(e.target.value);
+    };
+
+    const handlePriceChange = (e) => {
+        setPrice(e.target.value);
+    }
 
     useEffect(() => {
         const getUser = async () => {
@@ -94,7 +96,7 @@ export default function Dashboard() {
                     .select('*')
                     .eq('id', user.data.user.id);
                 if (error) {
-                    throw error;
+                    toast.error(error.message);
                 } else {
                     setEmail(data[0].email);
                     setUsername(data[0].username);
@@ -109,24 +111,20 @@ export default function Dashboard() {
             try {
                 const user = await supabase.auth.getUser();
                 const { data, error } = await supabase
-                    .from('invoices')
+                    .from('subscriptions')
                     .select('*')
                     .eq('merchant_id', user.data.user.id);
                 if (error) {
                     throw error;
                 } else {
                     if (data) {
-                        transactions = [];
+                        products = [];
                         for (let i = 0; i < data.length; i++) {
-                            transactions.push({
+                            products.push({
                                 id: i,
-                                name: data[i].customer_email,
-                                href: '#',
-                                amount: data[i].value_to_receive,
-                                currency: 'USD',
-                                status: data[i].status,
-                                date: UTC(data[i].created_at),
-                                datetime: UTC(data[i].created_at),
+                                id_hash: data[i].id,
+                                price: data[i].price_in_usd,
+                                name: data[i].product_name,
                             })
                         }
                         setLoaded(true);
@@ -155,6 +153,54 @@ export default function Dashboard() {
         await supabase.auth.signOut();
         // Redirect to login page or perform other actions after sign out
         router.push('/login');
+    };
+
+    const addProduct = async (product_name, price) => {
+        const user = await supabase.auth.getUser();
+        const { data, error } = await supabase
+            .from('subscriptions')
+            .insert({
+                id: (uuidv4().split('-')).pop(),
+                merchant_id: user.data.user.id,
+                product_name: product_name,
+                price_in_usd: price,
+            });
+        if (error) {
+            toast.error(error.message);
+        } else {
+            toast.success(`Subscription ${product_name} added`);
+            router.reload();
+        }
+    };
+
+    const updateProduct = async (id, name, price) => {
+        console.log(id, name, price);
+        const { data, error } = await supabase
+            .from('subscriptions')
+            .update({
+                product_name: name,
+                price_in_usd: price
+            })
+            .eq('id', id);
+        if (error) {
+            toast.error(error.message);
+        } else {
+            toast.success('Subscription updated');
+            router.reload();
+        }
+    };
+
+    const deleteProduct = async (id) => {
+        const { data, error } = await supabase
+            .from('subscriptions')
+            .delete()
+            .eq('id', id);
+        if (error) {
+            toast.error(error.message);
+        } else {
+            toast.success('Subscription deleted');
+            router.reload();
+        }
     };
 
     useEffect(() => {
@@ -203,7 +249,260 @@ export default function Dashboard() {
             <div>
                 <Toaster position="top-right"
                     reverseOrder={false} />
-                <title>Dashboard | Blockpay</title>
+                <title>Subscriptions | Blockpay</title>
+                {/* Add subscription */}
+                <Transition.Root show={open} as={Fragment}>
+                    <Dialog as="div" className="relative z-50" onClose={setOpen}>
+                        <Transition.Child
+                            as={Fragment}
+                            enter="ease-in-out duration-500"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100"
+                            leave="ease-in-out duration-500"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                        >
+                            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                        </Transition.Child>
+
+                        <div className="fixed inset-0 overflow-hidden">
+                            <div className="absolute inset-0 overflow-hidden">
+                                <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+                                    <Transition.Child
+                                        as={Fragment}
+                                        enter="transform transition ease-in-out duration-500 sm:duration-700"
+                                        enterFrom="translate-x-full"
+                                        enterTo="translate-x-0"
+                                        leave="transform transition ease-in-out duration-500 sm:duration-700"
+                                        leaveFrom="translate-x-0"
+                                        leaveTo="translate-x-full"
+                                    >
+                                        <Dialog.Panel className="pointer-events-auto relative w-96">
+                                            <Transition.Child
+                                                as={Fragment}
+                                                enter="ease-in-out duration-500"
+                                                enterFrom="opacity-0"
+                                                enterTo="opacity-100"
+                                                leave="ease-in-out duration-500"
+                                                leaveFrom="opacity-100"
+                                                leaveTo="opacity-0"
+                                            >
+                                                <div className="absolute left-0 top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4">
+                                                    <button
+                                                        type="button"
+                                                        className="rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                                                        onClick={() => setOpen(false)}
+                                                    >
+                                                        <span className="sr-only">Close panel</span>
+                                                        <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                                                    </button>
+                                                </div>
+                                            </Transition.Child>
+                                            <div className="h-full overflow-y-auto bg-white p-8">
+                                                <div className="space-y-6 pb-16">
+                                                    <div>
+                                                        <div className="mt-4">
+                                                            <h2 className='my-4 font-medium'>Subscription Details</h2>
+                                                            <div>
+                                                                <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
+                                                                    Subscription name
+                                                                </label>
+                                                                <div className="mt-2">
+                                                                    <input
+                                                                        type="text"
+                                                                        name="name"
+                                                                        id="Name"
+                                                                        className="pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                        placeholder="Name"
+                                                                        required
+                                                                        value={productName}
+                                                                        onChange={handleProductNameChange}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div>
+                                                            <label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">
+                                                                Price
+                                                            </label>
+                                                            <div className="relative mt-2 rounded-md shadow-sm">
+                                                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                                                    <span className="text-gray-500 sm:text-sm">$</span>
+                                                                </div>
+                                                                <input
+                                                                    type="number"
+                                                                    name="price"
+                                                                    id="price"
+                                                                    className="block w-full rounded-md border lg:border-0 py-1.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                    placeholder="0.00"
+                                                                    aria-describedby="price-currency"
+                                                                    required
+                                                                    value={price}
+                                                                    onChange={handlePriceChange}
+                                                                />
+                                                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                                                    <span className="text-gray-500 sm:text-sm" id="price-currency">
+                                                                        USD
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex">
+                                                        <button
+                                                            type="button"
+                                                            className="flex-1 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                                            onClick={async () => {
+                                                                await addProduct(productName, price);
+                                                                setOpen(false);
+                                                            }}
+                                                        >
+                                                            Add subscription
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </Dialog.Panel>
+                                    </Transition.Child>
+                                </div>
+                            </div>
+                        </div>
+                    </Dialog>
+                </Transition.Root>
+
+                {/* Edit subscription*/}
+                <Transition.Root show={openEdit} as={Fragment}>
+                    <Dialog as="div" className="relative z-50" onClose={setOpenEdit}>
+                        <Transition.Child
+                            as={Fragment}
+                            enter="ease-in-out duration-500"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100"
+                            leave="ease-in-out duration-500"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                        >
+                            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                        </Transition.Child>
+
+                        <div className="fixed inset-0 overflow-hidden">
+                            <div className="absolute inset-0 overflow-hidden">
+                                <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+                                    <Transition.Child
+                                        as={Fragment}
+                                        enter="transform transition ease-in-out duration-500 sm:duration-700"
+                                        enterFrom="translate-x-full"
+                                        enterTo="translate-x-0"
+                                        leave="transform transition ease-in-out duration-500 sm:duration-700"
+                                        leaveFrom="translate-x-0"
+                                        leaveTo="translate-x-full"
+                                    >
+                                        <Dialog.Panel className="pointer-events-auto relative w-96">
+                                            <Transition.Child
+                                                as={Fragment}
+                                                enter="ease-in-out duration-500"
+                                                enterFrom="opacity-0"
+                                                enterTo="opacity-100"
+                                                leave="ease-in-out duration-500"
+                                                leaveFrom="opacity-100"
+                                                leaveTo="opacity-0"
+                                            >
+                                                <div className="absolute left-0 top-0 -ml-8 flex pr-2 pt-4 sm:-ml-10 sm:pr-4">
+                                                    <button
+                                                        type="button"
+                                                        className="rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                                                        onClick={() => setOpenEdit(false)}
+                                                    >
+                                                        <span className="sr-only">Close panel</span>
+                                                        <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                                                    </button>
+                                                </div>
+                                            </Transition.Child>
+                                            <div className="h-full overflow-y-auto bg-white p-8">
+                                                <div className="space-y-6 pb-16">
+                                                    <div>
+                                                        <div className="mt-4">
+                                                            <h2 className='my-4 font-medium'>Subscription Details</h2>
+                                                            <div>
+                                                                <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
+                                                                    Subscription name
+                                                                </label>
+                                                                <div className="mt-2">
+                                                                    <input
+                                                                        type="text"
+                                                                        name="name"
+                                                                        id="Name"
+                                                                        className="pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                        placeholder={productName}
+                                                                        required
+                                                                        value={productName}
+                                                                        onChange={handleProductNameChange}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div>
+                                                            <label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">
+                                                                Price
+                                                            </label>
+                                                            <div className="relative mt-2 rounded-md shadow-sm">
+                                                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                                                    <span className="text-gray-500 sm:text-sm">$</span>
+                                                                </div>
+                                                                <input
+                                                                    type="number"
+                                                                    name="price"
+                                                                    id="price"
+                                                                    className="block w-full rounded-md border lg:border-0 py-1.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                    placeholder={price}
+                                                                    aria-describedby="price-currency"
+                                                                    required
+                                                                    value={price}
+                                                                    onChange={handlePriceChange}
+                                                                />
+                                                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                                                    <span className="text-gray-500 sm:text-sm" id="price-currency">
+                                                                        USD
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex justify-between space-x-2">
+                                                        <button
+                                                            type="button"
+                                                            className="flex-1 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                                            onClick={async () => {
+                                                                await updateProduct(currentID, productName, price);
+                                                                setOpenEdit(false);
+                                                            }}
+                                                        >
+                                                            Update subscription
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="flex-1 rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                                                            onClick={async () => {
+                                                                await deleteProduct(currentID);
+                                                                setOpenEdit(false);
+                                                            }}
+                                                        >
+                                                            Delete subscription
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </Dialog.Panel>
+                                    </Transition.Child>
+                                </div>
+                            </div>
+                        </div>
+                    </Dialog>
+                </Transition.Root>
                 <Transition.Root show={sidebarOpen} as={Fragment}>
                     <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
                         <Transition.Child
@@ -314,7 +613,7 @@ export default function Dashboard() {
                                                 </li>
                                                 <li className="mt-auto">
                                                     <a
-                                                        href="/settings"
+                                                        href="/settings/general"
                                                         className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                                                     >
                                                         <Cog8ToothIcon
@@ -404,7 +703,7 @@ export default function Dashboard() {
                                 </li>
                                 <li className="mt-auto">
                                     <a
-                                        href="/settings"
+                                        href="/settings/general"
                                         className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                                     >
                                         <Cog8ToothIcon
@@ -492,7 +791,7 @@ export default function Dashboard() {
                                                     <Menu.Item>
                                                         {({ active }) => (
                                                             <a
-                                                                href="/settings"
+                                                                href="/settings/general"
                                                                 className={classNames(
                                                                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                                                     'inline-flex items-center gap-x-1.5 block px-4 py-2 text-sm'
@@ -558,251 +857,100 @@ export default function Dashboard() {
                     </div>
 
                     <main className="py-10 bg-slate-50/80 h-screen relative">
-                        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"><main className="flex-1 pb-8">
-                            {/* Page header */}
-                            <div className="bg-white shadow rounded-lg">
-                                <div className="px-4 sm:px-6 lg:mx-auto lg:max-w-6xl lg:px-8">
-                                    <div className="py-6 md:flex md:items-center md:justify-between ">
-                                        <div className="min-w-0 flex-1">
-                                            {/* Profile */}
-                                            <div className="flex items-center">
-                                                <img
-                                                    className="hidden h-16 w-16 rounded-full sm:block"
-                                                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
-                                                    alt=""
-                                                />
-                                                <div>
-                                                    <div className="flex items-center">
-                                                        <img
-                                                            className="h-16 w-16 rounded-full sm:hidden"
-                                                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
-                                                            alt=""
-                                                        />
-                                                        <h1 className="inline-flex block ml-3 text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
-                                                            <TimeGreeting />&nbsp;<span>{username}</span>
-                                                        </h1>
-                                                    </div>
-                                                    <dl className="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
-                                                        <dt className="sr-only">Company</dt>
-                                                        <dd className="flex items-center text-sm font-medium capitalize text-gray-500 sm:mr-6">
-                                                            <BuildingOfficeIcon
-                                                                className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
-                                                                aria-hidden="true"
-                                                            />
-                                                            Duke street studio
-                                                        </dd>
-                                                        <dt className="sr-only">Account status</dt>
-                                                        <dd className="mt-3 flex items-center text-sm font-medium capitalize text-gray-500 sm:mr-6 sm:mt-0">
-                                                            <CheckCircleIcon
-                                                                className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
-                                                                aria-hidden="true"
-                                                            />
-                                                            Verified account
-                                                        </dd>
-                                                    </dl>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="mt-6 flex space-x-3 md:ml-4 md:mt-0">
-                                            <button
-                                                type="button"
-                                                className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                                            >
-                                                Add money
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className="inline-flex items-center rounded-md bg-cyan-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
-                                            >
-                                                Send money
-                                            </button>
-                                        </div>
-                                    </div>
+                        <div className="px-4 sm:px-6 lg:px-24">
+                            <div className="sm:flex sm:items-center">
+                                <div className="sm:flex-auto">
+                                    <h1 className="text-base font-semibold leading-6 text-gray-900">
+                                        Subscriptions
+                                    </h1>
+                                    <p className="mt-2 text-sm text-gray-700">
+                                        A list of all the users in your account including their name, title, email and role.
+                                    </p>
                                 </div>
-                            </div>
-
-                            <div className="mt-8">
-                                <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-                                    <h2 className="text-lg font-medium leading-6 text-gray-900">Cashflow</h2>
-                                    <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                                        {/* Card */}
-                                        {cards.map((card) => (
-                                            <div href={card.href} key={card.name} className="overflow-hidden rounded-lg bg-white shadow">
-                                                <div className="p-5">
-                                                    <div className="flex items-center">
-                                                        <div className="flex-shrink-0">
-                                                            <card.icon className="h-6 w-6 text-gray-400" aria-hidden="true" />
-                                                        </div>
-                                                        <div className="ml-5 w-0 flex-1">
-                                                            <dl>
-                                                                <dt className="truncate text-sm font-medium text-gray-500">{card.name}</dt>
-                                                                <dd>
-                                                                    <div className="text-lg font-medium text-gray-900">{card.amount}</div>
-                                                                </dd>
-                                                            </dl>
-                                                        </div>
-                                                        <div className='mt-4 text-sm'>
-                                                            <Badge color={changeColor(card.change)} text={`${card.change}%`} />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <h2 className="mx-auto mt-8 max-w-6xl px-4 text-lg font-medium leading-6 text-gray-900 sm:px-6 lg:px-8">
-                                    Recent activity
-                                </h2>
-
-                                {/* Activity list (smallest breakpoint only) */}
-                                <div className="shadow sm:hidden">
-                                    <ul role="list" className="mt-2 divide-y divide-gray-200 overflow-hidden shadow sm:hidden">
-                                        {loaded && transactions.map((transaction) => (
-                                            <li key={transaction.id}>
-                                                <a href={transaction.href} className="block bg-white px-4 py-4 hover:bg-gray-50">
-                                                    <span className="flex items-center space-x-4">
-                                                        <span className="flex flex-1 space-x-2 truncate">
-                                                            <BanknotesIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                                                            <span className="flex flex-col truncate text-sm text-gray-500">
-                                                                <span className="truncate">{transaction.name}</span>
-                                                                <span>
-                                                                    <span className="font-medium text-gray-900">{transaction.amount}</span>{' '}
-                                                                    {transaction.currency}
-                                                                </span>
-                                                                <time dateTime={transaction.datetime}>{transaction.date}</time>
-                                                            </span>
-                                                        </span>
-                                                        <ChevronRightIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                                                    </span>
-                                                </a>
-                                            </li>
-                                        ))}
-                                    </ul>
-
-                                    <nav
-                                        className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3"
-                                        aria-label="Pagination"
+                                <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+                                    <button
+                                        type="button"
+                                        className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        onClick={() => setOpen(true)}
                                     >
-                                        <div className="flex flex-1 justify-between">
-                                            <a
-                                                href="#"
-                                                className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                                            >
-                                                Previous
-                                            </a>
-                                            <a
-                                                href="#"
-                                                className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                                            >
-                                                Next
-                                            </a>
-                                        </div>
-                                    </nav>
+                                        Add subscription
+                                    </button>
                                 </div>
-
-                                {/* Activity table (small breakpoint and up) */}
-                                <div className="hidden sm:block">
-                                    <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-                                        <div className="mt-2 flex flex-col">
-                                            <div className="min-w-full overflow-hidden overflow-x-auto align-middle shadow sm:rounded-lg">
-                                                <table className="min-w-full divide-y divide-gray-200">
-                                                    <thead>
-                                                        <tr>
-                                                            <th
-                                                                className="bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900"
-                                                                scope="col"
+                            </div>
+                            <div className="mt-8 flow-root">
+                                <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                    <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                                        <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                                            <table className="min-w-full divide-y divide-gray-300">
+                                                <thead className="bg-gray-50">
+                                                    <tr>
+                                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                                                            Subscription Name
+                                                        </th>
+                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                            ID
+                                                        </th>
+                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                            Price
+                                                        </th>
+                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                            Link
+                                                        </th>
+                                                        <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                                            <span className="sr-only">Edit</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-gray-200 bg-white">
+                                                    {loaded && products.map((subscription) => (
+                                                        <tr key={subscription.id}>
+                                                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                                {subscription.name}
+                                                            </td>
+                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 font-mono">{subscription.id_hash}</td>
+                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-black font-medium">
+                                                                <span className='text-gray-500'>
+                                                                    $
+                                                                </span>
+                                                                {subscription.price}
+                                                                <span className='text-gray-500'>
+                                                                    USD
+                                                                </span>
+                                                            </td>
+                                                            <button
+                                                                className="font-mono whitespace-nowrap px-3 py-4 text-sm text-gray-500 hover:underline hover:cursor-pointer"
+                                                                onClick={() => {
+                                                                    navigator.clipboard.writeText(`https://onblockpay.io/s/${subscription.id_hash}`);
+                                                                    toast.success('Copied link to clipboard!');
+                                                                }}
                                                             >
-                                                                Invoices
-                                                            </th>
-                                                            <th
-                                                                className="bg-gray-50 px-6 py-3 text-right text-sm font-semibold text-gray-900"
-                                                                scope="col"
-                                                            >
-                                                                Amount
-                                                            </th>
-                                                            <th
-                                                                className="hidden bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900 md:block"
-                                                                scope="col"
-                                                            >
-                                                                Status
-                                                            </th>
-                                                            <th
-                                                                className="bg-gray-50 px-6 py-3 text-right text-sm font-semibold text-gray-900"
-                                                                scope="col"
-                                                            >
-                                                                Date
-                                                            </th>
+                                                                onblockpay.io/s/{subscription.id_hash}
+                                                            </button>
+                                                            <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                                                <button
+                                                                    className="text-indigo-600 hover:text-indigo-900"
+                                                                    onClick={() => {
+                                                                        setCurrentID(subscription.id_hash);
+                                                                        setProductName(subscription.name);
+                                                                        setPrice(subscription.price);
+                                                                        setOpenEdit(true);
+                                                                    }}
+                                                                >
+                                                                    Edit
+                                                                </button>
+                                                            </td>
                                                         </tr>
-                                                    </thead>
-                                                    <tbody className="divide-y divide-gray-200 bg-white">
-                                                        {transactions.map((transaction) => (
-                                                            <tr key={transaction.id} className="bg-white">
-                                                                <td className="w-full max-w-0 whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                                                                    <div className="flex">
-                                                                        <a href={transaction.href} className="group inline-flex space-x-2 truncate text-sm">
-                                                                            <BanknotesIcon
-                                                                                className="h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                                                                                aria-hidden="true"
-                                                                            />
-                                                                            <p className="truncate text-gray-500 group-hover:text-gray-900">
-                                                                                {transaction.name}
-                                                                            </p>
-                                                                        </a>
-                                                                    </div>
-                                                                </td>
-                                                                <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                                    <span className="font-medium text-gray-900">{transaction.amount}</span>
-                                                                    {transaction.currency}
-                                                                </td>
-                                                                <td className="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 md:block">
-
-                                                                    <div className="text-sm">
-                                                                        <Badge color={changeStatus(transaction.status)} text={transaction.status} />
-                                                                    </div>
-                                                                </td>
-                                                                <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                                    <time dateTime={transaction.datetime}>{transaction.date}</time>
-                                                                </td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                                {/* Pagination */}
-                                                <nav
-                                                    className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6"
-                                                    aria-label="Pagination"
-                                                >
-                                                    <div className="hidden sm:block">
-                                                        <p className="text-sm text-gray-700">
-                                                            Showing <span className="font-medium">1</span> to <span className="font-medium">10</span> of{' '}
-                                                            <span className="font-medium">20</span> results
-                                                        </p>
-                                                    </div>
-                                                    <div className="flex flex-1 justify-between gap-x-3 sm:justify-end">
-                                                        <a
-                                                            href="#"
-                                                            className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:ring-gray-400"
-                                                        >
-                                                            Previous
-                                                        </a>
-                                                        <a
-                                                            href="#"
-                                                            className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:ring-gray-400"
-                                                        >
-                                                            Next
-                                                        </a>
-                                                    </div>
-                                                </nav>
-                                            </div>
+                                                    ))}
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </main></div>
+                        </div>
                     </main>
-                </div>
-            </div>
+                </div >
+            </div >
         </>
     )
 }

@@ -17,10 +17,16 @@ import {
     UserCircleIcon,
     XMarkIcon as XMarkIconMini,
 } from '@heroicons/react/20/solid'
-import { BellIcon, XMarkIcon as XMarkIconOutline } from '@heroicons/react/24/outline'
-import { CheckCircleIcon } from '@heroicons/react/24/solid'
+import {
+    BellIcon,
+    XMarkIcon as XMarkIconOutline,
+    DocumentTextIcon,
+} from '@heroicons/react/24/outline'
 import logo from "@/public/logo.svg"
 import Image from 'next/image'
+import Badge from '@/components/Badge';
+import UTC from '@/components/UTC';
+
 const navigation = [
     { name: 'Home', href: '#' },
     { name: 'Invoices', href: '#' },
@@ -98,11 +104,84 @@ const moods = [
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
-const Invoice = ({ invoice }) => {
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-    const [selected, setSelected] = useState(moods[5])
 
-    console.log(invoice.exchange_rate);
+function changeStatus(status) {
+    if (status === "Awaiting payment")
+        return "yellow";
+    else if (status === "Voided")
+        return "red";
+    else if (status === "Confirmed")
+        return "green";
+    else
+        return "yellow";
+}
+
+function convertTimestamp(timestamp) {
+    var date = new Date(timestamp);
+    var year = date.getFullYear();
+    var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    var month = months[date.getMonth()];
+    var day = "0" + date.getDate();
+
+    return `${month} ${day.substr(-2)}, ${year}`;
+}
+
+
+const Invoice = ({ invoice }) => {
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const router = useRouter();
+    const [shouldRender, setShouldRender] = useState(false);
+
+    useEffect(() => {
+        const channel = supabase
+            .channel('table-db-changes')
+            .on(
+                'postgres_changes',
+                {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'invoices',
+                },
+                (payload) => {
+                    if (payload.new.id === invoice.id) {
+                        router.reload();
+                    }
+                }
+            )
+            .subscribe()
+        return () => {
+            channel.unsubscribe()
+        }
+    }, [invoice.id]);
+
+    async function handleNotSignedIn() {
+        const user = await supabase.auth.getUser();
+        if (!user.data.user) {
+            router.push('/login');
+        }
+        return user.data.user;
+    }
+
+    useEffect(() => {
+        const runPrecheck = async () => {
+            const result = await handleNotSignedIn();
+
+            if (result) {
+                // If precheck passes, set shouldRender to true
+                setShouldRender(true);
+            } else {
+                // If precheck fails, handle it accordingly
+                // For example, you can show an error message, redirect, etc.
+            }
+        };
+
+        runPrecheck();
+    }, []);
+
+    if (!shouldRender) {
+        // You can render a loading indicator, a placeholder, or nothing
+        return <div></div>;
+    }
 
     return (
         <>
@@ -197,16 +276,14 @@ const Invoice = ({ invoice }) => {
                     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
                         <div className="mx-auto flex max-w-2xl items-center justify-between gap-x-8 lg:mx-0 lg:max-w-none">
                             <div className="flex items-center gap-x-6">
-                                <img
-                                    src="https://tailwindui.com/img/logos/48x48/tuple.svg"
-                                    alt=""
-                                    className="h-16 w-16 flex-none rounded-full ring-1 ring-gray-900/10"
+                                <DocumentTextIcon
+                                    className="h-16 w-16 flex-none py-3.5 text-gray-700 rounded-full ring-1 ring-gray-900/10"
                                 />
                                 <h1>
                                     <div className="text-sm leading-6 font-medium text-gray-500">
                                         Invoice <span className="text-gray-700 font-mono">#{invoice.id}</span>
                                     </div>
-                                    <div className="mt-1 text-base font-semibold leading-6 text-gray-900">Tuple, Inc</div>
+                                    <div className="mt-1 text-base font-semibold leading-6 text-gray-900">{invoice.product_name}</div>
                                 </h1>
                             </div>
                             <div className="flex items-center gap-x-4 sm:gap-x-6">
@@ -282,12 +359,12 @@ const Invoice = ({ invoice }) => {
                                 <dl className="flex flex-wrap">
                                     <div className="flex-auto pl-6 pt-6">
                                         <dt className="text-sm font-semibold leading-6 text-gray-900">Amount</dt>
-                                        <dd className="mt-1 text-base font-semibold leading-6 text-gray-900">$10,560.00</dd>
+                                        <dd className="mt-1 text-base font-semibold leading-6 text-gray-900">${invoice.price_in_usd}</dd>
                                     </div>
                                     <div className="flex-none self-end px-6 pt-4">
                                         <dt className="sr-only">Status</dt>
-                                        <dd className="rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-600 ring-1 ring-inset ring-green-600/20">
-                                            Paid
+                                        <dd className="text-sm">
+                                            <Badge color={changeStatus(invoice.status)} text={invoice.status} />
                                         </dd>
                                     </div>
                                     <div className="mt-6 flex w-full flex-none gap-x-4 border-t border-gray-900/5 px-6 pt-6">
@@ -303,21 +380,14 @@ const Invoice = ({ invoice }) => {
                                             <CalendarDaysIcon className="h-6 w-5 text-gray-400" aria-hidden="true" />
                                         </dt>
                                         <dd className="text-sm leading-6 text-gray-500">
-                                            <time dateTime="2023-01-31">January 31, 2023</time>
+                                            <div>{convertTimestamp(invoice.created_at)}</div>
                                         </dd>
-                                    </div>
-                                    <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
-                                        <dt className="flex-none">
-                                            <span className="sr-only">Status</span>
-                                            <CreditCardIcon className="h-6 w-5 text-gray-400" aria-hidden="true" />
-                                        </dt>
-                                        <dd className="text-sm leading-6 text-gray-500">Paid with MasterCard</dd>
                                     </div>
                                 </dl>
                                 <div className="mt-6 border-t border-gray-900/5 px-6 py-6">
-                                    <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+                                    {/* <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
                                         Download receipt <span aria-hidden="true">&rarr;</span>
-                                    </a>
+                                    </a> */}
                                 </div>
                             </div>
                         </div>
@@ -329,33 +399,26 @@ const Invoice = ({ invoice }) => {
                                 <div className="sm:pr-4">
                                     <dt className="inline text-gray-500">Issued on</dt>{' '}
                                     <dd className="inline text-gray-700">
-                                        <time dateTime="2023-23-01">January 23, 2023</time>
+                                        <time><UTC timestamp={invoice.created_at} /></time>
                                     </dd>
                                 </div>
                                 <div className="mt-2 sm:mt-0 sm:pl-4">
                                     <dt className="inline text-gray-500">Due on</dt>{' '}
                                     <dd className="inline text-gray-700">
-                                        <time dateTime="2023-31-01">January 31, 2023</time>
+                                        <time><UTC timestamp={invoice.created_at + 1800000} /></time>
                                     </dd>
                                 </div>
                                 <div className="mt-6 border-t border-gray-900/5 pt-6 sm:pr-4">
                                     <dt className="font-semibold text-gray-900">From</dt>
                                     <dd className="mt-2 text-gray-500">
-                                        <span className="font-medium text-gray-900">Acme, Inc.</span>
-                                        <br />
-                                        7363 Cynthia Pass
-                                        <br />
-                                        Toronto, ON N3Y 4H8
+                                        <span className="font-medium text-gray-900 font-mono">Customer Address</span>
+
                                     </dd>
                                 </div>
                                 <div className="mt-8 sm:mt-6 sm:border-t sm:border-gray-900/5 sm:pl-4 sm:pt-6">
                                     <dt className="font-semibold text-gray-900">To</dt>
                                     <dd className="mt-2 text-gray-500">
-                                        <span className="font-medium text-gray-900">Tuple, Inc</span>
-                                        <br />
-                                        886 Walter Street
-                                        <br />
-                                        New York, NY 12345
+                                        <span className="font-medium text-gray-90- font-mono">{invoice.address.substring(0, 6)}...{invoice.address.substring(invoice.address.length - 5)}</span>
                                     </dd>
                                 </div>
                             </dl>
@@ -441,186 +504,6 @@ const Invoice = ({ invoice }) => {
                                     </tr>
                                 </tfoot>
                             </table>
-                        </div>
-
-                        <div className="lg:col-start-3">
-                            {/* Activity feed */}
-                            <h2 className="text-sm font-semibold leading-6 text-gray-900">Activity</h2>
-                            <ul role="list" className="mt-6 space-y-6">
-                                {activity.map((activityItem, activityItemIdx) => (
-                                    <li key={activityItem.id} className="relative flex gap-x-4">
-                                        <div
-                                            className={classNames(
-                                                activityItemIdx === activity.length - 1 ? 'h-6' : '-bottom-6',
-                                                'absolute left-0 top-0 flex w-6 justify-center'
-                                            )}
-                                        >
-                                            <div className="w-px bg-gray-200" />
-                                        </div>
-                                        {activityItem.type === 'commented' ? (
-                                            <>
-                                                <img
-                                                    src={activityItem.person.imageUrl}
-                                                    alt=""
-                                                    className="relative mt-3 h-6 w-6 flex-none rounded-full bg-gray-50"
-                                                />
-                                                <div className="flex-auto rounded-md p-3 ring-1 ring-inset ring-gray-200">
-                                                    <div className="flex justify-between gap-x-4">
-                                                        <div className="py-0.5 text-xs leading-5 text-gray-500">
-                                                            <span className="font-medium text-gray-900">{activityItem.person.name}</span> commented
-                                                        </div>
-                                                        <time
-                                                            dateTime={activityItem.dateTime}
-                                                            className="flex-none py-0.5 text-xs leading-5 text-gray-500"
-                                                        >
-                                                            {activityItem.date}
-                                                        </time>
-                                                    </div>
-                                                    <p className="text-sm leading-6 text-gray-500">{activityItem.comment}</p>
-                                                </div>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <div className="relative flex h-6 w-6 flex-none items-center justify-center bg-white">
-                                                    {activityItem.type === 'paid' ? (
-                                                        <CheckCircleIcon className="h-6 w-6 text-indigo-600" aria-hidden="true" />
-                                                    ) : (
-                                                        <div className="h-1.5 w-1.5 rounded-full bg-gray-100 ring-1 ring-gray-300" />
-                                                    )}
-                                                </div>
-                                                <p className="flex-auto py-0.5 text-xs leading-5 text-gray-500">
-                                                    <span className="font-medium text-gray-900">{activityItem.person.name}</span>{' '}
-                                                    {activityItem.type} the invoice.
-                                                </p>
-                                                <time
-                                                    dateTime={activityItem.dateTime}
-                                                    className="flex-none py-0.5 text-xs leading-5 text-gray-500"
-                                                >
-                                                    {activityItem.date}
-                                                </time>
-                                            </>
-                                        )}
-                                    </li>
-                                ))}
-                            </ul>
-
-                            {/* New comment form */}
-                            <div className="mt-6 flex gap-x-3">
-                                <img
-                                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                    alt=""
-                                    className="h-6 w-6 flex-none rounded-full bg-gray-50"
-                                />
-                                <form action="#" className="relative flex-auto">
-                                    <div className="overflow-hidden rounded-lg pb-12 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-indigo-600">
-                                        <label htmlFor="comment" className="sr-only">
-                                            Add your comment
-                                        </label>
-                                        <textarea
-                                            rows={2}
-                                            name="comment"
-                                            id="comment"
-                                            className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                                            placeholder="Add your comment..."
-                                            defaultValue={''}
-                                        />
-                                    </div>
-
-                                    <div className="absolute inset-x-0 bottom-0 flex justify-between py-2 pl-3 pr-2">
-                                        <div className="flex items-center space-x-5">
-                                            <div className="flex items-center">
-                                                <button
-                                                    type="button"
-                                                    className="-m-2.5 flex h-10 w-10 items-center justify-center rounded-full text-gray-400 hover:text-gray-500"
-                                                >
-                                                    <PaperClipIcon className="h-5 w-5" aria-hidden="true" />
-                                                    <span className="sr-only">Attach a file</span>
-                                                </button>
-                                            </div>
-                                            <div className="flex items-center">
-                                                <Listbox value={selected} onChange={setSelected}>
-                                                    {({ open }) => (
-                                                        <>
-                                                            <Listbox.Label className="sr-only">Your mood</Listbox.Label>
-                                                            <div className="relative">
-                                                                <Listbox.Button className="relative -m-2.5 flex h-10 w-10 items-center justify-center rounded-full text-gray-400 hover:text-gray-500">
-                                                                    <span className="flex items-center justify-center">
-                                                                        {selected.value === null ? (
-                                                                            <span>
-                                                                                <FaceSmileIcon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
-                                                                                <span className="sr-only">Add your mood</span>
-                                                                            </span>
-                                                                        ) : (
-                                                                            <span>
-                                                                                <span
-                                                                                    className={classNames(
-                                                                                        selected.bgColor,
-                                                                                        'flex h-8 w-8 items-center justify-center rounded-full'
-                                                                                    )}
-                                                                                >
-                                                                                    <selected.icon
-                                                                                        className="h-5 w-5 flex-shrink-0 text-white"
-                                                                                        aria-hidden="true"
-                                                                                    />
-                                                                                </span>
-                                                                                <span className="sr-only">{selected.name}</span>
-                                                                            </span>
-                                                                        )}
-                                                                    </span>
-                                                                </Listbox.Button>
-
-                                                                <Transition
-                                                                    show={open}
-                                                                    as={Fragment}
-                                                                    leave="transition ease-in duration-100"
-                                                                    leaveFrom="opacity-100"
-                                                                    leaveTo="opacity-0"
-                                                                >
-                                                                    <Listbox.Options className="absolute z-10 -ml-6 mt-1 w-60 rounded-lg bg-white py-3 text-base shadow ring-1 ring-black ring-opacity-5 focus:outline-none sm:ml-auto sm:w-64 sm:text-sm">
-                                                                        {moods.map((mood) => (
-                                                                            <Listbox.Option
-                                                                                key={mood.value}
-                                                                                className={({ active }) =>
-                                                                                    classNames(
-                                                                                        active ? 'bg-gray-100' : 'bg-white',
-                                                                                        'relative cursor-default select-none px-3 py-2'
-                                                                                    )
-                                                                                }
-                                                                                value={mood}
-                                                                            >
-                                                                                <div className="flex items-center">
-                                                                                    <div
-                                                                                        className={classNames(
-                                                                                            mood.bgColor,
-                                                                                            'flex h-8 w-8 items-center justify-center rounded-full'
-                                                                                        )}
-                                                                                    >
-                                                                                        <mood.icon
-                                                                                            className={classNames(mood.iconColor, 'h-5 w-5 flex-shrink-0')}
-                                                                                            aria-hidden="true"
-                                                                                        />
-                                                                                    </div>
-                                                                                    <span className="ml-3 block truncate font-medium">{mood.name}</span>
-                                                                                </div>
-                                                                            </Listbox.Option>
-                                                                        ))}
-                                                                    </Listbox.Options>
-                                                                </Transition>
-                                                            </div>
-                                                        </>
-                                                    )}
-                                                </Listbox>
-                                            </div>
-                                        </div>
-                                        <button
-                                            type="submit"
-                                            className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                                        >
-                                            Comment
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
                         </div>
                     </div>
                 </div>
