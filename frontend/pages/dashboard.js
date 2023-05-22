@@ -26,7 +26,7 @@ import { supabase } from '@/lib/supabaseClient'
 import logo from "@/public/logo.svg"
 import Image from 'next/image'
 import TimeGreeting from '@/components/TimeGreeting';
-import Badge from '@/components/Badge'; 
+import Badge from '@/components/Badge';
 import toast, { Toaster } from 'react-hot-toast';
 
 
@@ -85,6 +85,17 @@ export default function Dashboard() {
     const [username, setUsername] = useState('');
     const [loaded, setLoaded] = useState(false);
 
+    const [page, setPage] = useState(0);
+    const itemsPerPage = 10;
+
+    const nextPage = () => {
+        setPage(prevPage => prevPage + 1);
+    };
+
+    const prevPage = () => {
+        setPage(prevPage => Math.max(prevPage - 1, 0));
+    };
+
     useEffect(() => {
         const getUser = async () => {
             try {
@@ -121,7 +132,7 @@ export default function Dashboard() {
                             transactions.push({
                                 id: i,
                                 name: data[i].customer_email,
-                                href: '#',
+                                href: "/invoice/" + data[i].id,
                                 amount: data[i].value_to_receive,
                                 currency: 'USD',
                                 status: data[i].status,
@@ -142,6 +153,8 @@ export default function Dashboard() {
         getInvoices();
 
     }, []);
+
+    console.log(page, itemsPerPage, transactions);
 
     async function handleNotSignedIn() {
         const user = await supabase.auth.getUser();
@@ -658,7 +671,7 @@ export default function Dashboard() {
                                 {/* Activity list (smallest breakpoint only) */}
                                 <div className="shadow sm:hidden">
                                     <ul role="list" className="mt-2 divide-y divide-gray-200 overflow-hidden shadow sm:hidden">
-                                        {loaded && transactions.map((transaction) => (
+                                        {loaded && transactions.slice(page * itemsPerPage, (page + 1) * itemsPerPage).map((transaction) => (
                                             <li key={transaction.id}>
                                                 <a href={transaction.href} className="block bg-white px-4 py-4 hover:bg-gray-50">
                                                     <span className="flex items-center space-x-4">
@@ -685,18 +698,18 @@ export default function Dashboard() {
                                         aria-label="Pagination"
                                     >
                                         <div className="flex flex-1 justify-between">
-                                            <a
-                                                href="#"
+                                            <button
+                                                onClick={prevPage}
                                                 className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                                             >
                                                 Previous
-                                            </a>
-                                            <a
-                                                href="#"
+                                            </button>
+                                            <button
+                                                onClick={nextPage}
                                                 className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                                             >
                                                 Next
-                                            </a>
+                                            </button>
                                         </div>
                                     </nav>
                                 </div>
@@ -736,7 +749,7 @@ export default function Dashboard() {
                                                         </tr>
                                                     </thead>
                                                     <tbody className="divide-y divide-gray-200 bg-white">
-                                                        {transactions.map((transaction) => (
+                                                        {loaded && transactions.slice(page * itemsPerPage, (page + 1) * itemsPerPage).map((transaction) => (
                                                             <tr key={transaction.id} className="bg-white">
                                                                 <td className="w-full max-w-0 whitespace-nowrap px-6 py-4 text-sm text-gray-900">
                                                                     <div className="flex">
@@ -776,22 +789,22 @@ export default function Dashboard() {
                                                     <div className="hidden sm:block">
                                                         <p className="text-sm text-gray-700">
                                                             Showing <span className="font-medium">1</span> to <span className="font-medium">10</span> of{' '}
-                                                            <span className="font-medium">20</span> results
+                                                            <span className="font-medium">{transactions.length}</span> results
                                                         </p>
                                                     </div>
                                                     <div className="flex flex-1 justify-between gap-x-3 sm:justify-end">
-                                                        <a
-                                                            href="#"
+                                                        <button
+                                                            onClick={prevPage}
                                                             className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:ring-gray-400"
                                                         >
                                                             Previous
-                                                        </a>
-                                                        <a
-                                                            href="#"
+                                                        </button>
+                                                        <button
+                                                            onClick={nextPage}
                                                             className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:ring-gray-400"
                                                         >
                                                             Next
-                                                        </a>
+                                                        </button>
                                                     </div>
                                                 </nav>
                                             </div>
