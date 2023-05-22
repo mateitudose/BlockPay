@@ -8,8 +8,8 @@ import QRCodeGenerator from '@/components/QRCodeGenerator';
 import logo from "@/public/logo.svg"
 
 import {
-    ClipboardDocumentIcon,
-    ClipboardDocumentCheckIcon,
+    CheckCircleIcon,
+    Square2StackIcon,
     ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
 
@@ -17,11 +17,6 @@ import Image from "next/image"
 import toast, { Toaster } from 'react-hot-toast';
 
 import cryptos from '@/components/cryptos.js';
-
-// rainbow kit
-// import { ConnectButton } from '@rainbow-me/rainbowkit';
-
-// Page component
 
 const Invoice = ({ invoice }) => {
     let crypto = cryptos.find(crypto => crypto.id === invoice.crypto_option);
@@ -326,7 +321,7 @@ const Invoice = ({ invoice }) => {
                                                     <Badge
                                                         color="gray"
                                                         text={`Send ${parseFloat(parseFloat(invoice.value_to_receive).toFixed(8))} ${crypto.symbol}`}
-                                                        icon={!isCopied ? (<ClipboardDocumentIcon className="h-5 w-5" aria-hidden="true" />) : (<ClipboardDocumentCheckIcon className="h-5 w-5" aria-hidden="true" />)}
+                                                        icon={!isCopied ? (<Square2StackIcon className="h-5 w-5" aria-hidden="true" />) : (<CheckCircleIcon className="h-5 w-5" aria-hidden="true" />)}
                                                     />
                                                 </button>
                                             </div>
@@ -345,7 +340,7 @@ const Invoice = ({ invoice }) => {
                                                 <Badge
                                                     color="gray"
                                                     text={address}
-                                                    icon={!isCopied2 ? (<ClipboardDocumentIcon className="h-5 w-5" aria-hidden="true" />) : (<ClipboardDocumentCheckIcon className="h-5 w-5" aria-hidden="true" />)}
+                                                    icon={!isCopied2 ? (<Square2StackIcon className="h-5 w-5" aria-hidden="true" />) : (<CheckCircleIcon className="h-5 w-5" aria-hidden="true" />)}
                                                 />
                                             </button>
                                         </div>

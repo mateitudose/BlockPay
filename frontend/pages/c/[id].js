@@ -6,7 +6,10 @@ const fetch = require('node-fetch');
 const { v4: uuidv4 } = require('uuid');
 import { useRouter } from 'next/router'
 
-import { ChevronLeftIcon } from '@heroicons/react/24/outline';
+import { 
+    ChevronLeftIcon,
+    BuildingStorefrontIcon,
+ } from '@heroicons/react/24/outline';
 
 import Bitcoin from "@/public/Crypto/Bitcoin.svg"
 import BitcoinCash from "@/public/Crypto/Bitcoin_Cash.svg"
@@ -120,9 +123,8 @@ const Checkout = ({ checkout }) => {
                         </h2>
                         <dl className='space-y-6 text-sm font-medium'>
                             <div className="flex items-center pb-6">
-                                <img
-                                    className="drop-shadow inline-block h-8 w-8 rounded-full"
-                                    src={checkout.store_logo}
+                                <BuildingStorefrontIcon
+                                    className="drop-shadow inline-block h-8 w-8 py-1.5 rounded-full bg-gray-50"
                                     alt="Store logo"
                                 />
                                 <span className="text-base ml-2">{checkout.store_name}</span>

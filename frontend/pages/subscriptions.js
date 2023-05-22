@@ -24,6 +24,9 @@ const { v4: uuidv4 } = require('uuid');
 import Badge from '@/components/Badge';
 import toast, { Toaster } from 'react-hot-toast';
 
+import Web3 from 'web3';
+const web3 = new Web3(new Web3.providers.HttpProvider("https://rpc.ankr.com/polygon_mumbai"));
+
 
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: WindowIcon, current: false },
@@ -38,28 +41,6 @@ const teams = [
 ]
 
 let subscriptions = [];
-
-
-const UTC = (timestamp) => {
-    const date = new Date(timestamp);
-
-    const timeFormatter = new Intl.DateTimeFormat('default', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-    });
-
-    const dateFormatter = new Intl.DateTimeFormat('default', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-    });
-
-    const formattedTime = timeFormatter.format(date);
-    const formattedDate = dateFormatter.format(date);
-
-    return (`${formattedTime} - ${formattedDate}`);
-};
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -77,7 +58,12 @@ export default function Dashboard() {
     const [openEdit, setOpenEdit] = useState(false);
     const [subscriptionName, setSubscriptionName] = useState('');
     const [price, setPrice] = useState('');
+    const [referral, setReferral] = useState('');
     const [currentID, setCurrentID] = useState('');
+
+    const handleReferralChange = (e) => {
+        setReferral(e.target.value);
+    };
 
     const handleSubscriptionNameChange = (e) => {
         setSubscriptionName(e.target.value);
@@ -157,19 +143,23 @@ export default function Dashboard() {
 
     const addSubscription = async (product_name, price) => {
         const user = await supabase.auth.getUser();
-        const { data, error } = await supabase
-            .from('subscriptions')
-            .insert({
-                id: (uuidv4().split('-')).pop(),
-                merchant_id: user.data.user.id,
-                product_name: product_name,
-                price_in_usd: price,
-            });
-        if (error) {
-            toast.error(error.message);
+        if (referral >= 0 && referral <= 100) {
+            const { data, error } = await supabase
+                .from('subscriptions')
+                .insert({
+                    id: (uuidv4().split('-')).pop(),
+                    merchant_id: user.data.user.id,
+                    product_name: product_name,
+                    price_in_usd: price,
+                });
+            if (error) {
+                toast.error(error.message);
+            } else {
+                toast.success(`Subscription ${product_name} added`);
+                router.reload();
+            }
         } else {
-            toast.success(`Subscription ${product_name} added`);
-            router.reload();
+            toast.error('Referral percentage must be between 0 and 100');
         }
     };
 
@@ -344,6 +334,28 @@ export default function Dashboard() {
                                                                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                                                                     <span className="text-gray-500 sm:text-sm" id="price-currency">
                                                                         USD
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className='mt-6'>
+                                                            <label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">
+                                                                Referral Percentage
+                                                            </label>
+                                                            <div className="relative mt-2 rounded-md shadow-sm">
+                                                                <input
+                                                                    type="number"
+                                                                    name="referral"
+                                                                    id="referral"
+                                                                    className="block w-full rounded-md border lg:border-0 py-1.5 pl-2.5 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                    placeholder="0"
+                                                                    required
+                                                                    value={referral}
+                                                                    onChange={handleReferralChange}
+                                                                />
+                                                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                                                    <span className="text-gray-500 sm:text-sm" id="price-currency">
+                                                                        %
                                                                     </span>
                                                                 </div>
                                                             </div>
