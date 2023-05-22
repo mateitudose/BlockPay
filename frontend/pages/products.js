@@ -172,7 +172,6 @@ export default function Dashboard() {
     };
 
     const updateProduct = async (id, name, price) => {
-        console.log(id, name, price);
         const { data, error } = await supabase
             .from('checkout')
             .update({

@@ -1,12 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import ABI from '@/lib/ABI.json';
 import TOKEN_ABI from '@/lib/TOKEN_ABI.json';
 
-const fetch = require('node-fetch');
-
-const { v4: uuidv4 } = require('uuid');
 import { useRouter } from 'next/router'
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
@@ -374,10 +371,12 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                                             <button
                                                 className="drop-shadow shadow-[#627EEA] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#627EEA] bg-white px-4 py- shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                 onClick={() => {
-                                                    if (chain.id != 1) {
-                                                        switchNetwork(1);
+                                                    if (chain != undefined) {
+                                                        if (chain.id != 1) {
+                                                            switchNetwork(1);
+                                                        }
+                                                        setShowChains(true)
                                                     }
-                                                    setShowChains(true)
                                                 }}
                                             >
                                                 <Image
@@ -392,10 +391,12 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                                             <button
                                                 className="drop-shadow shadow-[#F0B90B] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#F0B90B] bg-white px-4 py- shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                 onClick={() => {
-                                                    if (chain.id != 56) {
-                                                        switchNetwork(56);
+                                                    if (chain != undefined) {
+                                                        if (chain.id != 56) {
+                                                            switchNetwork(56);
+                                                        }
+                                                        setShowChains(true)
                                                     }
-                                                    setShowChains(true)
                                                 }}
                                             >
                                                 <Image
@@ -410,10 +411,12 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                                             <button
                                                 className="drop-shadow shadow-[#7b3fe4] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#7b3fe4] bg-white px-4 py- shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                 onClick={() => {
-                                                    if (chain.id != 80001) {
-                                                        switchNetwork(80001);
+                                                    if (chain != undefined) {
+                                                        if (chain.id != 80001) {
+                                                            switchNetwork(80001);
+                                                        }
+                                                        setShowChains(true)
                                                     }
-                                                    setShowChains(true)
                                                 }}
                                             >
                                                 <Image

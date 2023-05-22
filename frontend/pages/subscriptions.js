@@ -37,7 +37,7 @@ const teams = [
     { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
 ]
 
-let products = [];
+let subscriptions = [];
 
 
 const UTC = (timestamp) => {
@@ -75,12 +75,12 @@ export default function Dashboard() {
     const [loaded, setLoaded] = useState(false);
     const [open, setOpen] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
-    const [productName, setProductName] = useState('');
+    const [subscriptionName, setSubscriptionName] = useState('');
     const [price, setPrice] = useState('');
     const [currentID, setCurrentID] = useState('');
 
-    const handleProductNameChange = (e) => {
-        setProductName(e.target.value);
+    const handleSubscriptionNameChange = (e) => {
+        setSubscriptionName(e.target.value);
     };
 
     const handlePriceChange = (e) => {
@@ -118,9 +118,9 @@ export default function Dashboard() {
                     throw error;
                 } else {
                     if (data) {
-                        products = [];
+                        subscriptions = [];
                         for (let i = 0; i < data.length; i++) {
-                            products.push({
+                            subscriptions.push({
                                 id: i,
                                 id_hash: data[i].id,
                                 price: data[i].price_in_usd,
@@ -155,7 +155,7 @@ export default function Dashboard() {
         router.push('/login');
     };
 
-    const addProduct = async (product_name, price) => {
+    const addSubscription = async (product_name, price) => {
         const user = await supabase.auth.getUser();
         const { data, error } = await supabase
             .from('subscriptions')
@@ -173,8 +173,7 @@ export default function Dashboard() {
         }
     };
 
-    const updateProduct = async (id, name, price) => {
-        console.log(id, name, price);
+    const updateSubscription = async (id, name, price) => {
         const { data, error } = await supabase
             .from('subscriptions')
             .update({
@@ -190,7 +189,7 @@ export default function Dashboard() {
         }
     };
 
-    const deleteProduct = async (id) => {
+    const deleteSubscription = async (id) => {
         const { data, error } = await supabase
             .from('subscriptions')
             .delete()
@@ -315,8 +314,8 @@ export default function Dashboard() {
                                                                         className="pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                                         placeholder="Name"
                                                                         required
-                                                                        value={productName}
-                                                                        onChange={handleProductNameChange}
+                                                                        value={subscriptionName}
+                                                                        onChange={handleSubscriptionNameChange}
                                                                     />
                                                                 </div>
                                                             </div>
@@ -355,7 +354,7 @@ export default function Dashboard() {
                                                             type="button"
                                                             className="flex-1 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                                             onClick={async () => {
-                                                                await addProduct(productName, price);
+                                                                await addSubscription(subscriptionName, price);
                                                                 setOpen(false);
                                                             }}
                                                         >
@@ -435,10 +434,10 @@ export default function Dashboard() {
                                                                         name="name"
                                                                         id="Name"
                                                                         className="pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                                        placeholder={productName}
+                                                                        placeholder={subscriptionName}
                                                                         required
-                                                                        value={productName}
-                                                                        onChange={handleProductNameChange}
+                                                                        value={subscriptionName}
+                                                                        onChange={handleSubscriptionNameChange}
                                                                     />
                                                                 </div>
                                                             </div>
@@ -477,7 +476,7 @@ export default function Dashboard() {
                                                             type="button"
                                                             className="flex-1 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                                             onClick={async () => {
-                                                                await updateProduct(currentID, productName, price);
+                                                                await updateSubscription(currentID, subscriptionName, price);
                                                                 setOpenEdit(false);
                                                             }}
                                                         >
@@ -487,7 +486,7 @@ export default function Dashboard() {
                                                             type="button"
                                                             className="flex-1 rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                                                             onClick={async () => {
-                                                                await deleteProduct(currentID);
+                                                                await deleteSubscription(currentID);
                                                                 setOpenEdit(false);
                                                             }}
                                                         >
@@ -902,7 +901,7 @@ export default function Dashboard() {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="divide-y divide-gray-200 bg-white">
-                                                    {loaded && products.map((subscription) => (
+                                                    {loaded && subscriptions.map((subscription) => (
                                                         <tr key={subscription.id}>
                                                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                                                                 {subscription.name}
@@ -931,7 +930,7 @@ export default function Dashboard() {
                                                                     className="text-indigo-600 hover:text-indigo-900"
                                                                     onClick={() => {
                                                                         setCurrentID(subscription.id_hash);
-                                                                        setProductName(subscription.name);
+                                                                        setSubscriptionName(subscription.name);
                                                                         setPrice(subscription.price);
                                                                         setOpenEdit(true);
                                                                     }}
