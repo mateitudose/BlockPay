@@ -170,6 +170,7 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
         for (let i = 0; i < plans.data.length; i++) {
             if (plans.data[i][2] == chain != undefined ? tokenAddress[chain.id][selectedCrypto] : zeroAddress)
                 planID[selectedCrypto] = parseInt(plans.data[i][0]);
+
             // frequency - plans.data[i][5]
         }
     }

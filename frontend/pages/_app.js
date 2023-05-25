@@ -26,6 +26,8 @@ import {
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { mainnet, bsc, polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
+import TawkTo from '@/components/Tawk';
+
 
 const { chains, provider } = configureChains(
   [mainnet, bsc, polygonMumbai],
@@ -80,6 +82,7 @@ export default function App({ Component, pageProps }) {
       <RainbowKitProvider chains={chains} >
         <SessionContextProvider supabaseClient={supabase} initialSession={pageProps.initialSession}>
           <Component {...pageProps} />
+          <TawkTo />
         </SessionContextProvider>
       </RainbowKitProvider>
     </WagmiConfig>

@@ -12,6 +12,7 @@ import {
     CreditCardIcon,
     Square3Stack3DIcon,
     CurrencyDollarIcon,
+    UserCircleIcon,
 } from '@heroicons/react/24/outline'
 import {
     ChevronDownIcon,
@@ -40,13 +41,6 @@ const teams = [
     { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
     { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
     { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
-]
-
-
-const cards = [
-    { name: 'Total Revenue', href: '#', icon: BanknotesIcon, amount: '$30,659.45', change: 12 },
-    { name: 'Orders', href: '#', icon: BuildingStorefrontIcon, amount: '1,257', change: 0 },
-    { name: 'Subscription Revenue', href: '#', icon: CreditCardIcon, amount: '$12,557.44', change: -3 },
 ]
 
 let transactions = []
@@ -84,8 +78,16 @@ export default function Dashboard() {
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [loaded, setLoaded] = useState(false);
+    const [ethAddress, setEthAddress] = useState('0x0000000000000000000000000000000000000000');
 
     const [page, setPage] = useState(0);
+
+    const [cards, setCards] = useState([
+        { name: 'Total Revenue', href: '#', icon: BanknotesIcon, amount: '0', change: 0 },
+        { name: 'Orders', href: '#', icon: BuildingStorefrontIcon, amount: '0', change: 0 },
+        // { name: 'Subscription Revenue', href: '#', icon: CreditCardIcon, amount: '0', change: 0 },
+    ]);
+
     const itemsPerPage = 10;
 
     const nextPage = () => {
@@ -95,6 +97,58 @@ export default function Dashboard() {
     const prevPage = () => {
         setPage(prevPage => Math.max(prevPage - 1, 0));
     };
+
+    async function getCompletedInvoices() {
+        const user = await supabase.auth.getUser();
+        if (user) {
+            const date = new Date();
+            const startOfDate = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
+            const endOfDate = startOfDate + 24 * 60 * 60 * 1000
+
+            const startOfPrevDate = startOfDate - 24 * 60 * 60 * 1000
+            const endOfPrevDate = startOfDate
+
+            const { data: invoicesToday, error: errorToday } = await supabase
+                .from('invoices')
+                .select('*')
+                .eq('merchant_id', user.data.user.id)
+                .eq('status', 'Confirmed')
+                .gte('confirm_date', startOfDate)
+                .lt('confirm_date', endOfDate)
+
+            if (errorToday) console.error(errorToday)
+
+            const { data: invoicesYesterday, error: errorYesterday } = await supabase
+                .from('invoices')
+                .select('*')
+                .eq('merchant_id', user.data.user.id)
+                .eq('status', 'Confirmed')
+                .gte('confirm_date', startOfPrevDate)
+                .lt('confirm_date', endOfPrevDate)
+
+            if (errorYesterday) console.error(errorYesterday)
+
+            const { data: subscriptions, error: errorSubscriptions } = await supabase
+                .from('subscriptions')
+                .select('*')
+                .eq('merchant_id', user.data.user.id)
+
+            if (errorSubscriptions) console.error(errorSubscriptions)
+
+            const changeInInvoices = invoicesToday.length - invoicesYesterday.length
+            const percentChangeInInvoices = (invoicesYesterday.length !== 0) ? ((changeInInvoices / invoicesYesterday.length) * 100) : (invoicesToday.length !== 0) ? 100 : 0;
+
+            const revenueToday = invoicesToday.reduce((total, invoice) => total + invoice.price_in_usd, 0);
+            const revenueYesterday = invoicesYesterday.reduce((total, invoice) => total + invoice.price_in_usd, 0);
+            const changeInRevenue = revenueToday - revenueYesterday;
+            const percentChangeInRevenue = (revenueYesterday !== 0) ? ((changeInRevenue / revenueYesterday) * 100) : (revenueToday !== 0) ? 100 : 0;
+
+            setCards([
+                { name: 'Total Revenue', href: '#', icon: BanknotesIcon, amount: "$" + revenueToday.toString(), change: percentChangeInRevenue.toFixed(2) },
+                { name: 'Orders', href: '#', icon: BuildingStorefrontIcon, amount: invoicesToday.length.toString(), change: percentChangeInInvoices.toFixed(2) },
+            ]);
+        }
+    }
 
     useEffect(() => {
         const getUser = async () => {
@@ -109,6 +163,7 @@ export default function Dashboard() {
                 } else {
                     setEmail(data[0].email);
                     setUsername(data[0].username);
+                    setEthAddress(data[0].eth_address);
                 }
 
             } catch (error) {
@@ -151,7 +206,7 @@ export default function Dashboard() {
 
         getUser();
         getInvoices();
-
+        getCompletedInvoices();
     }, []);
 
     console.log(page, itemsPerPage, transactions);
@@ -169,6 +224,8 @@ export default function Dashboard() {
         // Redirect to login page or perform other actions after sign out
         router.push('/login');
     };
+
+
 
     useEffect(() => {
         const runPrecheck = async () => {
@@ -579,18 +636,18 @@ export default function Dashboard() {
                                         <div className="min-w-0 flex-1">
                                             {/* Profile */}
                                             <div className="flex items-center">
-                                                <img
+                                                {/* <img
                                                     className="hidden h-16 w-16 rounded-full sm:block"
                                                     src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
                                                     alt=""
-                                                />
+                                                /> */}
                                                 <div>
                                                     <div className="flex items-center">
-                                                        <img
+                                                        {/* <img
                                                             className="h-16 w-16 rounded-full sm:hidden"
                                                             src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
                                                             alt=""
-                                                        />
+                                                        /> */}
                                                         <h1 className="inline-flex block ml-3 text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
                                                             <TimeGreeting />&nbsp;<span>{username}</span>
                                                         </h1>
@@ -598,11 +655,11 @@ export default function Dashboard() {
                                                     <dl className="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
                                                         <dt className="sr-only">Company</dt>
                                                         <dd className="flex items-center text-sm font-medium capitalize text-gray-500 sm:mr-6">
-                                                            <BuildingOfficeIcon
+                                                            <UserCircleIcon
                                                                 className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                                                                 aria-hidden="true"
                                                             />
-                                                            Duke street studio
+                                                            {ethAddress.substring(0, 6)}...{ethAddress.substring(ethAddress.length - 5)}
                                                         </dd>
                                                         <dt className="sr-only">Account status</dt>
                                                         <dd className="mt-3 flex items-center text-sm font-medium capitalize text-gray-500 sm:mr-6 sm:mt-0">
@@ -617,7 +674,7 @@ export default function Dashboard() {
                                             </div>
                                         </div>
                                         <div className="mt-6 flex space-x-3 md:ml-4 md:mt-0">
-                                            <button
+                                            {/* <button
                                                 type="button"
                                                 className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                                             >
@@ -628,7 +685,7 @@ export default function Dashboard() {
                                                 className="inline-flex items-center rounded-md bg-cyan-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-cyan-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
                                             >
                                                 Send money
-                                            </button>
+                                            </button> */}
                                         </div>
                                     </div>
                                 </div>

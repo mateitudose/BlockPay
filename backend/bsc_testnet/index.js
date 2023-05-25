@@ -60,6 +60,7 @@ async function sendTokenTransaction(destinationAddress, senderPrivateKey, value)
         console.error('Error sending transaction:', error.message);
     }
 }
+
 async function sendTransaction(destinationAddress, senderPrivateKey, value) {
     try {
         const senderAddress = web3.eth.accounts.privateKeyToAccount(senderPrivateKey).address;
@@ -118,7 +119,7 @@ async function sendTransaction(destinationAddress, senderPrivateKey, value) {
 }
 
 
-async function checkConfirmations(address, txHash, callback) {
+async function checkConfirmations(price_in_usd, address, txHash, callback) {
     try {
         // Get the current block number
         let tx = await web3.eth.getTransaction(txHash.toString());
@@ -140,6 +141,7 @@ async function checkConfirmations(address, txHash, callback) {
                         confirmed: true,
                         confirmations: confirmations,
                         status: 'Confirmed',
+                        confirm_date: new Date().getTime(),
                     },
                 ])
                 .eq('address', address);
@@ -147,6 +149,8 @@ async function checkConfirmations(address, txHash, callback) {
             if (error) {
                 console.log(`Error updating transaction as confirmed in database: ${error.message}`);
             }
+
+            addToSales(address, price_in_usd, 0);
 
             callback();
         } else {
@@ -172,7 +176,7 @@ async function checkConfirmations(address, txHash, callback) {
     }
 }
 
-async function watchAddress(address, merchantAddress, valueToSend, crypto_option) {
+async function watchAddress(address, merchantAddress, valueToSend, crypto_option, price_in_usd) {
     console.log(`Watching for incoming transactions to ${address}...`);
     if (crypto_option == 3) {
         const subscription = web3.eth.subscribe('pendingTransactions', async (error, txHash) => {
@@ -190,7 +194,7 @@ async function watchAddress(address, merchantAddress, valueToSend, crypto_option
                     console.log(`To: ${tx.to}`);
                     console.log(`Value: ${web3.utils.fromWei(tx.value, 'ether')} BNB`);
 
-                    checkConfirmations(address, txHash, async () => {
+                    checkConfirmations(price_in_usd, address, txHash, async () => {
                         // Unsubscribe from the 'pendingTransactions' event
                         subscription.unsubscribe((error, success) => {
                             if (error) {
@@ -345,6 +349,7 @@ const channel = supabase
             if (payload.new.crypto_option == 3 || payload.new.crypto_option == 10 || payload.new.crypto_option == 12 || payload.new.crypto_option == 14) {
                 let merchantID = payload.new.merchant_id;
                 let invoice_id = payload.new.id;
+                let price_in_usd = payload.new.price_in_usd;
 
                 // Find the address by the id in profiles
                 const { data: merchantData, error: merchantError } = await supabase

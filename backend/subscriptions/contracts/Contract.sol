@@ -21,6 +21,7 @@ contract Subscriptions is Ownable, ReentrancyGuard {
         uint256 referralPercentage;
         uint256 earnings;
         IERC20 token;
+        bool active;
     }
 
     struct Subscription {
@@ -66,15 +67,37 @@ contract Subscriptions is Ownable, ReentrancyGuard {
             frequency,
             referralPercentage,
             0,
-            IERC20(tokenAddress)
+            IERC20(tokenAddress),
+            true
         );
         totalPlans++;
+    }
+
+    function createPlans(
+        uint256[] memory cost,
+        uint256[] memory frequency,
+        uint256[] memory referralPercentage,
+        address[] memory tokenAddress
+    ) public nonReentrant {
+        require(
+            cost.length == frequency.length &&
+                cost.length == referralPercentage.length &&
+                cost.length == tokenAddress.length
+        );
+        for (uint256 i = 0; i < cost.length; i++) {
+            createPlan(
+                cost[i],
+                frequency[i],
+                referralPercentage[i],
+                tokenAddress[i]
+            );
+        }
     }
 
     // deletePlan
     function deletePlan(uint256 planID) public nonReentrant {
         require(msg.sender == plan[planID].manager);
-        delete plan[planID];
+        plan[planID].active = false;
     }
 
     // subscribe
@@ -90,6 +113,7 @@ contract Subscriptions is Ownable, ReentrancyGuard {
         require(token.allowance(msg.sender, address(this)) >= planCost);
         require(token.balanceOf(msg.sender) >= planCost);
         require(subscriptions[msg.sender].isActive[planID] == false);
+        require(plan[planID].active, "This plan has been deleted");
 
         token.transferFrom(msg.sender, address(this), planCost);
 
@@ -228,11 +252,9 @@ contract Subscriptions is Ownable, ReentrancyGuard {
         }
     }
 
-    function getManagerPlans(address _manager)
-        public
-        view
-        returns (Plan[] memory)
-    {
+    function getManagerPlans(
+        address _manager
+    ) public view returns (Plan[] memory) {
         Plan[] memory managerPlans = new Plan[](totalPlans);
         uint256 count = 0;
         for (uint256 i = 0; i < totalPlans; i++) {
@@ -242,5 +264,9 @@ contract Subscriptions is Ownable, ReentrancyGuard {
             }
         }
         return managerPlans;
+    }
+
+    function changeAutoPayer(address _autoPayer) public onlyOwner {
+        autoPayer = _autoPayer;
     }
 }

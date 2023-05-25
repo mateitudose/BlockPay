@@ -27,6 +27,12 @@ import toast, { Toaster } from 'react-hot-toast';
 import Web3 from 'web3';
 const web3 = new Web3(new Web3.providers.HttpProvider("https://rpc.ankr.com/polygon_mumbai"));
 
+import ABI from '@/lib/ABI.json';
+import TOKEN_ABI from '@/lib/TOKEN_ABI.json';
+
+import { useContractWrite, useContractRead, useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
+
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: WindowIcon, current: false },
@@ -57,9 +63,11 @@ export default function Dashboard() {
     const [open, setOpen] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [subscriptionName, setSubscriptionName] = useState('');
-    const [price, setPrice] = useState('');
-    const [referral, setReferral] = useState('');
+    const [price, setPrice] = useState(0);
+    const [referral, setReferral] = useState(0);
     const [currentID, setCurrentID] = useState('');
+    const [planID, setPlanID] = useState('');
+    const { isConnected, isConnecting } = useAccount();
 
     const handleReferralChange = (e) => {
         setReferral(e.target.value);
@@ -72,6 +80,20 @@ export default function Dashboard() {
     const handlePriceChange = (e) => {
         setPrice(e.target.value);
     }
+
+    const { data: dataCreatePlan, isLoading: isLoadingCreatePlan, isSuccess: isSuccessCreatePlan, writeAsync: createPlan } = useContractWrite({
+        address: "0x22beE43896b32a07e243500e4a7bf331B33214DB",
+        abi: ABI,
+        functionName: "createPlan",
+        args: [web3.utils.toWei(price != '' ? price.toString() : "0", 'ether'), "2592000", referral.toString(), "0x2e84cC0cE546A50f0C0B6731f119D37ae2B6c7eE"],
+    });
+
+    const { data: dataDeletePlan, isLoading: isLoadingDeletePlan, isSuccess: isSuccessDeletePlan, writeAsync: deletePlan } = useContractWrite({
+        address: "0x22beE43896b32a07e243500e4a7bf331B33214DB",
+        abi: ABI,
+        functionName: "deletePlan",
+        args: [planID != '' ? planID.toString() : "0"],
+    });
 
     useEffect(() => {
         const getUser = async () => {
@@ -141,34 +163,50 @@ export default function Dashboard() {
         router.push('/login');
     };
 
-    const addSubscription = async (product_name, price) => {
-        const user = await supabase.auth.getUser();
+    const totalPlans = useContractRead({
+        address: "0x22beE43896b32a07e243500e4a7bf331B33214DB",
+        abi: ABI,
+        functionName: 'totalPlans',
+    })
+
+    const addSubscription = async () => {
+        if (isLoadingCreatePlan) return;
         if (referral >= 0 && referral <= 100) {
-            const { data, error } = await supabase
-                .from('subscriptions')
-                .insert({
-                    id: (uuidv4().split('-')).pop(),
-                    merchant_id: user.data.user.id,
-                    product_name: product_name,
-                    price_in_usd: price,
+            try {
+                const tx = await createPlan();
+                const res = await tx?.wait().then(async () => {
+                    const user = await supabase.auth.getUser();
+                    const { data, error } = await supabase
+                        .from('subscriptions')
+                        .insert({
+                            id: (uuidv4().split('-')).pop(),
+                            merchant_id: user.data.user.id,
+                            product_name: subscriptionName,
+                            price_in_usd: price,
+                            planID: parseInt(totalPlans.data),
+                        });
+                    if (error) {
+                        toast.error(error.message);
+                    } else {
+                        toast.success(`Subscription ${subscriptionName} added`);
+                        router.reload();
+                    }
+
                 });
-            if (error) {
-                toast.error(error.message);
-            } else {
-                toast.success(`Subscription ${product_name} added`);
-                router.reload();
+            } catch (error) {
+                console.error(error);
             }
         } else {
             toast.error('Referral percentage must be between 0 and 100');
         }
+
     };
 
-    const updateSubscription = async (id, name, price) => {
+    const updateSubscription = async (id, name) => {
         const { data, error } = await supabase
             .from('subscriptions')
             .update({
                 product_name: name,
-                price_in_usd: price
             })
             .eq('id', id);
         if (error) {
@@ -182,13 +220,34 @@ export default function Dashboard() {
     const deleteSubscription = async (id) => {
         const { data, error } = await supabase
             .from('subscriptions')
-            .delete()
+            .select('*')
             .eq('id', id);
-        if (error) {
-            toast.error(error.message);
+        if (!error && data.length > 0 && data[0].planID) {
+            setPlanID(data[0].planID);
+            try {
+                const tx = await deletePlan();
+                const res = await tx?.wait().then(async () => {
+                    const { data, error } = await supabase
+                        .from('subscriptions')
+                        .delete()
+                        .eq('planID', planID);
+                    if (error) {
+                        toast.error(error.message);
+                    } else {
+                        toast.success(`Subscription ${subscriptionName} deleted`);
+                        router.reload();
+                    }
+                });
+            }
+            catch (error) {
+                toast.error(error);
+            }
         } else {
-            toast.success('Subscription deleted');
-            router.reload();
+            if (error) {
+                toast.error(error.message);
+            } else {
+                toast.error('No data found with provided ID or Plan ID is missing');
+            }
         }
     };
 
@@ -239,7 +298,7 @@ export default function Dashboard() {
                 <Toaster position="top-right"
                     reverseOrder={false} />
                 <title>Subscriptions | Blockpay</title>
-                {/* Add subscription */}
+
                 <Transition.Root show={open} as={Fragment}>
                     <Dialog as="div" className="relative z-50" onClose={setOpen}>
                         <Transition.Child
@@ -366,7 +425,7 @@ export default function Dashboard() {
                                                             type="button"
                                                             className="flex-1 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                                             onClick={async () => {
-                                                                await addSubscription(subscriptionName, price);
+                                                                await addSubscription();
                                                                 setOpen(false);
                                                             }}
                                                         >
@@ -455,40 +514,12 @@ export default function Dashboard() {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div>
-                                                        <div>
-                                                            <label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">
-                                                                Price
-                                                            </label>
-                                                            <div className="relative mt-2 rounded-md shadow-sm">
-                                                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                                                    <span className="text-gray-500 sm:text-sm">$</span>
-                                                                </div>
-                                                                <input
-                                                                    type="number"
-                                                                    name="price"
-                                                                    id="price"
-                                                                    className="block w-full rounded-md border lg:border-0 py-1.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                                    placeholder={price}
-                                                                    aria-describedby="price-currency"
-                                                                    required
-                                                                    value={price}
-                                                                    onChange={handlePriceChange}
-                                                                />
-                                                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                                                                    <span className="text-gray-500 sm:text-sm" id="price-currency">
-                                                                        USD
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                     <div className="flex justify-between space-x-2">
                                                         <button
                                                             type="button"
                                                             className="flex-1 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                                             onClick={async () => {
-                                                                await updateSubscription(currentID, subscriptionName, price);
+                                                                await updateSubscription(currentID, subscriptionName);
                                                                 setOpenEdit(false);
                                                             }}
                                                         >
@@ -771,6 +802,11 @@ export default function Dashboard() {
                                     <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" aria-hidden="true" />
 
                                     {/* Profile dropdown */}
+                                    <div className="hidden lg:block">
+                                        <ConnectButton
+                                            label='Connect Web3'
+                                        />
+                                    </div>
                                     <Menu as="div" className="relative inline-block text-left lg:pr-4">
                                         <div>
                                             <Menu.Button className="inline-flex w-full justify-center gap-x-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
@@ -871,6 +907,17 @@ export default function Dashboard() {
                         <div className="px-4 sm:px-6 lg:px-24">
                             <div className="sm:flex sm:items-center">
                                 <div className="sm:flex-auto">
+                                    <div className="block lg:hidden mb-6 -mr-1">
+                                        <ConnectButton
+                                            label='Connect Web3'
+                                        />
+                                    </div>
+                                    <div className={!isConnected || isConnecting ? `mb-8 text-sm` : `hidden`}>
+                                        <Badge
+                                            color="yellow"
+                                            text="You must connect your Web3 wallet in order to subscribe."
+                                        />
+                                    </div>
                                     <h1 className="text-base font-semibold leading-6 text-gray-900">
                                         Subscriptions
                                     </h1>
