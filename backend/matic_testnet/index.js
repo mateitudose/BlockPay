@@ -119,7 +119,7 @@ async function sendTransaction(destinationAddress, senderPrivateKey, value) {
 }
 
 
-async function checkConfirmations(price_in_usd, address, txHash, callback) {
+async function checkConfirmations(address, txHash, callback) {
     try {
         // Get the current block number
         let tx = await web3.eth.getTransaction(txHash.toString());
@@ -150,8 +150,6 @@ async function checkConfirmations(price_in_usd, address, txHash, callback) {
                 console.log(`Error updating transaction as confirmed in database: ${error.message}`);
             }
 
-            addToSales(address, price_in_usd, 0);
-
             callback();
         } else {
             console.log(`Transaction has ${confirmations} confirmations. Waiting for more confirmations...`);
@@ -176,7 +174,7 @@ async function checkConfirmations(price_in_usd, address, txHash, callback) {
     }
 }
 
-async function watchAddress(address, merchantAddress, valueToSend, crypto_option, price_in_usd) {
+async function watchAddress(address, merchantAddress, valueToSend, crypto_option) {
     console.log(`Watching for incoming transactions to ${address}...`);
     if (crypto_option == 3) {
         const subscription = web3.eth.subscribe('pendingTransactions', async (error, txHash) => {
@@ -194,7 +192,7 @@ async function watchAddress(address, merchantAddress, valueToSend, crypto_option
                     console.log(`To: ${tx.to}`);
                     console.log(`Value: ${web3.utils.fromWei(tx.value, 'ether')} BNB`);
 
-                    checkConfirmations(price_in_usd, address, txHash, async () => {
+                    checkConfirmations(address, txHash, async () => {
                         // Unsubscribe from the 'pendingTransactions' event
                         subscription.unsubscribe((error, success) => {
                             if (error) {
@@ -288,7 +286,7 @@ async function watchAddress(address, merchantAddress, valueToSend, crypto_option
 
                     const privateKey = data[0].privateKey;
 
-                    const bnbFee = "0.000000005"; // 5 Gwei
+                    const bnbFee = "0.005"; // 5 Gwei
                     let tokenBalance = await tokenContract.methods.balanceOf(address).call();
 
                     if (web3.utils.toBN(tokenBalance).gte(web3.utils.toWei(valueToSend.toString(), 'ether'))) {
@@ -349,7 +347,6 @@ const channel = supabase
             if (payload.new.crypto_option == 3 || payload.new.crypto_option == 10 || payload.new.crypto_option == 12 || payload.new.crypto_option == 14) {
                 let merchantID = payload.new.merchant_id;
                 let invoice_id = payload.new.id;
-                let price_in_usd = payload.new.price_in_usd;
 
                 // Find the address by the id in profiles
                 const { data: merchantData, error: merchantError } = await supabase

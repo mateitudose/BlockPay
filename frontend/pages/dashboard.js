@@ -193,8 +193,10 @@ export default function Dashboard() {
                                 status: data[i].status,
                                 date: UTC(data[i].created_at),
                                 datetime: UTC(data[i].created_at),
+                                date_unix: data[i].created_at,
                             })
                         }
+                        transactions.sort((a, b) => b.date_unix - a.date_unix);
                         setLoaded(true);
                     }
                 }
@@ -208,8 +210,6 @@ export default function Dashboard() {
         getInvoices();
         getCompletedInvoices();
     }, []);
-
-    console.log(page, itemsPerPage, transactions);
 
     async function handleNotSignedIn() {
         const user = await supabase.auth.getUser();
