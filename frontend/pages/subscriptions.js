@@ -82,14 +82,14 @@ export default function Dashboard() {
     }
 
     const { data: dataCreatePlan, isLoading: isLoadingCreatePlan, isSuccess: isSuccessCreatePlan, writeAsync: createPlan } = useContractWrite({
-        address: "0x22beE43896b32a07e243500e4a7bf331B33214DB",
+        address: "0xe77279967EFeE08cc8F879Db518d9f512d2aa6Dd",
         abi: ABI,
         functionName: "createPlan",
         args: [web3.utils.toWei(price != '' ? price.toString() : "0", 'ether'), "2592000", referral.toString(), "0x2e84cC0cE546A50f0C0B6731f119D37ae2B6c7eE"],
     });
 
     const { data: dataDeletePlan, isLoading: isLoadingDeletePlan, isSuccess: isSuccessDeletePlan, writeAsync: deletePlan } = useContractWrite({
-        address: "0x22beE43896b32a07e243500e4a7bf331B33214DB",
+        address: "0xe77279967EFeE08cc8F879Db518d9f512d2aa6Dd",
         abi: ABI,
         functionName: "deletePlan",
         args: [planID != '' ? planID.toString() : "0"],
@@ -164,7 +164,7 @@ export default function Dashboard() {
     };
 
     const totalPlans = useContractRead({
-        address: "0x22beE43896b32a07e243500e4a7bf331B33214DB",
+        address: "0xe77279967EFeE08cc8F879Db518d9f512d2aa6Dd",
         abi: ABI,
         functionName: 'totalPlans',
     })

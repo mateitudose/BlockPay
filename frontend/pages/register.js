@@ -129,7 +129,7 @@ export default function Register() {
 
                                         </button>
                                     </div>
-                                    <div>
+                                    {/* <div>
                                         <button
                                             href=""
                                             className="inline-flex w-full justify-center rounded-lg bg-white px-4 py-2 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0"
@@ -137,7 +137,7 @@ export default function Register() {
                                             <Image className='mt-0.5' src={Apple} alt="apple" width={14} height={20} />
                                             <span className="ml-2 text-gray-500">Register with Apple</span>
                                         </button>
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <div className="relative my-6">
                                     <div className="absolute inset-0 flex items-center" aria-hidden="true">

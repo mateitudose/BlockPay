@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 pragma solidity 0.8.19;
 
 contract Subscriptions is Ownable, ReentrancyGuard {
-    address public autoPayer = 0x9E4e16151f9fB31f9943eEAbF02C3d41Bf4aBe55; // to change
+    address public autoPayer = 0x31c9600C79f0824c193cC3Bec1D10D45881aA745; // to change
     uint256 public index;
     uint256 public totalPlans;
 
@@ -24,18 +24,15 @@ contract Subscriptions is Ownable, ReentrancyGuard {
         bool active;
     }
 
-    struct Subscription {
-        address subscriber;
-        mapping(uint256 => uint256) start;
-        mapping(uint256 => uint256) nextPayment;
-        mapping(uint256 => bool) isActive;
-        mapping(uint256 => bytes32) userIDHash;
-    }
+    mapping(address => mapping(uint256 => uint256)) public start;
+    mapping(address => mapping(uint256 => uint256)) public nextPayment;
+    mapping(address => mapping(uint256 => bool)) public isActive;
+    mapping(address => mapping(uint256 => bytes32)) public userIDHash;
 
-    mapping(address => Subscription) public subscriptions;
     mapping(uint256 => Plan) public plan;
     mapping(bytes32 => address) public userIDs;
     mapping(uint256 => address) public numberToAddress;
+    mapping(uint256 => address) public numberToAddress2;
     mapping(address => bytes32) public addressToID;
 
     event Subscribed(address indexed subscriber, uint256 indexed planID);
@@ -103,7 +100,7 @@ contract Subscriptions is Ownable, ReentrancyGuard {
     // subscribe
     function subscribe(
         uint256 planID,
-        bytes32 userIDHash,
+        bytes32 _userIDHash,
         address referral
     ) public nonReentrant {
         IERC20 token = plan[planID].token;
@@ -112,7 +109,7 @@ contract Subscriptions is Ownable, ReentrancyGuard {
         uint256 referralPercentage = plan[planID].referralPercentage;
         require(token.allowance(msg.sender, address(this)) >= planCost);
         require(token.balanceOf(msg.sender) >= planCost);
-        require(subscriptions[msg.sender].isActive[planID] == false);
+        require(isActive[msg.sender][planID] == false);
         require(plan[planID].active, "This plan has been deleted");
 
         token.transferFrom(msg.sender, address(this), planCost);
@@ -125,17 +122,15 @@ contract Subscriptions is Ownable, ReentrancyGuard {
             planCost -
             ((planCost * referralPercentage) / 100);
 
-        subscriptions[msg.sender].subscriber = msg.sender;
-        subscriptions[msg.sender].start[planID] = block.timestamp;
-        subscriptions[msg.sender].nextPayment[planID] =
-            block.timestamp +
-            frequency;
-        subscriptions[msg.sender].isActive[planID] = true;
-        subscriptions[msg.sender].userIDHash[planID] = userIDHash;
+        start[msg.sender][planID] = block.timestamp;
+        nextPayment[msg.sender][planID] = block.timestamp + frequency;
+        isActive[msg.sender][planID] = true;
+        userIDHash[msg.sender][planID] = _userIDHash;
 
-        userIDs[userIDHash] = msg.sender;
-        addressToID[msg.sender] = userIDHash;
-        numberToAddress[index] = msg.sender;
+        userIDs[_userIDHash] = msg.sender;
+        addressToID[msg.sender] = _userIDHash;
+        numberToAddress[plan[planID].subscribers] = msg.sender;
+        numberToAddress2[index] = msg.sender;
         index++;
         plan[planID].subscribers++;
 
@@ -144,10 +139,9 @@ contract Subscriptions is Ownable, ReentrancyGuard {
 
     // cancel
     function cancel(uint256 planID) public nonReentrant {
-        require(subscriptions[msg.sender].subscriber == msg.sender);
-        require(subscriptions[msg.sender].isActive[planID] == true);
+        require(isActive[msg.sender][planID] == true);
 
-        subscriptions[msg.sender].isActive[planID] = false;
+        isActive[msg.sender][planID] = false;
         plan[planID].subscribers--;
 
         emit Canceled(msg.sender, planID);
@@ -155,50 +149,38 @@ contract Subscriptions is Ownable, ReentrancyGuard {
 
     // pay
     function pay(uint256 planID, address _subscriber) internal {
-        Subscription storage subscription = subscriptions[_subscriber];
         IERC20 token = plan[planID].token;
         uint256 planCost = plan[planID].planCost;
         uint256 frequency = plan[planID].frequency;
 
         require(token.allowance(_subscriber, address(this)) >= planCost);
         require(token.balanceOf(_subscriber) >= planCost);
-        require(
-            subscription.subscriber != address(0) &&
-                subscription.subscriber == msg.sender
-        );
-        require(subscription.nextPayment[planID] <= block.timestamp);
+        require(_subscriber != address(0) && _subscriber == msg.sender);
+        require(nextPayment[msg.sender][planID] <= block.timestamp);
 
         token.transferFrom(_subscriber, address(this), planCost);
         plan[planID].earnings += planCost;
-        subscription.nextPayment[planID] = block.timestamp + frequency;
+        nextPayment[msg.sender][planID] = block.timestamp + frequency;
         emit Paid(msg.sender, planID);
     }
 
     // changeuserID
     function changeUserID(
         uint256 planID,
-        bytes32 userIDHash
+        bytes32 _userIDHash
     ) public nonReentrant {
         require(
-            subscriptions[msg.sender].subscriber != address(0),
-            "Subscriber does not exist"
-        );
-        require(
-            subscriptions[msg.sender].subscriber == msg.sender,
-            "Sender is not the subscriber"
-        );
-        require(
-            userIDs[userIDHash] == address(0),
+            userIDs[_userIDHash] == address(0),
             "userIDHash is already in use"
         );
 
-        bytes32 oldUserIDHash = subscriptions[msg.sender].userIDHash[planID];
+        bytes32 oldUserIDHash = userIDHash[msg.sender][planID];
         userIDs[oldUserIDHash] = address(0);
 
-        subscriptions[msg.sender].userIDHash[planID] = userIDHash;
-        userIDs[userIDHash] = msg.sender;
+        userIDHash[msg.sender][planID] = _userIDHash;
+        userIDs[_userIDHash] = msg.sender;
 
-        emit UserIDChanged(msg.sender, planID, oldUserIDHash, userIDHash);
+        emit UserIDChanged(msg.sender, planID, oldUserIDHash, _userIDHash);
     }
 
     // checkDue
@@ -208,24 +190,15 @@ contract Subscriptions is Ownable, ReentrancyGuard {
     ) public view returns (bool) {
         require(_subscriber != address(0));
         return
-            block.timestamp < subscriptions[_subscriber].nextPayment[planID]
-                ? true
-                : false;
+            block.timestamp < nextPayment[_subscriber][planID] ? true : false;
     }
 
     // autoPay
     function autoPay(uint256 planID, address _subscriber) external {
         require(msg.sender == autoPayer);
+        require(_subscriber != address(0), "This subscription does not exist");
         require(
-            subscriptions[_subscriber].subscriber != address(0),
-            "This subscription does not exist"
-        );
-        require(
-            subscriptions[_subscriber].subscriber == _subscriber,
-            "Sender is not the subscriber"
-        );
-        require(
-            subscriptions[_subscriber].isActive[planID] == true,
+            isActive[_subscriber][planID] == true,
             "This subscription is not active"
         );
         require(!checkDue(planID, _subscriber));

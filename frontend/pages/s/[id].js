@@ -39,9 +39,9 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
     let zeroAddress = "0x0000000000000000000000000000000000000000";
 
     let contractAddress = {
-        1: "0x22beE43896b32a07e243500e4a7bf331B33214DB",
-        56: "0x22beE43896b32a07e243500e4a7bf331B33214DB",
-        80001: "0x22beE43896b32a07e243500e4a7bf331B33214DB",
+        1: "0xe77279967EFeE08cc8F879Db518d9f512d2aa6Dd",
+        56: "0xe77279967EFeE08cc8F879Db518d9f512d2aa6Dd",
+        80001: "0xe77279967EFeE08cc8F879Db518d9f512d2aa6Dd",
     };
 
     let tokenAddress = {
@@ -68,12 +68,6 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
             2: "0x2e84cC0cE546A50f0C0B6731f119D37ae2B6c7eE",
             3: "0x2e84cC0cE546A50f0C0B6731f119D37ae2B6c7eE",
         },
-    }
-
-    let planID = {
-        1: 0,
-        2: 0,
-        3: 0,
     }
 
     const handleEmailChange = (e) => {
@@ -121,7 +115,7 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
         address: chain != undefined ? contractAddress[chain.id] : zeroAddress,
         abi: ABI,
         functionName: "subscribe",
-        args: [planID[selectedCrypto], web3.utils.soliditySha3(email), referralAddress],
+        args: [subscription.planID, web3.utils.soliditySha3(email), referralAddress],
     });
 
     const { data: dataApprove, isLoading: isLoadingApprove, isSuccess: isSuccessApprove, writeAsync: approve } = useContractWrite({
@@ -165,18 +159,16 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
         args: [merchantEthAddress],
     });
 
-    function mapPlans() {
-        if (plans.data == undefined) return;
-        for (let i = 0; i < plans.data.length; i++) {
-            if (plans.data[i][2] == chain != undefined ? tokenAddress[chain.id][selectedCrypto] : zeroAddress)
-                planID[selectedCrypto] = parseInt(plans.data[i][0]);
+    // function mapPlans() {
+    //     if (plans.data == undefined) return;
+    //     for (let i = 0; i < plans.data.length; i++) {
+    //         if (plans.data[i][2] == chain != undefined ? tokenAddress[chain.id][selectedCrypto] : zeroAddress)
+    //             planID[selectedCrypto] = parseInt(plans.data[i][0]);
 
-            // frequency - plans.data[i][5]
-        }
-    }
-    mapPlans();
-
-    console.log(!isConnected, isConnecting, address);
+    //         // frequency - plans.data[i][5]
+    //     }
+    // }
+    // mapPlans();
 
     return (
         <div className="bg-white">
