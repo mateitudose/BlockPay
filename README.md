@@ -22,7 +22,7 @@ Proiectul a utilizat o serie de software-uri și biblioteci care au facilitat de
 
 - **Rainbow kit wallet, Ethers, Web3js:** Aceste biblioteci au fost folosite pentru a facilita interacțiunile cu portofelele blockchain și pentru a permite tranzacțiile de criptomonedă.
 
-- **Hardhat (Solidity):** A fost folosit pentru a scrie și testa smart contracts pentru platforma Ethereum.
+- **Hardhat (Solidity), OpenZeppelin:** A fost folosit pentru a scrie și testa smart contracts pentru platforma Ethereum.
 
 **2. Descrierea părții cu aport propriu**
 
