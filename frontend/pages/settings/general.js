@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Dialog, Switch } from '@headlessui/react'
+import { useState, Fragment, useEffect } from 'react'
+import { Dialog, Transition, Menu } from '@headlessui/react'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import {
     BellIcon,
@@ -10,24 +10,31 @@ import {
     XMarkIcon,
     EyeIcon,
     EyeSlashIcon,
+    ChevronDownIcon,
+    Cog8ToothIcon,
+    ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline'
 import { supabase } from '@/lib/supabaseClient';
 
-import BitcoinIcon from '@/components/BitcoinIcon'
+import BitcoinIcon from '@/components/BitcoinIcon';
+
+import logo from '@/public/logo.svg'
+import Image from 'next/image'
+import { useRouter } from 'next/router';
+import toast, { Toaster } from 'react-hot-toast';
+
+
 
 const navigation = [
-    { name: 'Home', href: '#' },
-    { name: 'Invoices', href: '#' },
-    { name: 'Clients', href: '#' },
-    { name: 'Expenses', href: '#' },
+    { name: 'Home', href: '/' },
+    { name: 'Dashboard', href: '/dashboard' },
+    { name: 'Products', href: '/products' },
+    { name: 'Subscriptions', href: '/subscriptions' },
 ]
+
 const secondaryNavigation = [
     { name: 'General', href: '/settings/general', icon: UserCircleIcon, current: true },
     { name: 'Crypto', href: '/settings/crypto', icon: BitcoinIcon, current: false },
-    { name: 'Notifications', href: '#', icon: BellIcon, current: false },
-    { name: 'Plan', href: '#', icon: CubeIcon, current: false },
-    { name: 'Billing', href: '#', icon: CreditCardIcon, current: false },
-    { name: 'Team members', href: '#', icon: UsersIcon, current: false },
 ]
 
 function classNames(...classes) {
@@ -36,23 +43,46 @@ function classNames(...classes) {
 
 export default function Example() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-    const [isPasswordHidden, setPasswordHidden] = useState(true);
     const [username, setUsername] = useState('');
     const [newUsername, setNewUsername] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [shouldRender, setShouldRender] = useState(false);
+    const router = useRouter();
+
 
     const handleUsernameChange = (e) => {
-        setUsername(e.target.value);
+        setNewUsername(e.target.value);
     };
 
-    const handleEmailChange = (e) => {
-        setEmail(e.target.value);
+    async function handleNotSignedIn() {
+        const user = await supabase.auth.getUser();
+        if (!user.data.user) {
+            router.push('/login');
+        }
+        return user.data.user;
+    }
+
+    const handleSignOut = async () => {
+        await supabase.auth.signOut();
+        // Redirect to login page or perform other actions after sign out
+        router.push('/login');
     };
 
-    const handlePasswordChange = (e) => {
-        setPassword(e.target.value);
-    };
+    useEffect(() => {
+        const runPrecheck = async () => {
+            const result = await handleNotSignedIn();
+
+            if (result) {
+                // If precheck passes, set shouldRender to true
+                setShouldRender(true);
+            } else {
+                // If precheck fails, handle it accordingly
+                // For example, you can show an error message, redirect, etc.
+            }
+        };
+
+        runPrecheck();
+    }, []);
 
     useEffect(() => {
         const getUser = async () => {
@@ -86,47 +116,40 @@ export default function Example() {
                 .update({
                     username: newUsername,
                 })
-                .eq({ 'id': user.data.user.id });
+                .eq('id', user.data.user.id);
             if (error) {
                 toast.error(error.message);
-            }
-        } else if (email !== '') {
-            const { data, error } = await supabase
-                .from('profiles')
-                .update({
-                    email: email,
-                })
-                .eq({ 'id': user.data.user.id });
-            if (error) {
-                toast.error(error.message);
-            }
-        } else if (password !== '') {
-            const { data, error } = await supabase
-                .from('profiles')
-                .update({
-                    password: password,
-                })
-                .eq({ 'id': user.data.user.id });
-            if (error) {
-                toast.error(error.message);
+            } else {
+                toast.success('Username updated successfully!');
+                setUsername(newUsername);
             }
         }
-
     };
+
+    if (!shouldRender) {
+        // You can render a loading indicator, a placeholder, or nothing
+        return <div></div>;
+    }
+
 
     return (
         <>
-            <header className="absolute inset-x-0 top-0 z-50 flex h-16 border-b border-gray-900/10">
+            <Toaster position="top-right"
+                reverseOrder={false} />
+            <title>Settings - General | Blockpay</title>
+            <header className="bg-white absolute inset-x-0 top-0 z-50 flex h-16 border-b border-gray-900/10">
                 <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-1 items-center gap-x-6">
                         <button type="button" className="-m-3 p-3 md:hidden" onClick={() => setMobileMenuOpen(true)}>
                             <span className="sr-only">Open main menu</span>
                             <Bars3Icon className="h-5 w-5 text-gray-900" aria-hidden="true" />
                         </button>
-                        <img
+                        <Image
+                            src={logo}
+                            alt="Logo"
+                            width={8} // Set the image width
+                            height={8} // Set the image height
                             className="h-8 w-auto"
-                            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                            alt="Your Company"
                         />
                     </div>
                     <nav className="hidden md:flex md:gap-x-11 md:text-sm md:font-semibold md:leading-6 md:text-gray-700">
@@ -137,18 +160,98 @@ export default function Example() {
                         ))}
                     </nav>
                     <div className="flex flex-1 items-center justify-end gap-x-8">
-                        <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
-                            <span className="sr-only">View notifications</span>
-                            <BellIcon className="h-6 w-6" aria-hidden="true" />
-                        </button>
-                        <a href="#" className="-m-1.5 p-1.5">
-                            <span className="sr-only">Your profile</span>
-                            <img
-                                className="h-8 w-8 rounded-full bg-gray-800"
-                                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                alt=""
-                            />
-                        </a>
+
+                        <Menu as="div" className="relative inline-block text-left lg:pr-4">
+                            <div>
+                                <Menu.Button className="inline-flex w-full justify-center gap-x-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                    <span className="inline-block h-5 w-5 overflow-hidden rounded-full bg-gray-100">
+                                        <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                                        </svg>
+                                    </span>
+                                    {username}
+                                    <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                </Menu.Button>
+                            </div>
+
+                            <Transition
+                                as={Fragment}
+                                enter="transition ease-out duration-100"
+                                enterFrom="transform opacity-0 scale-95"
+                                enterTo="transform opacity-100 scale-100"
+                                leave="transition ease-in duration-75"
+                                leaveFrom="transform opacity-100 scale-100"
+                                leaveTo="transform opacity-0 scale-95"
+                            >
+                                <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                    <div className="px-4 py-3">
+                                        <p className="text-sm">Signed in as</p>
+                                        <p className="truncate text-sm font-medium text-gray-900">{email}</p>
+                                    </div>
+                                    <div className="py-1">
+                                        <Menu.Item>
+                                            {({ active }) => (
+                                                <a
+                                                    href="/settings"
+                                                    className={classNames(
+                                                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                                        'inline-flex items-center gap-x-1.5 block px-4 py-2 text-sm'
+                                                    )}
+                                                >
+                                                    <Cog8ToothIcon
+                                                        className="-ml-0.5 h-5 w-5"
+                                                        aria-hidden="true"
+                                                    />Account settings
+                                                </a>
+                                            )}
+                                        </Menu.Item>
+                                        <Menu.Item>
+                                            {({ active }) => (
+                                                <a
+                                                    href="#"
+                                                    className={classNames(
+                                                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                                        'block px-4 py-2 text-sm'
+                                                    )}
+                                                >
+                                                    Support
+                                                </a>
+                                            )}
+                                        </Menu.Item>
+                                        <Menu.Item>
+                                            {({ active }) => (
+                                                <a
+                                                    href="#"
+                                                    className={classNames(
+                                                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                                        'block px-4 py-2 text-sm'
+                                                    )}
+                                                >
+                                                    License
+                                                </a>
+                                            )}
+                                        </Menu.Item>
+                                    </div>
+                                    <div className="py-1">
+                                        <Menu.Item>
+                                            {({ active }) => (
+                                                <button
+                                                    type="submit"
+                                                    className={classNames(
+                                                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                                        'inline-flex items-center gap-x-1.5 block w-full px-4 py-2 text-left text-sm'
+                                                    )}
+                                                    onClick={handleSignOut}
+                                                >
+                                                    <ArrowRightOnRectangleIcon className="-ml-2 h-5 w-5" aria-hidden="true" />
+                                                    Sign out
+                                                </button>
+                                            )}
+                                        </Menu.Item>
+                                    </div>
+                                </Menu.Items>
+                            </Transition>
+                        </Menu>
                     </div>
                 </div>
                 <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
@@ -162,10 +265,12 @@ export default function Example() {
                             <div className="-ml-0.5">
                                 <a href="#" className="-m-1.5 block p-1.5">
                                     <span className="sr-only">Your Company</span>
-                                    <img
+                                    <Image
+                                        src={logo}
+                                        alt="Logo"
+                                        width={8} // Set the image width
+                                        height={8} // Set the image height
                                         className="h-8 w-auto"
-                                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                                        alt=""
                                     />
                                 </a>
                             </div>
@@ -195,8 +300,8 @@ export default function Example() {
                                         href={item.href}
                                         className={classNames(
                                             item.current
-                                                ? 'bg-gray-50 text-indigo-600'
-                                                : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
+                                                ? 'bg-gray-100'
+                                                : 'text-gray-700 hover:bg-gray-50',
                                             'group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold'
                                         )}
                                     >
@@ -238,7 +343,7 @@ export default function Example() {
                                                         type="text"
                                                         name="username"
                                                         id="username"
-                                                        className="pl-2.5 block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                                                        className="pl-2.5 block flex-1 border rounded-md bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                                                         placeholder={username ? username : 'blockpayuser'}
                                                         value={newUsername}
                                                         onChange={handleUsernameChange}
@@ -246,75 +351,13 @@ export default function Example() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="sm:col-span-4">
-                                            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                                                Email
-                                            </label>
-                                            <div className="mt-2">
-                                                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                                                    <input
-                                                        type="text"
-                                                        name="email"
-                                                        id="email"
-                                                        className="pl-2.5 block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                                                        placeholder="you@example.com"
-                                                        value={email}
-                                                        onChange={handleEmailChange}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="sm:col-span-4">
-                                            <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                                                Password
-                                            </label>
-                                            <div className="relative mt-2">
-                                                <button type="button" className="text-gray-400 absolute right-3 inset-y-0 my-auto active:text-gray-600"
-                                                    onClick={() => setPasswordHidden(!isPasswordHidden)}
-                                                >
-                                                    {
-                                                        isPasswordHidden ? (
-                                                            <EyeIcon className='w-6 h-6' />
-                                                        ) : (
-                                                            <EyeSlashIcon className='w-6 h-6' />
-                                                        )
-                                                    }
-                                                </button>
-                                                <input
-                                                    type={isPasswordHidden ? "password" : "text"}
-                                                    placeholder="Enter your password"
-                                                    className="pl-2.5 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                    required
-                                                    id='password'
-                                                    name='password'
-                                                    autoComplete='current-password'
-                                                    value={password}
-                                                    onChange={handlePasswordChange}
-                                                />
-                                            </div>
-                                        </div >
-                                        <div className="col-span-full">
-                                            <label htmlFor="about" className="block text-sm font-medium leading-6 text-gray-900">
-                                                About
-                                            </label>
-                                            <div className="mt-2">
-                                                <textarea
-                                                    id="about"
-                                                    name="about"
-                                                    rows={3}
-                                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                    defaultValue={''}
-                                                />
-                                            </div>
-                                            <p className="mt-3 text-sm leading-6 text-gray-600">Write a few sentences about yourself.</p>
-                                        </div>
-
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
                                     <button
                                         type="submit"
                                         className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        onClick={(e) => handleSave(e)}
                                     >
                                         Save
                                     </button>

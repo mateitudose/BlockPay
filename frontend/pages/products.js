@@ -8,6 +8,7 @@ import {
     ArrowRightOnRectangleIcon,
     WindowIcon,
     Square3Stack3DIcon,
+    CurrencyDollarIcon,
 } from '@heroicons/react/24/outline'
 
 import {
@@ -27,6 +28,7 @@ import toast, { Toaster } from 'react-hot-toast';
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: WindowIcon, current: false },
     { name: 'Products', href: '/products', icon: Square3Stack3DIcon, current: true },
+    { name: 'Subscriptions', href: '/subscriptions', icon: CurrencyDollarIcon, current: false },
 ]
 
 const teams = [

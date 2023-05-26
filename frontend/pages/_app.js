@@ -81,8 +81,8 @@ export default function App({ Component, pageProps }) {
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains} >
         <SessionContextProvider supabaseClient={supabase} initialSession={pageProps.initialSession}>
-          <Component {...pageProps} />
           <TawkTo />
+          <Component {...pageProps} />
         </SessionContextProvider>
       </RainbowKitProvider>
     </WagmiConfig>

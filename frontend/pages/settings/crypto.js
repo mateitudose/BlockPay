@@ -30,14 +30,14 @@ const web3 = new Web3(new Web3.providers.HttpProvider("https://rpc.ankr.com/poly
 
 const navigation = [
     { name: 'Home', href: '/' },
+    { name: 'Dashboard', href: '/dashboard' },
+    { name: 'Products', href: '/products' },
+    { name: 'Subscriptions', href: '/subscriptions' },
 ]
 
 const secondaryNavigation = [
     { name: 'General', href: '/settings/general', icon: UserCircleIcon, current: false },
-    { name: 'Crypto', href: '', icon: BitcoinIcon, current: true },
-    { name: 'Plan', href: '#', icon: CubeIcon, current: false },
-    { name: 'Billing', href: '#', icon: CreditCardIcon, current: false },
-    { name: 'Team members', href: '#', icon: UsersIcon, current: false },
+    { name: 'Crypto', href: '/settings/crypto', icon: BitcoinIcon, current: true },
 ]
 
 function classNames(...classes) {
@@ -55,18 +55,6 @@ export default function Example() {
 
     const handleEthAddressChange = (e) => {
         setEthAddress(e.target.value);
-    };
-
-    const handleUsernameChange = (e) => {
-        setUsername(e.target.value);
-    };
-
-    const handleEmailChange = (e) => {
-        setEmail(e.target.value);
-    };
-
-    const handlePasswordChange = (e) => {
-        setPassword(e.target.value);
     };
 
     async function handleNotSignedIn() {
@@ -145,42 +133,6 @@ export default function Example() {
         }
     };
 
-    const handleSave = async (e) => {
-        e.preventDefault();
-        const user = await supabase.auth.getUser();
-        if (newUsername !== '') {
-            const { data, error } = await supabase
-                .from('profiles')
-                .update({
-                    username: newUsername,
-                })
-                .eq({ 'id': user.data.user.id });
-            if (error) {
-                toast.error(error.message);
-            }
-        } else if (email !== '') {
-            const { data, error } = await supabase
-                .from('profiles')
-                .update({
-                    email: email,
-                })
-                .eq({ 'id': user.data.user.id });
-            if (error) {
-                toast.error(error.message);
-            }
-        } else if (password !== '') {
-            const { data, error } = await supabase
-                .from('profiles')
-                .update({
-                    password: password,
-                })
-                .eq({ 'id': user.data.user.id });
-            if (error) {
-                toast.error(error.message);
-            }
-        }
-
-    };
     if (!shouldRender) {
         // You can render a loading indicator, a placeholder, or nothing
         return <div></div>;

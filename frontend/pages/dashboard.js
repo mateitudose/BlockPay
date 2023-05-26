@@ -384,7 +384,7 @@ export default function Dashboard() {
                                                 </li>
                                                 <li className="mt-auto">
                                                     <a
-                                                        href="/settings"
+                                                        href="/settings/general"
                                                         className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                                                     >
                                                         <Cog8ToothIcon
@@ -474,7 +474,7 @@ export default function Dashboard() {
                                 </li>
                                 <li className="mt-auto">
                                     <a
-                                        href="/settings"
+                                        href="/settings/general"
                                         className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                                     >
                                         <Cog8ToothIcon
@@ -562,7 +562,7 @@ export default function Dashboard() {
                                                     <Menu.Item>
                                                         {({ active }) => (
                                                             <a
-                                                                href="/settings"
+                                                                href="/settings/general"
                                                                 className={classNames(
                                                                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                                                     'inline-flex items-center gap-x-1.5 block px-4 py-2 text-sm'
