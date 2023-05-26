@@ -13,7 +13,6 @@ import {
 
 import {
     ChevronDownIcon,
-    MagnifyingGlassIcon,
 } from '@heroicons/react/20/solid'
 
 import { useRouter } from 'next/router';
@@ -28,7 +27,6 @@ import Web3 from 'web3';
 const web3 = new Web3(new Web3.providers.HttpProvider("https://rpc.ankr.com/polygon_mumbai"));
 
 import ABI from '@/lib/ABI.json';
-import TOKEN_ABI from '@/lib/TOKEN_ABI.json';
 
 import { useContractWrite, useContractRead, useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
 
@@ -40,12 +38,6 @@ const navigation = [
     { name: 'Subscriptions', href: '/subscriptions', icon: CurrencyDollarIcon, current: true },
 ]
 
-const teams = [
-    { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
-    { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
-    { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
-]
-
 let subscriptions = [];
 
 function classNames(...classes) {
@@ -53,7 +45,7 @@ function classNames(...classes) {
 }
 
 
-export default function Dashboard() {
+export default function Subscriptions() {
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const [shouldRender, setShouldRender] = useState(false);
     const router = useRouter();
@@ -256,11 +248,9 @@ export default function Dashboard() {
             const result = await handleNotSignedIn();
 
             if (result) {
-                // If precheck passes, set shouldRender to true
                 setShouldRender(true);
             } else {
-                // If precheck fails, handle it accordingly
-                // For example, you can show an error message, redirect, etc.
+
             }
         };
 
@@ -268,7 +258,6 @@ export default function Dashboard() {
     }, []);
 
     if (!shouldRender) {
-        // You can render a loading indicator, a placeholder, or nothing
         return <div></div>;
     }
 
@@ -623,36 +612,7 @@ export default function Dashboard() {
                                                         ))}
                                                     </ul>
                                                 </li>
-                                                <li>
-                                                    <div className="text-xs font-semibold leading-6 text-gray-400">Your teams</div>
-                                                    <ul role="list" className="-mx-2 mt-2 space-y-1">
-                                                        {teams.map((team) => (
-                                                            <li key={team.name}>
-                                                                <a
-                                                                    href={team.href}
-                                                                    className={classNames(
-                                                                        team.current
-                                                                            ? 'bg-gray-50 text-indigo-600'
-                                                                            : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
-                                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                                                                    )}
-                                                                >
-                                                                    <span
-                                                                        className={classNames(
-                                                                            team.current
-                                                                                ? 'text-indigo-600 border-indigo-600'
-                                                                                : 'text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600',
-                                                                            'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white'
-                                                                        )}
-                                                                    >
-                                                                        {team.initial}
-                                                                    </span>
-                                                                    <span className="truncate">{team.name}</span>
-                                                                </a>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </li>
+
                                                 <li className="mt-auto">
                                                     <a
                                                         href="/settings/general"
@@ -713,36 +673,7 @@ export default function Dashboard() {
                                         ))}
                                     </ul>
                                 </li>
-                                <li>
-                                    <div className="text-xs font-semibold leading-6 text-gray-400">Your teams</div>
-                                    <ul role="list" className="-mx-2 mt-2 space-y-1">
-                                        {teams.map((team) => (
-                                            <li key={team.name}>
-                                                <a
-                                                    href={team.href}
-                                                    className={classNames(
-                                                        team.current
-                                                            ? 'bg-gray-50 text-indigo-600'
-                                                            : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
-                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                                                    )}
-                                                >
-                                                    <span
-                                                        className={classNames(
-                                                            team.current
-                                                                ? 'text-indigo-600 border-indigo-600'
-                                                                : 'text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600',
-                                                            'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white'
-                                                        )}
-                                                    >
-                                                        {team.initial}
-                                                    </span>
-                                                    <span className="truncate">{team.name}</span>
-                                                </a>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </li>
+
                                 <li className="mt-auto">
                                     <a
                                         href="/settings/general"
@@ -777,7 +708,7 @@ export default function Dashboard() {
 
                             <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6 lg:pl-4">
                                 <form className="relative flex flex-1" action="#" method="GET">
-                                    <label htmlFor="search-field" className="sr-only">
+                                    {/* <label htmlFor="search-field" className="sr-only">
                                         Search
                                     </label>
                                     <MagnifyingGlassIcon
@@ -790,23 +721,18 @@ export default function Dashboard() {
                                         placeholder="Search..."
                                         type="search"
                                         name="search"
-                                    />
+                                    /> */}
                                 </form>
                                 <div className="flex items-center gap-x-4 lg:gap-x-6">
-                                    <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
+                                    {/* <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
                                         <span className="sr-only">View notifications</span>
                                         <BellIcon className="h-6 w-6" aria-hidden="true" />
-                                    </button>
+                                    </button> */}
 
                                     {/* Separator */}
                                     <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" aria-hidden="true" />
 
                                     {/* Profile dropdown */}
-                                    <div className="hidden lg:block">
-                                        <ConnectButton
-                                            label='Connect Web3'
-                                        />
-                                    </div>
                                     <Menu as="div" className="relative inline-block text-left lg:pr-4">
                                         <div>
                                             <Menu.Button className="inline-flex w-full justify-center gap-x-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">

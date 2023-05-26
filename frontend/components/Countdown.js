@@ -12,11 +12,11 @@ const Countdown = ({ unixTimestamp }) => {
             setTimeLeft(Math.floor(diff / 1000));
         };
 
-        updateTimeLeft(); // Initial update
-        const interval = setInterval(updateTimeLeft, 1000); // Update every second
+        updateTimeLeft(); 
+        const interval = setInterval(updateTimeLeft, 1000); 
 
         return () => {
-            clearInterval(interval); // Clean up the interval on component unmount
+            clearInterval(interval);
         };
     }, [unixTimestamp]);
 

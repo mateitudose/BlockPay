@@ -30,11 +30,9 @@ export default function Login() {
             const result = await handleSignedIn();
 
             if (!result) {
-                // If precheck passes, set shouldRender to true
                 setShouldRender(true);
             } else {
-                // If precheck fails, handle it accordingly
-                // For example, you can show an error message, redirect, etc.
+
             }
         };
 
@@ -75,7 +73,6 @@ export default function Login() {
         }
     };
     if (!shouldRender) {
-        // You can render a loading indicator, a placeholder, or nothing
         return <div></div>;
     }
     return (

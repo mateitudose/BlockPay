@@ -44,7 +44,7 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
+export default function Crypto() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [shouldRender, setShouldRender] = useState(false);
     const router = useRouter();
@@ -76,11 +76,9 @@ export default function Example() {
             const result = await handleNotSignedIn();
 
             if (result) {
-                // If precheck passes, set shouldRender to true
                 setShouldRender(true);
             } else {
-                // If precheck fails, handle it accordingly
-                // For example, you can show an error message, redirect, etc.
+
             }
         };
 
@@ -134,7 +132,6 @@ export default function Example() {
     };
 
     if (!shouldRender) {
-        // You can render a loading indicator, a placeholder, or nothing
         return <div></div>;
     }
 

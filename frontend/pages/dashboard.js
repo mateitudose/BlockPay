@@ -2,22 +2,18 @@ import { Fragment, useState, useEffect, use } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
     Bars3Icon,
-    BellIcon,
     Cog8ToothIcon,
     XMarkIcon,
     ArrowRightOnRectangleIcon,
     WindowIcon,
     BuildingStorefrontIcon,
     BanknotesIcon,
-    CreditCardIcon,
     Square3Stack3DIcon,
     CurrencyDollarIcon,
     UserCircleIcon,
 } from '@heroicons/react/24/outline'
 import {
     ChevronDownIcon,
-    MagnifyingGlassIcon,
-    BuildingOfficeIcon,
     CheckCircleIcon,
     ChevronRightIcon,
 }
@@ -37,11 +33,7 @@ const navigation = [
     { name: 'Subscriptions', href: '/subscriptions', icon: CurrencyDollarIcon, current: false },
 ]
 
-const teams = [
-    { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
-    { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
-    { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
-]
+
 
 let transactions = []
 
@@ -189,10 +181,9 @@ export default function Dashboard() {
                                 name: data[i].customer_email,
                                 href: "/invoice/" + data[i].id,
                                 amount: data[i].value_to_receive,
-                                currency: 'USD',
+                                currency: data[i].crypto_option == 3 ? "BNB" : 'USD',
                                 status: data[i].status,
                                 date: UTC(data[i].created_at),
-                                datetime: UTC(data[i].created_at),
                                 date_unix: data[i].created_at,
                             })
                         }
@@ -232,11 +223,9 @@ export default function Dashboard() {
             const result = await handleNotSignedIn();
 
             if (result) {
-                // If precheck passes, set shouldRender to true
                 setShouldRender(true);
             } else {
-                // If precheck fails, handle it accordingly
-                // For example, you can show an error message, redirect, etc.
+
             }
         };
 
@@ -244,7 +233,6 @@ export default function Dashboard() {
     }, []);
 
     if (!shouldRender) {
-        // You can render a loading indicator, a placeholder, or nothing
         return <div></div>;
     }
 
@@ -352,36 +340,7 @@ export default function Dashboard() {
                                                         ))}
                                                     </ul>
                                                 </li>
-                                                <li>
-                                                    <div className="text-xs font-semibold leading-6 text-gray-400">Your teams</div>
-                                                    <ul role="list" className="-mx-2 mt-2 space-y-1">
-                                                        {teams.map((team) => (
-                                                            <li key={team.name}>
-                                                                <a
-                                                                    href={team.href}
-                                                                    className={classNames(
-                                                                        team.current
-                                                                            ? 'bg-gray-50 text-indigo-600'
-                                                                            : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
-                                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                                                                    )}
-                                                                >
-                                                                    <span
-                                                                        className={classNames(
-                                                                            team.current
-                                                                                ? 'text-indigo-600 border-indigo-600'
-                                                                                : 'text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600',
-                                                                            'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white'
-                                                                        )}
-                                                                    >
-                                                                        {team.initial}
-                                                                    </span>
-                                                                    <span className="truncate">{team.name}</span>
-                                                                </a>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </li>
+
                                                 <li className="mt-auto">
                                                     <a
                                                         href="/settings/general"
@@ -442,36 +401,7 @@ export default function Dashboard() {
                                         ))}
                                     </ul>
                                 </li>
-                                <li>
-                                    <div className="text-xs font-semibold leading-6 text-gray-400">Your teams</div>
-                                    <ul role="list" className="-mx-2 mt-2 space-y-1">
-                                        {teams.map((team) => (
-                                            <li key={team.name}>
-                                                <a
-                                                    href={team.href}
-                                                    className={classNames(
-                                                        team.current
-                                                            ? 'bg-gray-50 text-indigo-600'
-                                                            : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
-                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                                                    )}
-                                                >
-                                                    <span
-                                                        className={classNames(
-                                                            team.current
-                                                                ? 'text-indigo-600 border-indigo-600'
-                                                                : 'text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600',
-                                                            'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white'
-                                                        )}
-                                                    >
-                                                        {team.initial}
-                                                    </span>
-                                                    <span className="truncate">{team.name}</span>
-                                                </a>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </li>
+
                                 <li className="mt-auto">
                                     <a
                                         href="/settings/general"
@@ -506,7 +436,7 @@ export default function Dashboard() {
 
                             <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6 lg:pl-4">
                                 <form className="relative flex flex-1" action="#" method="GET">
-                                    <label htmlFor="search-field" className="sr-only">
+                                    {/* <label htmlFor="search-field" className="sr-only">
                                         Search
                                     </label>
                                     <MagnifyingGlassIcon
@@ -519,13 +449,13 @@ export default function Dashboard() {
                                         placeholder="Search..."
                                         type="search"
                                         name="search"
-                                    />
+                                    /> */}
                                 </form>
                                 <div className="flex items-center gap-x-4 lg:gap-x-6">
-                                    <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
+                                    {/* <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
                                         <span className="sr-only">View notifications</span>
                                         <BellIcon className="h-6 w-6" aria-hidden="true" />
-                                    </button>
+                                    </button> */}
 
                                     {/* Separator */}
                                     <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" aria-hidden="true" />
@@ -737,10 +667,10 @@ export default function Dashboard() {
                                                             <span className="flex flex-col truncate text-sm text-gray-500">
                                                                 <span className="truncate">{transaction.name}</span>
                                                                 <span>
-                                                                    <span className="font-medium text-gray-900">{transaction.amount}</span>{' '}
+                                                                    <span className="font-medium text-gray-900">{parseFloat(parseFloat(transaction.amount).toFixed(8))}</span>{' '}
                                                                     {transaction.currency}
                                                                 </span>
-                                                                <time dateTime={transaction.datetime}>{transaction.date}</time>
+                                                                <time dateTime={transaction.date}>{transaction.date}</time>
                                                             </span>
                                                         </span>
                                                         <ChevronRightIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
@@ -822,7 +752,7 @@ export default function Dashboard() {
                                                                     </div>
                                                                 </td>
                                                                 <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                                    <span className="font-medium text-gray-900">{transaction.amount}</span>
+                                                                    <span className="font-medium text-gray-900">{parseFloat(parseFloat(transaction.amount).toFixed(8))}</span>
                                                                     {transaction.currency}
                                                                 </td>
                                                                 <td className="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 md:block">
@@ -832,7 +762,7 @@ export default function Dashboard() {
                                                                     </div>
                                                                 </td>
                                                                 <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                                    <time dateTime={transaction.datetime}>{transaction.date}</time>
+                                                                    <time dateTime={transaction.date}>{transaction.date}</time>
                                                                 </td>
                                                             </tr>
                                                         ))}

@@ -32,11 +32,9 @@ export default function Register() {
             const result = await handleSignedIn();
 
             if (!result) {
-                // If precheck passes, set shouldRender to true
                 setShouldRender(true);
             } else {
-                // If precheck fails, handle it accordingly
-                // For example, you can show an error message, redirect, etc.
+
             }
         };
 

@@ -9,10 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 
 const navigation = [
-    { name: 'Product', href: '#' },
-    { name: 'Features', href: '#' },
-    { name: 'Marketplace', href: '#' },
-    { name: 'Company', href: '#' },
+    { name: 'Dashboard', href: '/dashboard' },
 ]
 
 export default function Header() {

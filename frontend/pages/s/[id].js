@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import ABI from '@/lib/ABI.json';
 import TOKEN_ABI from '@/lib/TOKEN_ABI.json';
@@ -12,7 +12,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider("https://rpc.ankr.com/poly
 
 import { useContractWrite, useContractRead, useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
 
-import { ChevronLeftIcon } from '@heroicons/react/24/outline';
+import { ChevronLeftIcon, BuildingStorefrontIcon } from '@heroicons/react/24/outline';
 
 import Ethereum from "@/public/Crypto/Ethereum.svg"
 import Tether from "@/public/Crypto/Tether.svg"
@@ -26,7 +26,7 @@ import logo from "@/public/logo.svg"
 import Image from "next/image"
 import toast, { Toaster } from 'react-hot-toast';
 import Badge from '@/components/Badge';
-// Page component
+
 const Subscription = ({ subscription, referral, merchantEthAddress }) => {
     const router = useRouter();
     const [email, setEmail] = useState('');
@@ -35,6 +35,7 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
     const { address, isConnected, isConnecting } = useAccount();
     const { chain } = useNetwork();
     const { switchNetwork } = useSwitchNetwork();
+    const [storeName, setStoreName] = useState('');
 
     let zeroAddress = "0x0000000000000000000000000000000000000000";
 
@@ -170,9 +171,24 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
     // }
     // mapPlans();
 
+    useEffect(async () => {
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('store_name')
+            .eq('id', subscription.merchant_id)
+            .single();
+        if (error) {
+            toast.error(error.message);
+        }
+        else {
+            document.title = `Subscription | ${data.store_name}`;
+            setStoreName(data.store_name);
+        }
+    }, []);
+
     return (
         <div className="bg-white">
-            <title>Subscription</title>
+            <title>Subscription | Blockpay</title>
 
             <Toaster position="top-right"
                 reverseOrder={false} />
@@ -196,12 +212,11 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                         </h2>
                         <dl className='space-y-6 text-sm font-medium'>
                             <div className="flex items-center pb-6">
-                                <img
-                                    className="drop-shadow inline-block h-8 w-8 rounded-full"
-                                    src={subscription.store_logo}
+                                <BuildingStorefrontIcon
+                                    className="drop-shadow inline-block h-8 w-8 py-1.5 rounded-full bg-gray-50"
                                     alt="Store logo"
                                 />
-                                <span className="text-base ml-2">{subscription.store_name}</span>
+                                <span className="text-base ml-2">{storeName}</span>
                             </div>
 
                         </dl>
@@ -220,7 +235,7 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
 
 
 
-                            <a href="https://blockpay.com" target='_blank'>
+                            <a href="https://onblockpay.io" target='_blank'>
                                 <div className="hidden lg:block fixed bottom-1/4 opacity-80 grayscale hover:grayscale-0">
                                     Powered by
                                     <Image className='w-auto h-6 inline-block pb-0.5 ml-1' src={logo} />
@@ -302,8 +317,8 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                                                 <Image
                                                     src={Tether}
                                                     alt="USDT"
-                                                    width={18} // Set the image width
-                                                    height={18} // Set the image height
+                                                    width={18} 
+                                                    height={18} 
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>USDT</span>
@@ -319,8 +334,8 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                                                 <Image
                                                     src={BUSD}
                                                     alt="BUSD"
-                                                    width={18} // Set the image width
-                                                    height={18} // Set the image height
+                                                    width={18} 
+                                                    height={18} 
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>BUSD</span>
@@ -336,8 +351,8 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                                                 <Image
                                                     src={USDC}
                                                     alt="USDC"
-                                                    width={18} // Set the image width
-                                                    height={18} // Set the image height
+                                                    width={18} 
+                                                    height={18} 
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>USDC</span>
@@ -352,8 +367,8 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                                                 <Image
                                                     src={Dai}
                                                     alt="DAI"
-                                                    width={18} // Set the image width
-                                                    height={18} // Set the image height
+                                                    width={18} 
+                                                    height={18} 
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>DAI</span>
@@ -375,8 +390,8 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                                                 <Image
                                                     src={Ethereum}
                                                     alt="ERC-20"
-                                                    width={18} // Set the image width
-                                                    height={18} // Set the image height
+                                                    width={18} 
+                                                    height={18} 
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>ERC-20</span>
@@ -395,8 +410,8 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                                                 <Image
                                                     src={BNB}
                                                     alt="BEP-20"
-                                                    width={18} // Set the image width
-                                                    height={18} // Set the image height
+                                                    width={18} 
+                                                    height={18} 
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>BEP-20</span>
@@ -415,8 +430,8 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                                                 <Image
                                                     src={Polygon}
                                                     alt="Mumbai Testnet"
-                                                    width={18} // Set the image width
-                                                    height={18} // Set the image height
+                                                    width={18} 
+                                                    height={18} 
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>Mumbai Testnet</span>

@@ -28,12 +28,10 @@ const QRCodeGenerator = ({ value }) => {
 
         updateQRCode(size, size);
 
-        // Set a timer to update the size after 3 seconds (3000 milliseconds)
         const timer = setTimeout(() => {
             setSize(1024);
         }, 500);
 
-        // Clean up the timer when the component is unmounted or the value changes
         return () => clearTimeout(timer);
     }, [value, size]);
 

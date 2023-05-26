@@ -65,7 +65,7 @@ const Invoice = ({ invoice }) => {
             return () => clearTimeout(timer);
         }
     }, [isCopied]);
-    
+
     const handleCopyClick = (textToCopy) => {
         if (typeof window !== 'undefined') {
             navigator.clipboard.writeText(textToCopy).then(() => {
@@ -104,7 +104,6 @@ const Invoice = ({ invoice }) => {
             const result = await voided();
 
             if (result) {
-                // If precheck passes, set shouldRender to true
                 setShouldRender(true);
                 setIsLoading(false);
             }

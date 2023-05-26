@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 
@@ -6,23 +6,19 @@ const fetch = require('node-fetch');
 const { v4: uuidv4 } = require('uuid');
 import { useRouter } from 'next/router'
 
-import { 
+import {
     ChevronLeftIcon,
     BuildingStorefrontIcon,
- } from '@heroicons/react/24/outline';
+} from '@heroicons/react/24/outline';
 
-import Bitcoin from "@/public/Crypto/Bitcoin.svg"
-import BitcoinCash from "@/public/Crypto/Bitcoin_Cash.svg"
 import Ethereum from "@/public/Crypto/Ethereum.svg"
 import Tether from "@/public/Crypto/Tether.svg"
 import USDC from "@/public/Crypto/Circle_USDC.svg"
 import BNB from "@/public/Crypto/BNB.svg"
 import BUSD from "@/public/Crypto/BUSD.svg"
-import Tron from "@/public/Crypto/Tron.svg"
 import Arbitrum from "@/public/Crypto/Arbitrum.svg"
 import Polygon from "@/public/Crypto/Polygon.svg"
 import Solana from "@/public/Crypto/Solana.svg"
-import Litecoin from "@/public/Crypto/Litecoin.svg"
 import Avax from "@/public/Crypto/Avax.svg"
 import logo from "@/public/logo.svg"
 
@@ -30,13 +26,13 @@ import Image from "next/image"
 import toast, { Toaster } from 'react-hot-toast';
 
 
-// Page component
 const Checkout = ({ checkout }) => {
     const router = useRouter();
     const [email, setEmail] = useState('');
     const [selectedCrypto, setSelectedCrypto] = useState(0);
     const [loading, setLoading] = useState(false);
     const [showChains, setShowChains] = useState(false);
+    const [storeName, setStoreName] = useState('');
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -62,7 +58,7 @@ const Checkout = ({ checkout }) => {
             return;
         }
         setLoading(true);
-        // Continue with payment
+
         let id = uuidv4();
         const { data, error } = await supabase
             .from('invoices')
@@ -101,9 +97,24 @@ const Checkout = ({ checkout }) => {
         return { cryptoAmount, cryptoPrice };
     }
 
+    useEffect(async () => {
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('store_name')
+            .eq('id', checkout.merchant_id)
+            .single();
+        if (error) {
+            toast.error(error.message);
+        }
+        else {
+            document.title = `Checkout | ${data.store_name}`;
+            setStoreName(data.store_name);
+        }
+    }, []);
+
     return (
         <div className="bg-white">
-            <title>Checkout</title>
+            <title>Checkout | Blockpay</title>
             <Toaster position="top-right"
                 reverseOrder={false} />
             {/* Background color split screen for large screens */}
@@ -127,7 +138,7 @@ const Checkout = ({ checkout }) => {
                                     className="drop-shadow inline-block h-8 w-8 py-1.5 rounded-full bg-gray-50"
                                     alt="Store logo"
                                 />
-                                <span className="text-base ml-2">{checkout.store_name}</span>
+                                <span className="text-base ml-2">{storeName}</span>
                             </div>
                             <span className="text-base block">Order details</span>
 
@@ -222,8 +233,8 @@ const Checkout = ({ checkout }) => {
                                             <Image
                                                 src={Bitcoin}
                                                 alt="Bitcoin"
-                                                width={18} // Set the image width
-                                                height={18} // Set the image height
+                                                width={18} 
+                                                height={18} 
                                                 className="mr-2 lg:w-6 lg:h-6"
                                             />
                                             <span className='block lg:hidden'>BTC</span>
@@ -240,8 +251,8 @@ const Checkout = ({ checkout }) => {
                                                 <Image
                                                     src={Tether}
                                                     alt="USDT"
-                                                    width={18} // Set the image width
-                                                    height={18} // Set the image height
+                                                    width={18} 
+                                                    height={18} 
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>USDT</span>
@@ -256,8 +267,8 @@ const Checkout = ({ checkout }) => {
                                                 <Image
                                                     src={BUSD}
                                                     alt="BUSD"
-                                                    width={18} // Set the image width
-                                                    height={18} // Set the image height
+                                                    width={18} 
+                                                    height={18} 
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>BUSD</span>
@@ -272,8 +283,8 @@ const Checkout = ({ checkout }) => {
                                                 <Image
                                                     src={USDC}
                                                     alt="USDC"
-                                                    width={18} // Set the image width
-                                                    height={18} // Set the image height
+                                                    width={18} 
+                                                    height={18} 
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>USDC</span>
@@ -285,8 +296,8 @@ const Checkout = ({ checkout }) => {
                                                 <Image
                                                     src={Ethereum}
                                                     alt="Ethereum"
-                                                    width={18} // Set the image width
-                                                    height={18} // Set the image height
+                                                    width={18} 
+                                                    height={18} 
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span className='block lg:hidden'>ETH</span>
@@ -299,8 +310,8 @@ const Checkout = ({ checkout }) => {
                                                 <Image
                                                     src={BNB}
                                                     alt="BNB"
-                                                    width={18} // Set the image width
-                                                    height={18} // Set the image height
+                                                    width={18} 
+                                                    height={18} 
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>BNB</span>
@@ -313,8 +324,8 @@ const Checkout = ({ checkout }) => {
                                                     <Image
                                                         src={Litecoin}
                                                         alt="Litecoin"
-                                                        width={18} // Set the image width
-                                                        height={18} // Set the image height
+                                                        width={18} 
+                                                        height={18} 
                                                         className="mr-2 lg:w-6 lg:h-6"
                                                     />
                                                     <span className='block lg:hidden'>LTC</span>
@@ -328,8 +339,8 @@ const Checkout = ({ checkout }) => {
                                                 <Image
                                                     src={Avax}
                                                     alt="Avax"
-                                                    width={18} // Set the image width
-                                                    height={18} // Set the image height
+                                                    width={18} 
+                                                    height={18} 
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span className='block lg:hidden'>AVAX</span>
@@ -342,8 +353,8 @@ const Checkout = ({ checkout }) => {
                                                 <Image
                                                     src={Arbitrum}
                                                     alt="Arbitrum"
-                                                    width={18} // Set the image width
-                                                    height={18} // Set the image height
+                                                    width={18} 
+                                                    height={18} 
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span className='block lg:hidden'>ARB</span>
@@ -356,8 +367,8 @@ const Checkout = ({ checkout }) => {
                                                 <Image
                                                     src={Polygon}
                                                     alt="Matic"
-                                                    width={18} // Set the image width
-                                                    height={18} // Set the image height
+                                                    width={18} 
+                                                    height={18} 
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span className='block lg:hidden'>MATIC</span>
@@ -370,8 +381,8 @@ const Checkout = ({ checkout }) => {
                                                 <Image
                                                     src={Solana}
                                                     alt="Solana"
-                                                    width={18} // Set the image width
-                                                    height={18} // Set the image height
+                                                    width={18} 
+                                                    height={18} 
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
 
@@ -399,8 +410,8 @@ const Checkout = ({ checkout }) => {
                                                 <Image
                                                     src={Ethereum}
                                                     alt="ERC-20"
-                                                    width={18} // Set the image width
-                                                    height={18} // Set the image height
+                                                    width={18} 
+                                                    height={18} 
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>ERC-20</span>
@@ -423,8 +434,8 @@ const Checkout = ({ checkout }) => {
                                                 <Image
                                                     src={BNB}
                                                     alt="BEP-20"
-                                                    width={18} // Set the image width
-                                                    height={18} // Set the image height
+                                                    width={18} 
+                                                    height={18} 
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>BEP-20</span>
@@ -489,7 +500,6 @@ const Checkout = ({ checkout }) => {
 
 export default Checkout;
 
-// Fetch data from Supabase database
 export async function getServerSideProps({ params }) {
     const { id } = params;
     const { data, error } = await supabase

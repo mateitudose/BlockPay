@@ -2,14 +2,8 @@ import { useState, Fragment, useEffect } from 'react'
 import { Dialog, Transition, Menu } from '@headlessui/react'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import {
-    BellIcon,
-    CreditCardIcon,
-    CubeIcon,
     UserCircleIcon,
-    UsersIcon,
     XMarkIcon,
-    EyeIcon,
-    EyeSlashIcon,
     ChevronDownIcon,
     Cog8ToothIcon,
     ArrowRightOnRectangleIcon,
@@ -41,7 +35,7 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
+export default function General() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [username, setUsername] = useState('');
     const [newUsername, setNewUsername] = useState('');
@@ -73,11 +67,9 @@ export default function Example() {
             const result = await handleNotSignedIn();
 
             if (result) {
-                // If precheck passes, set shouldRender to true
                 setShouldRender(true);
             } else {
-                // If precheck fails, handle it accordingly
-                // For example, you can show an error message, redirect, etc.
+
             }
         };
 
@@ -127,7 +119,6 @@ export default function Example() {
     };
 
     if (!shouldRender) {
-        // You can render a loading indicator, a placeholder, or nothing
         return <div></div>;
     }
 
