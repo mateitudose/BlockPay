@@ -2,7 +2,6 @@ import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
     Bars3Icon,
-    BellIcon,
     Cog8ToothIcon,
     XMarkIcon,
     ArrowRightOnRectangleIcon,
@@ -28,7 +27,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider("https://rpc.ankr.com/poly
 
 import ABI from '@/lib/ABI.json';
 
-import { useContractWrite, useContractRead, useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
+import { useContractWrite, useContractRead, useAccount } from 'wagmi'
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
