@@ -83,6 +83,7 @@ const Invoice = ({ invoice }) => {
             return () => clearTimeout(timer);
         }
     }, [isCopied2]);
+
     const handleCopyClick2 = (textToCopy) => {
         if (typeof window !== 'undefined') {
             navigator.clipboard.writeText(textToCopy).then(() => {
@@ -91,15 +92,22 @@ const Invoice = ({ invoice }) => {
         }
     };
 
-    async function voided() {
-        let tTime = new Date(invoice.created_at).getTime() + 30 * 60 * 1000;
-        let time = new Date().getTime();
-        return (tTime < time)
-    }
-
-
-
     useEffect(() => {
+        const voided = async () => {
+            let tTime = new Date(invoice.created_at).getTime() + 30 * 60 * 1000;
+            let time = new Date().getTime();
+            if (tTime < time) {
+                const { data, error } = await supabase
+                    .from('invoices')
+                    .update({ voided: true })
+                    .eq('id', invoice.id)
+                if (error) {
+                    toast.error(error.message);
+                }
+            }
+            return (tTime < time);
+        }
+
         const runPrecheck = async () => {
             const result = await voided();
 
@@ -115,11 +123,14 @@ const Invoice = ({ invoice }) => {
         runPrecheck();
     }, []);
 
+
+
     if (isLoading) {
         return (
             <div />
-        ); // This will be rendered while data is loading
+        );
     }
+
     if (shouldRender) {
         return (
             <div className="bg-white">
@@ -165,6 +176,7 @@ const Invoice = ({ invoice }) => {
                                     <dt className="">Total</dt>
                                     <dd className="">${invoice.price_in_usd}</dd>
                                 </div>
+
                                 <a href="https://blockpay.com" target='_blank'>
                                     <div className="hidden lg:block fixed bottom-1/4 opacity-80 grayscale hover:grayscale-0">
                                         Powered by

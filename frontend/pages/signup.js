@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import Google from '@/public/google_logo.svg'
-import Apple from '@/public/apple_logo.svg'
 import logo from "@/public/logo.svg"
 import { useState, useEffect } from 'react'
 import toast, { Toaster } from 'react-hot-toast';
@@ -68,7 +67,6 @@ export default function Register() {
 
     const registerEmail = async () => {
         const { data, error } = await supabase.auth.signUp({
-            username: username,
             email: email,
             password: password,
             options: {
@@ -115,7 +113,7 @@ export default function Register() {
                                 </a>
                             </p>
                             <div className="mt-6">
-                                <div className="mt-6 grid grid-rows-2 gap-3">
+                                <div className="mt-6">
                                     <div>
                                         <button
                                             href=""
@@ -147,8 +145,8 @@ export default function Register() {
                                 </div>
                             </div>
                             <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
-                                <div>
-                                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                                {/* <div>
+                                    <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
                                         Username
                                     </label>
                                     <div className="mt-2">
@@ -163,7 +161,7 @@ export default function Register() {
                                             onChange={handleUsernameChange}
                                         />
                                     </div>
-                                </div>
+                                </div> */}
                                 <div>
                                     <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                                         Email

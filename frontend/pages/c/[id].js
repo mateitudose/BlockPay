@@ -24,12 +24,13 @@ import logo from "@/public/logo.svg"
 
 import Image from "next/image"
 import toast, { Toaster } from 'react-hot-toast';
+import cryptos from '@/components/cryptos';
 
 
 const Checkout = ({ checkout }) => {
     const router = useRouter();
     const [email, setEmail] = useState('');
-    const [selectedCrypto, setSelectedCrypto] = useState(0);
+    const [selectedCrypto, setSelectedCrypto] = useState('');
     const [loading, setLoading] = useState(false);
     const [showChains, setShowChains] = useState(false);
     const [storeName, setStoreName] = useState('');
@@ -85,31 +86,59 @@ const Checkout = ({ checkout }) => {
     }
 
     async function fetchCryptoPrice(cryptoId, usdAmount) {
-        if (cryptoId > 8) {
+        // for stablecoins
+        if (["USDT(ERC-20)", "USDT(BEP-20)", "BUSD(ERC-20)", "BUSD(BEP-20)", "USDC(ERC-20)", "USDC(BEP-20)"].includes(cryptoId)) {
             return { cryptoAmount: usdAmount, cryptoPrice: "1.00" };
         }
-        const cryptoIds = ['bitcoin', 'ethereum', 'binancecoin', 'litecoin', 'avalanche-2', 'arbitrum', 'matic-network', 'solana'];
-        const url = `https://api.coingecko.com/api/v3/simple/price?ids=${cryptoIds[cryptoId - 1]}&vs_currencies=usd`;
+
+        // mapping between your crypto symbol and coingecko id
+        const coinGeckoIdMap = {
+            'BTC': 'bitcoin',
+            'ETH': 'ethereum',
+            'BNB': 'binancecoin',
+            'LTC': 'litecoin',
+            'AVAX': 'avalanche-2',
+            'ARB': 'arbitrum',
+            'MATIC': 'matic-network',
+            'SOL': 'solana'
+        };
+
+        // get the main part of cryptoId (before any parentheses)
+        const cryptoMainId = cryptoId.split('(')[0];
+
+        const coinGeckoId = coinGeckoIdMap[cryptoMainId];
+        if (!coinGeckoId) {
+            throw new Error('Unsupported cryptocurrency for CoinGecko API');
+        }
+
+        const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coinGeckoId}&vs_currencies=usd`;
         const response = await fetch(url);
         const data = await response.json();
-        const cryptoPrice = data[cryptoIds[cryptoId - 1]].usd;
+        const cryptoPrice = data[coinGeckoId].usd;
         const cryptoAmount = usdAmount / cryptoPrice;
+        console.log(cryptoAmount, cryptoPrice, usdAmount, cryptoId);
+
         return { cryptoAmount, cryptoPrice };
     }
 
-    useEffect(async () => {
-        const { data, error } = await supabase
-            .from('profiles')
-            .select('store_name')
-            .eq('id', checkout.merchant_id)
-            .single();
-        if (error) {
-            toast.error(error.message);
+
+
+    useEffect(() => {
+        const set = async () => {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('store_name')
+                .eq('id', checkout.merchant_id)
+                .single();
+            if (error) {
+                toast.error(error.message);
+            }
+            else {
+                document.title = `Checkout | ${data.store_name}`;
+                setStoreName(data.store_name);
+            }
         }
-        else {
-            document.title = `Checkout | ${data.store_name}`;
-            setStoreName(data.store_name);
-        }
+        set();
     }, []);
 
     return (
@@ -244,15 +273,15 @@ const Checkout = ({ checkout }) => {
                                             <button
                                                 className="drop-shadow shadow-[#53ae94] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#53ae94] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                 onClick={() => {
-                                                    setSelectedCrypto(9), setShowChains(true)
+                                                    setSelectedCrypto("USDT"), setShowChains(true)
                                                     document.activeElement.blur();
                                                 }}
                                             >
                                                 <Image
                                                     src={Tether}
                                                     alt="USDT"
-                                                    width={18} 
-                                                    height={18} 
+                                                    width={18}
+                                                    height={18}
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>USDT</span>
@@ -260,15 +289,15 @@ const Checkout = ({ checkout }) => {
                                             <button
                                                 className="drop-shadow shadow-[#F0B90B] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#F0B90B] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                 onClick={() => {
-                                                    setSelectedCrypto(10), setShowChains(true)
+                                                    setSelectedCrypto("BUSD"), setShowChains(true)
                                                     document.activeElement.blur();
                                                 }}
                                             >
                                                 <Image
                                                     src={BUSD}
                                                     alt="BUSD"
-                                                    width={18} 
-                                                    height={18} 
+                                                    width={18}
+                                                    height={18}
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>BUSD</span>
@@ -276,28 +305,28 @@ const Checkout = ({ checkout }) => {
                                             <button
                                                 className="drop-shadow shadow-[#2775ca] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#2775ca] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                 onClick={() => {
-                                                    setSelectedCrypto(11), setShowChains(true)
+                                                    setSelectedCrypto("USDC"), setShowChains(true)
                                                     document.activeElement.blur();
                                                 }}
                                             >
                                                 <Image
                                                     src={USDC}
                                                     alt="USDC"
-                                                    width={18} 
-                                                    height={18} 
+                                                    width={18}
+                                                    height={18}
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>USDC</span>
                                             </button>
                                             <button
                                                 className="drop-shadow shadow-[#627EEA] mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#627EEA] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
-                                                onClick={() => setSelectedCrypto(2)}
+                                                onClick={() => setSelectedCrypto("ETH")}
                                             >
                                                 <Image
                                                     src={Ethereum}
                                                     alt="Ethereum"
-                                                    width={18} 
-                                                    height={18} 
+                                                    width={18}
+                                                    height={18}
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span className='block lg:hidden'>ETH</span>
@@ -305,13 +334,13 @@ const Checkout = ({ checkout }) => {
                                             </button>
                                             <button
                                                 className="drop-shadow shadow-[#F0B90B] mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#F0B90B] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
-                                                onClick={() => setSelectedCrypto(3)}
+                                                onClick={() => setSelectedCrypto("BNB")}
                                             >
                                                 <Image
                                                     src={BNB}
                                                     alt="BNB"
-                                                    width={18} 
-                                                    height={18} 
+                                                    width={18}
+                                                    height={18}
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>BNB</span>
@@ -334,13 +363,13 @@ const Checkout = ({ checkout }) => {
                                             }
                                             <button
                                                 className="drop-shadow shadow-[#E84142] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#E84142] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
-                                                onClick={() => setSelectedCrypto(5)}
+                                                onClick={() => setSelectedCrypto("AVAX")}
                                             >
                                                 <Image
                                                     src={Avax}
                                                     alt="Avax"
-                                                    width={18} 
-                                                    height={18} 
+                                                    width={18}
+                                                    height={18}
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span className='block lg:hidden'>AVAX</span>
@@ -348,13 +377,13 @@ const Checkout = ({ checkout }) => {
                                             </button>
                                             <button
                                                 className="drop-shadow shadow-[#12AAFF] mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#12AAFF] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
-                                                onClick={() => setSelectedCrypto(6)}
+                                                onClick={() => setSelectedCrypto("ARB")}
                                             >
                                                 <Image
                                                     src={Arbitrum}
                                                     alt="Arbitrum"
-                                                    width={18} 
-                                                    height={18} 
+                                                    width={18}
+                                                    height={18}
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span className='block lg:hidden'>ARB</span>
@@ -362,13 +391,13 @@ const Checkout = ({ checkout }) => {
                                             </button>
                                             <button
                                                 className="drop-shadow shadow-[#7b3fe4] mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#7b3fe4] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
-                                                onClick={() => setSelectedCrypto(7)}
+                                                onClick={() => setSelectedCrypto("MATIC")}
                                             >
                                                 <Image
                                                     src={Polygon}
                                                     alt="Matic"
-                                                    width={18} 
-                                                    height={18} 
+                                                    width={18}
+                                                    height={18}
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span className='block lg:hidden'>MATIC</span>
@@ -376,13 +405,13 @@ const Checkout = ({ checkout }) => {
                                             </button>
                                             <button
                                                 className="drop-shadow shadow-[#14F195] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#14F195] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
-                                                onClick={() => setSelectedCrypto(8)}
+                                                onClick={() => setSelectedCrypto("SOL")}
                                             >
                                                 <Image
                                                     src={Solana}
                                                     alt="Solana"
-                                                    width={18} 
-                                                    height={18} 
+                                                    width={18}
+                                                    height={18}
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
 
@@ -395,23 +424,15 @@ const Checkout = ({ checkout }) => {
                                             <button
                                                 className="drop-shadow shadow-[#627EEA] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#627EEA] bg-white px-4 py- shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                 onClick={() => {
-                                                    if (selectedCrypto == 9) {
-                                                        setSelectedCrypto(9)
-                                                    }
-                                                    if (selectedCrypto == 10) {
-                                                        setSelectedCrypto(11)
-                                                    }
-                                                    if (selectedCrypto == 11) {
-                                                        setSelectedCrypto(13)
-                                                    }
+                                                    setSelectedCrypto(selectedCrypto + "(ERC-20)")
                                                     setShowChains(true)
                                                 }}
                                             >
                                                 <Image
                                                     src={Ethereum}
                                                     alt="ERC-20"
-                                                    width={18} 
-                                                    height={18} 
+                                                    width={18}
+                                                    height={18}
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>ERC-20</span>
@@ -419,23 +440,15 @@ const Checkout = ({ checkout }) => {
                                             <button
                                                 className="drop-shadow shadow-[#F0B90B] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#F0B90B] bg-white px-4 py- shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                 onClick={() => {
-                                                    if (selectedCrypto == 9) {
-                                                        setSelectedCrypto(10)
-                                                    }
-                                                    if (selectedCrypto == 10) {
-                                                        setSelectedCrypto(12)
-                                                    }
-                                                    if (selectedCrypto == 11) {
-                                                        setSelectedCrypto(14)
-                                                    }
+                                                    setSelectedCrypto(selectedCrypto + "(BEP-20)")
                                                     setShowChains(true)
                                                 }}
                                             >
                                                 <Image
                                                     src={BNB}
                                                     alt="BEP-20"
-                                                    width={18} 
-                                                    height={18} 
+                                                    width={18}
+                                                    height={18}
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>BEP-20</span>

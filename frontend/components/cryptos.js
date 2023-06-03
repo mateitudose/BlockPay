@@ -14,7 +14,7 @@ import Avax from "@/public/Crypto/Avax.svg"
 
 const cryptos = [
     {
-        id: 1,
+        id: "BTC",
         name: "Bitcoin",
         icon: Bitcoin,
         symbol: "BTC",
@@ -22,7 +22,7 @@ const cryptos = [
         background_color: "bg-[#f7931a]",
     },
     {
-        id: 2,
+        id: "ETH",
         name: "Ethereum",
         icon: Ethereum,
         symbol: "ETH",
@@ -30,7 +30,7 @@ const cryptos = [
         background_color: "bg-[#627EEA]",
     },
     {
-        id: 3,
+        id: "BNB",
         name: "Binance Coin",
         icon: BNB,
         symbol: "BNB",
@@ -38,7 +38,7 @@ const cryptos = [
         background_color: "bg-[#F0B90B]",
     },
     {
-        id: 4,
+        id: "LTC",
         name: "Litecoin",
         icon: Litecoin,
         symbol: "LTC",
@@ -46,7 +46,7 @@ const cryptos = [
         background_color: "bg-[#bebebe]",
     },
     {
-        id: 5,
+        id: "AVAX",
         name: "Avax",
         icon: Avax,
         symbol: "AVAX",
@@ -54,7 +54,7 @@ const cryptos = [
         background_color: "bg-[#E84142]",
     },
     {
-        id: 6,
+        id: "ARB",
         name: "Arbitrum",
         icon: Arbitrum,
         symbol: "ARB",
@@ -62,7 +62,7 @@ const cryptos = [
         background_color: "bg-[#213147]",
     },
     {
-        id: 7,
+        id: "MATIC",
         name: "Polygon",
         icon: Polygon,
         symbol: "MATIC",
@@ -70,7 +70,7 @@ const cryptos = [
         background_color: "bg-[#7b3fe4]",
     },
     {
-        id: 8,
+        id: "SOL",
         name: "Solana",
         icon: Solana,
         symbol: "SOL",
@@ -78,7 +78,7 @@ const cryptos = [
         background_color: "bg-[#000]",
     },
     {
-        id: 9,
+        id: "USDT(ERC-20)",
         name: 'USDT (ERC-20)',
         icon: Tether,
         symbol: "USDT",
@@ -86,7 +86,7 @@ const cryptos = [
         background_color: "bg-[#53ae94]",
     },
     {
-        id: 10,
+        id: 'USDT(BEP-20)',
         name: 'USDT (BEP-20)',
         icon: Tether,
         symbol: "USDT",
@@ -94,7 +94,7 @@ const cryptos = [
         background_color: "bg-[#53ae94]",
     },
     {
-        id: 11,
+        id: 'BUSD(ERC-20)',
         name: 'BUSD (ERC-20)',
         icon: BUSD,
         symbol: "BUSD",
@@ -102,7 +102,7 @@ const cryptos = [
         background_color: "bg-[#F0B90B]",
     },
     {
-        id: 12,
+        id: 'BUSD(BEP-20)',
         name: 'BUSD (BEP-20)',
         icon: BUSD,
         symbol: "BUSD",
@@ -110,7 +110,7 @@ const cryptos = [
         background_color: "bg-[#F0B90B]",
     },
     {
-        id: 13,
+        id: 'USDC(ERC-20)',
         name: 'USDC (ERC-20)',
         icon: USDC,
         symbol: "USDC",
@@ -118,7 +118,7 @@ const cryptos = [
         background_color: "bg-[#2775ca]",
     },
     {
-        id: 14,
+        id: 'USDC(BEP-20)',
         name: 'USDC (BEP-20)',
         icon: USDC,
         symbol: "USDC",

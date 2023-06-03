@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
-import logo from "@/public/logo.svg"
+import logo_white from "@/public/logo_white.svg"
 import { supabase } from '@/lib/supabaseClient'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -34,34 +34,35 @@ export default function Header() {
                 <div className="flex lg:flex-1">
                     <a href="#" className="-m-1.5 p-1.5">
                         <span className="sr-only">Your Company</span>
-                        <Image className="h-9 w-auto" src={logo} alt="" />
+                        <Image className="h-9 w-fit" src={logo_white} alt="" />
                     </a>
                 </div>
                 <div className="hidden lg:flex lg:gap-x-12">
                     {navigation.map((item) => (
-                        <a key={item.name} href={item.href} className="text-sm font-semibold leading-6 text-gray-900">
+                        <a key={item.name} href={item.href} className="text-sm font-semibold text-[#EFF7FF] transition duration-200 ease-in-out hover:text-white hover:opacity-100 opacity-80">
                             {item.name}
                         </a>
                     ))}
                 </div>
                 <div className="flex flex-1 items-center justify-end gap-x-6">
                     {signedIn ? (
-                        <a
-                            href="/dashboard"
-                            className="hidden lg:flex lg:text-sm lg:font-semibold lg:leading-6 flex rounded-lg bg-black px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                        >
-                            Dashboard <ArrowRightIcon className="ml-2 w-4" aria-hidden="true" />
+                        <a href="/dashboard" className="opacity-80 inline-flex items-center justify-center h-10 px-4 text-sm font-semibold bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-md hover:opacity-100 focus:ring-2 focus:ring-zinc-700 focus:outline-none disabled:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-70 transition-all duration-200 ease-in-out">
+                            Dashboard <ArrowRightIcon className="ml-1 w-5" aria-hidden="true" />
                         </a>
                     ) : (
                         <div className="flex flex-1 items-center justify-end gap-x-6">
-                            <a href="/login" className="bg-slate-100 rounded-lg px-3 py-2 hidden lg:block lg:text-sm lg:font-semibold lg:leading-6 lg:text-gray-800">
-                                Login
+                            <a href="/login" className="opacity-80 inline-flex items-center justify-center h-10 px-4 text-sm font-semibold bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-md hover:opacity-100 focus:ring-2 focus:ring-zinc-700 focus:outline-none disabled:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-70 transition-all duration-200 ease-in-out">
+                                Login <ArrowRightIcon className="ml-1 w-5" aria-hidden="true" />
                             </a>
+
                             <a
-                                href="/register"
-                                className="hidden lg:flex lg:text-sm lg:font-semibold lg:leading-6 flex rounded-lg bg-black px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                className="text-sm h-10 pl-4 pr-4 rounded-md gap-1 font-semibold bg-white text-black hover:bg-white/90 focus:ring-2 focus:ring-white/20 focus:outline-none focus:bg-white/90 disabled:hover:bg-white inline-flex items-center border justify-center select-none disabled:cursor-not-allowed disabled:opacity-70 transition ease-in-out duration-200 hidden sm:inline-flex"
+                                href="/signup"
+                                style={{
+                                    boxShadow: 'rgba(53,247,143,0.3) -8px 0px 20px, rgba(235,56,54,0.3) 8px 0px 20px',
+                                }}
                             >
-                                Get Started <ArrowRightIcon className="ml-2 w-4" aria-hidden="true" />
+                                Sign up
                             </a>
                         </div>
                     )}
@@ -93,8 +94,8 @@ export default function Header() {
                                 <a href="#" className="-m-1.5 p-1.5">
                                     <span className="sr-only">Your Company</span>
                                     <Image
-                                        className="h-9 w-auto"
-                                        src={logo}
+                                        className="h-9 w-fit"
+                                        src={logo_white}
                                         alt=""
                                     />
                                 </a>
@@ -114,7 +115,7 @@ export default function Header() {
                                             <a
                                                 key={item.name}
                                                 href={item.href}
-                                                className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                                                className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 opacity-80"
                                             >
                                                 {item.name}
                                             </a>
@@ -128,7 +129,7 @@ export default function Header() {
                                             Login
                                         </a>
                                         <a
-                                            href="/register"
+                                            href="/signup"
                                             className="relative justify-center flex rounded-xl bg-black text-center py-2.5 text-sm leading-6 font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                         >
                                             Get Started <ArrowRightIcon className="ml-2 w-4" aria-hidden="true" />

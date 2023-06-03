@@ -73,14 +73,14 @@ export default function Subscriptions() {
     }
 
     const { data: dataCreatePlan, isLoading: isLoadingCreatePlan, isSuccess: isSuccessCreatePlan, writeAsync: createPlan } = useContractWrite({
-        address: "0xe77279967EFeE08cc8F879Db518d9f512d2aa6Dd",
+        address: "0x14710BDb76743e217C3F936aE3ecb4673F45369c",
         abi: ABI,
         functionName: "createPlan",
         args: [web3.utils.toWei(price != '' ? price.toString() : "0", 'ether'), "2592000", referral.toString(), "0x2e84cC0cE546A50f0C0B6731f119D37ae2B6c7eE"],
     });
 
     const { data: dataDeletePlan, isLoading: isLoadingDeletePlan, isSuccess: isSuccessDeletePlan, writeAsync: deletePlan } = useContractWrite({
-        address: "0xe77279967EFeE08cc8F879Db518d9f512d2aa6Dd",
+        address: "0x14710BDb76743e217C3F936aE3ecb4673F45369c",
         abi: ABI,
         functionName: "deletePlan",
         args: [planID != '' ? planID.toString() : "0"],
@@ -155,7 +155,7 @@ export default function Subscriptions() {
     };
 
     const totalPlans = useContractRead({
-        address: "0xe77279967EFeE08cc8F879Db518d9f512d2aa6Dd",
+        address: "0x14710BDb76743e217C3F936aE3ecb4673F45369c",
         abi: ABI,
         functionName: 'totalPlans',
     })
@@ -732,6 +732,11 @@ export default function Subscriptions() {
                                     <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" aria-hidden="true" />
 
                                     {/* Profile dropdown */}
+                                    <div className="hidden lg:block">
+                                        <ConnectButton
+                                            label='Connect Web3'
+                                        />
+                                    </div>
                                     <Menu as="div" className="relative inline-block text-left lg:pr-4">
                                         <div>
                                             <Menu.Button className="inline-flex w-full justify-center gap-x-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
@@ -776,32 +781,7 @@ export default function Subscriptions() {
                                                             </a>
                                                         )}
                                                     </Menu.Item>
-                                                    <Menu.Item>
-                                                        {({ active }) => (
-                                                            <a
-                                                                href="#"
-                                                                className={classNames(
-                                                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                                    'block px-4 py-2 text-sm'
-                                                                )}
-                                                            >
-                                                                Support
-                                                            </a>
-                                                        )}
-                                                    </Menu.Item>
-                                                    <Menu.Item>
-                                                        {({ active }) => (
-                                                            <a
-                                                                href="#"
-                                                                className={classNames(
-                                                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                                    'block px-4 py-2 text-sm'
-                                                                )}
-                                                            >
-                                                                License
-                                                            </a>
-                                                        )}
-                                                    </Menu.Item>
+
                                                 </div>
                                                 <div className="py-1">
                                                     <Menu.Item>
@@ -847,7 +827,7 @@ export default function Subscriptions() {
                                         Subscriptions
                                     </h1>
                                     <p className="mt-2 text-sm text-gray-700">
-                                        A list of all the users in your account including their name, title, email and role.
+                                        A list of all the subscriptions in your account including their name, id, price and link.
                                     </p>
                                 </div>
                                 <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
@@ -903,11 +883,11 @@ export default function Subscriptions() {
                                                             <button
                                                                 className="font-mono whitespace-nowrap px-3 py-4 text-sm text-gray-500 hover:underline hover:cursor-pointer"
                                                                 onClick={() => {
-                                                                    navigator.clipboard.writeText(`https://onblockpay.io/s/${subscription.id_hash}`);
+                                                                    navigator.clipboard.writeText(`http://localhost:3000/s/${subscription.id_hash}`);
                                                                     toast.success('Copied link to clipboard!');
                                                                 }}
                                                             >
-                                                                onblockpay.io/s/{subscription.id_hash}
+                                                                localhost:3000/s/{subscription.id_hash}
                                                             </button>
                                                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                                                 <button

@@ -196,32 +196,6 @@ export default function General() {
                                                 </a>
                                             )}
                                         </Menu.Item>
-                                        <Menu.Item>
-                                            {({ active }) => (
-                                                <a
-                                                    href="#"
-                                                    className={classNames(
-                                                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                        'block px-4 py-2 text-sm'
-                                                    )}
-                                                >
-                                                    Support
-                                                </a>
-                                            )}
-                                        </Menu.Item>
-                                        <Menu.Item>
-                                            {({ active }) => (
-                                                <a
-                                                    href="#"
-                                                    className={classNames(
-                                                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                        'block px-4 py-2 text-sm'
-                                                    )}
-                                                >
-                                                    License
-                                                </a>
-                                            )}
-                                        </Menu.Item>
                                     </div>
                                     <div className="py-1">
                                         <Menu.Item>
@@ -317,7 +291,7 @@ export default function General() {
                             <div className="px-4 sm:px-0">
                                 <h2 className="text-base font-semibold leading-7 text-gray-900">Profile</h2>
                                 <p className="mt-1 text-sm leading-6 text-gray-600">
-                                    This information will be displayed publicly so be careful what you share.
+                                    This information will be stored in our database
                                 </p>
                             </div>
 

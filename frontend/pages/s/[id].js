@@ -40,9 +40,9 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
     let zeroAddress = "0x0000000000000000000000000000000000000000";
 
     let contractAddress = {
-        1: "0xe77279967EFeE08cc8F879Db518d9f512d2aa6Dd",
-        56: "0xe77279967EFeE08cc8F879Db518d9f512d2aa6Dd",
-        80001: "0xe77279967EFeE08cc8F879Db518d9f512d2aa6Dd",
+        1: "0x14710BDb76743e217C3F936aE3ecb4673F45369c",
+        56: "0x14710BDb76743e217C3F936aE3ecb4673F45369c",
+        80001: "0x14710BDb76743e217C3F936aE3ecb4673F45369c",
     };
 
     let tokenAddress = {
@@ -171,19 +171,22 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
     // }
     // mapPlans();
 
-    useEffect(async () => {
-        const { data, error } = await supabase
-            .from('profiles')
-            .select('store_name')
-            .eq('id', subscription.merchant_id)
-            .single();
-        if (error) {
-            toast.error(error.message);
+    useEffect(() => {
+        const set = async () => {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('store_name')
+                .eq('id', subscription.merchant_id)
+                .single();
+            if (error) {
+                toast.error(error.message);
+            }
+            else {
+                document.title = `Subscription | ${data.store_name}`;
+                setStoreName(data.store_name);
+            }
         }
-        else {
-            document.title = `Subscription | ${data.store_name}`;
-            setStoreName(data.store_name);
-        }
+        set();
     }, []);
 
     return (
@@ -235,7 +238,7 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
 
 
 
-                            <a href="https://onblockpay.io" target='_blank'>
+                            <a href="http://localhost:3000" target='_blank'>
                                 <div className="hidden lg:block fixed bottom-1/4 opacity-80 grayscale hover:grayscale-0">
                                     Powered by
                                     <Image className='w-auto h-6 inline-block pb-0.5 ml-1' src={logo} />
@@ -317,8 +320,8 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                                                 <Image
                                                     src={Tether}
                                                     alt="USDT"
-                                                    width={18} 
-                                                    height={18} 
+                                                    width={18}
+                                                    height={18}
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>USDT</span>
@@ -334,8 +337,8 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                                                 <Image
                                                     src={BUSD}
                                                     alt="BUSD"
-                                                    width={18} 
-                                                    height={18} 
+                                                    width={18}
+                                                    height={18}
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>BUSD</span>
@@ -351,8 +354,8 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                                                 <Image
                                                     src={USDC}
                                                     alt="USDC"
-                                                    width={18} 
-                                                    height={18} 
+                                                    width={18}
+                                                    height={18}
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>USDC</span>
@@ -390,8 +393,8 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                                                 <Image
                                                     src={Ethereum}
                                                     alt="ERC-20"
-                                                    width={18} 
-                                                    height={18} 
+                                                    width={18}
+                                                    height={18}
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>ERC-20</span>
@@ -410,8 +413,8 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                                                 <Image
                                                     src={BNB}
                                                     alt="BEP-20"
-                                                    width={18} 
-                                                    height={18} 
+                                                    width={18}
+                                                    height={18}
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>BEP-20</span>
@@ -430,8 +433,8 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                                                 <Image
                                                     src={Polygon}
                                                     alt="Mumbai Testnet"
-                                                    width={18} 
-                                                    height={18} 
+                                                    width={18}
+                                                    height={18}
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
                                                 <span>Mumbai Testnet</span>

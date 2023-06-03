@@ -8,7 +8,7 @@ const privateKey = 'd2a055101b4f1ed131fd55c8e3c85b62c0e64bda9c2691bb3fa8e28c353f
 
 // The contract ABI
 const abi = require('./ABI.json');
-const contractAddress = '0xe77279967EFeE08cc8F879Db518d9f512d2aa6Dd';
+const contractAddress = '0x14710BDb76743e217C3F936aE3ecb4673F45369c';
 
 const contract = new web3.eth.Contract(abi, contractAddress);
 
@@ -35,7 +35,7 @@ async function checkAndAutoPay() {
         for (let j = 0; j < parseInt(totalSubscribers[3]); j++) {
             console.log(`Checking subscriber ${j}`);
             const subscriberAddress = await contract.methods.numberToAddress(j).call();
-            
+
             await delay(20);
 
             const isDue = await contract.methods.checkDue(i, subscriberAddress).call();

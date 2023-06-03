@@ -7,7 +7,7 @@ const web3 = new Web3(new Web3.providers.WebsocketProvider(providerUrl));
 
 const supabase = createClient(
     'https://ecozdwjnqcnxnyjfaxlm.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjb3pkd2pucWNueG55amZheGxtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY4MTA0NDM0OCwiZXhwIjoxOTk2NjIwMzQ4fQ.4_Zc1tsRTnAcI2-Mi6LhiJKQXKsD1TCLw7xW0qQlMQE'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjb3pkd2pucWNueG55amZheGxtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY4NTE2NDQ4MywiZXhwIjoyMDAwNzQwNDgzfQ.UnseGYC4_ARBA2D7WeVcXoHpRyvce1kQQfY0UI-Lsss'
 )
 
 const tokenABI = require('./ABIs/BUSD.json');
@@ -176,7 +176,7 @@ async function checkConfirmations(address, txHash, callback) {
 
 async function watchAddress(address, merchantAddress, valueToSend, crypto_option) {
     console.log(`Watching for incoming transactions to ${address}...`);
-    if (crypto_option == 3) {
+    if (crypto_option == "BNB") {
         const subscription = web3.eth.subscribe('pendingTransactions', async (error, txHash) => {
             if (error) {
                 console.log(`Error subscribing to pendingTransactions: ${error.message}`);
@@ -232,7 +232,7 @@ async function watchAddress(address, merchantAddress, valueToSend, crypto_option
             }
         });
     }
-    else if (crypto_option == 10 || crypto_option == 12 || crypto_option == 14) {
+    else if (crypto_option == "USDT(BEP-20)" || crypto_option == "BUSD(BEP-20)" || crypto_option == "USDC(BEP-20)") {
         const logs = web3.eth.subscribe('logs', {
             address: tokenAddress,
             topics: [
@@ -313,7 +313,7 @@ async function watchAddress(address, merchantAddress, valueToSend, crypto_option
 
 async function generateWallet(option, invoice_id) {
     let walletAddress = null;
-    if (option === 2 || option === 3 || option === 5 || option === 6 || option === 7 || option > 8) {
+    if (option == "BNB" || option == "USDT(BEP-20)" || option == "BUSD(BEP-20)" || option == "USDC(BEP-20)") {
         // Generate a new Ethereum wallet
         const wallet = Wallet.createRandom();
         walletAddress = wallet.address;
@@ -344,7 +344,7 @@ const channel = supabase
             table: 'invoices',
         },
         async (payload) => {
-            if (payload.new.crypto_option == 3 || payload.new.crypto_option == 10 || payload.new.crypto_option == 12 || payload.new.crypto_option == 14) {
+            if (payload.new.crypto_option == "BNB" || payload.new.crypto_option == "USDT(BEP-20)" || payload.new.crypto_option == "BUSD(BEP-20)" || payload.new.crypto_option == "USDC(BEP-20)") {
                 let merchantID = payload.new.merchant_id;
                 let invoice_id = payload.new.id;
 

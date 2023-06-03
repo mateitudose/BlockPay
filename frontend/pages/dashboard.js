@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect, use } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
     Bars3Icon,
@@ -74,6 +74,7 @@ export default function Dashboard() {
 
     const [page, setPage] = useState(0);
 
+
     const [cards, setCards] = useState([
         { name: 'Total Revenue', href: '#', icon: BanknotesIcon, amount: '0', change: 0 },
         { name: 'Orders', href: '#', icon: BuildingStorefrontIcon, amount: '0', change: 0 },
@@ -91,8 +92,9 @@ export default function Dashboard() {
     };
 
     async function getCompletedInvoices() {
-        const user = await supabase.auth.getUser();
-        if (user) {
+        const { user, error } = await supabase.auth.getUser();
+        console.log(user)
+        if (user && !error) {
             const date = new Date();
             const startOfDate = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
             const endOfDate = startOfDate + 24 * 60 * 60 * 1000
@@ -103,7 +105,7 @@ export default function Dashboard() {
             const { data: invoicesToday, error: errorToday } = await supabase
                 .from('invoices')
                 .select('*')
-                .eq('merchant_id', user.data.user.id)
+                .eq('merchant_id', user.data.user != null ? user.data.user.id : 0)
                 .eq('status', 'Confirmed')
                 .gte('confirm_date', startOfDate)
                 .lt('confirm_date', endOfDate)
@@ -113,7 +115,7 @@ export default function Dashboard() {
             const { data: invoicesYesterday, error: errorYesterday } = await supabase
                 .from('invoices')
                 .select('*')
-                .eq('merchant_id', user.data.user.id)
+                .eq('merchant_id', user.data.user != null ? user.data.user.id : 0)
                 .eq('status', 'Confirmed')
                 .gte('confirm_date', startOfPrevDate)
                 .lt('confirm_date', endOfPrevDate)
@@ -123,7 +125,7 @@ export default function Dashboard() {
             const { data: subscriptions, error: errorSubscriptions } = await supabase
                 .from('subscriptions')
                 .select('*')
-                .eq('merchant_id', user.data.user.id)
+                .eq('merchant_id', user.data.user != null ? user.data.user.id : 0)
 
             if (errorSubscriptions) console.error(errorSubscriptions)
 
@@ -181,7 +183,7 @@ export default function Dashboard() {
                                 name: data[i].customer_email,
                                 href: "/invoice/" + data[i].id,
                                 amount: data[i].value_to_receive,
-                                currency: data[i].crypto_option == 3 ? "BNB" : 'USD',
+                                currency: data[i].crypto_option,
                                 status: data[i].status,
                                 date: UTC(data[i].created_at),
                                 date_unix: data[i].created_at,
@@ -505,32 +507,6 @@ export default function Dashboard() {
                                                             </a>
                                                         )}
                                                     </Menu.Item>
-                                                    <Menu.Item>
-                                                        {({ active }) => (
-                                                            <a
-                                                                href="#"
-                                                                className={classNames(
-                                                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                                    'block px-4 py-2 text-sm'
-                                                                )}
-                                                            >
-                                                                Support
-                                                            </a>
-                                                        )}
-                                                    </Menu.Item>
-                                                    <Menu.Item>
-                                                        {({ active }) => (
-                                                            <a
-                                                                href="#"
-                                                                className={classNames(
-                                                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                                    'block px-4 py-2 text-sm'
-                                                                )}
-                                                            >
-                                                                License
-                                                            </a>
-                                                        )}
-                                                    </Menu.Item>
                                                 </div>
                                                 <div className="py-1">
                                                     <Menu.Item>
@@ -589,7 +565,7 @@ export default function Dashboard() {
                                                                 className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                                                                 aria-hidden="true"
                                                             />
-                                                            {ethAddress.substring(0, 6)}...{ethAddress.substring(ethAddress.length - 5)}
+                                                            {ethAddress !== null ? ethAddress.substring(0, 6) + '...' + ethAddress.substring(ethAddress.length - 5) : "0x000...0000"}
                                                         </dd>
                                                         <dt className="sr-only">Account status</dt>
                                                         <dd className="mt-3 flex items-center text-sm font-medium capitalize text-gray-500 sm:mr-6 sm:mt-0">

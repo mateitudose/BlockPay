@@ -736,32 +736,7 @@ export default function Products() {
                                                             </a>
                                                         )}
                                                     </Menu.Item>
-                                                    <Menu.Item>
-                                                        {({ active }) => (
-                                                            <a
-                                                                href="#"
-                                                                className={classNames(
-                                                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                                    'block px-4 py-2 text-sm'
-                                                                )}
-                                                            >
-                                                                Support
-                                                            </a>
-                                                        )}
-                                                    </Menu.Item>
-                                                    <Menu.Item>
-                                                        {({ active }) => (
-                                                            <a
-                                                                href="#"
-                                                                className={classNames(
-                                                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                                    'block px-4 py-2 text-sm'
-                                                                )}
-                                                            >
-                                                                License
-                                                            </a>
-                                                        )}
-                                                    </Menu.Item>
+
                                                 </div>
                                                 <div className="py-1">
                                                     <Menu.Item>
@@ -796,7 +771,7 @@ export default function Products() {
                                         Products
                                     </h1>
                                     <p className="mt-2 text-sm text-gray-700">
-                                        A list of all the users in your account including their name, title, email and role.
+                                        A list of all the products in your account including their name, id, price and link.
                                     </p>
                                 </div>
                                 <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
@@ -855,11 +830,11 @@ export default function Products() {
                                                             <button
                                                                 className="font-mono whitespace-nowrap px-3 py-4 text-sm text-gray-500 hover:underline hover:cursor-pointer"
                                                                 onClick={() => {
-                                                                    navigator.clipboard.writeText(`https://onblockpay.io/c/${product.id_hash}`);
+                                                                    navigator.clipboard.writeText(`http://localhost:3000/c/${product.id_hash}`);
                                                                     toast.success('Copied link to clipboard!');
                                                                 }}
                                                             >
-                                                                onblockpay.io/c/{product.id_hash}
+                                                                localhost:3000/c/{product.id_hash}
                                                             </button>
                                                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                                                 <button
