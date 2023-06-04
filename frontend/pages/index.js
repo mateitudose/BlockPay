@@ -7,15 +7,21 @@ export default function Home() {
   const router = useRouter()
   useEffect(() => {
     function handleKeyPress(event) {
-      let key = event.key;
+      let key = (event.key).toLowerCase();
       console.log('Key pressed:', key);
 
-      if (key === 's' || key === 'S') {
+      if (key === 's') {
         router.push('/signup')
       }
-      if (key === 'l' || key === 'L') {
+
+      if (key === 'l') {
         router.push('/login')
       }
+
+      if (key === 'd') {
+        router.push('/dashboard')
+      }
+
     }
 
     // Add the event listener when the component mounts

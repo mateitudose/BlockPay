@@ -6,6 +6,8 @@ import { ArrowRightIcon } from '@heroicons/react/20/solid'
 import logo_white from "@/public/logo_white.svg"
 import { supabase } from '@/lib/supabaseClient'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useRouter } from 'next/router'
+import Tooltip from '@/components/Tooltip';
 
 
 const navigation = [
@@ -46,24 +48,56 @@ export default function Header() {
                 </div>
                 <div className="flex flex-1 items-center justify-end gap-x-6">
                     {signedIn ? (
-                        <a href="/dashboard" className="opacity-80 inline-flex items-center justify-center h-10 px-4 text-sm font-semibold bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-md hover:opacity-100 focus:ring-2 focus:ring-zinc-700 focus:outline-none disabled:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-70 transition-all duration-200 ease-in-out">
-                            Dashboard <ArrowRightIcon className="ml-1 w-5" aria-hidden="true" />
-                        </a>
+                        <Tooltip
+                            content={
+                                <span>
+                                    Go to dashboard &nbsp;
+                                    <kbd className="inline-flex h-[22px] w-[22px] select-none items-center justify-center rounded text-sm uppercase bg-zinc-800 text-white/90 border border-slate-400/20 transition duration-200 ease-in-out group-hover:bg-slate-200 group-focus:bg-slate-200 group-focus:text-black">
+                                        D
+                                    </kbd>
+                                </span>
+                            }
+                        >
+                            <a href="/dashboard" className="opacity-80 inline-flex items-center justify-center h-10 px-4 text-sm font-semibold bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-md hover:opacity-100 focus:ring-2 focus:ring-zinc-700 focus:outline-none disabled:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-70 transition-all duration-200 ease-in-out">
+                                Dashboard <ArrowRightIcon className="ml-1 w-5" aria-hidden="true" />
+                            </a>
+                        </Tooltip>
                     ) : (
                         <div className="flex flex-1 items-center justify-end gap-x-6">
-                            <a href="/login" className="opacity-80 inline-flex items-center justify-center h-10 px-4 text-sm font-semibold bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-md hover:opacity-100 focus:ring-2 focus:ring-zinc-700 focus:outline-none disabled:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-70 transition-all duration-200 ease-in-out">
-                                Login <ArrowRightIcon className="ml-1 w-5" aria-hidden="true" />
-                            </a>
-
-                            <a
-                                className="text-sm h-10 pl-4 pr-4 rounded-md gap-1 font-semibold bg-white text-black hover:bg-white/90 focus:ring-2 focus:ring-white/20 focus:outline-none focus:bg-white/90 disabled:hover:bg-white inline-flex items-center border justify-center select-none disabled:cursor-not-allowed disabled:opacity-70 transition ease-in-out duration-200 hidden sm:inline-flex"
-                                href="/signup"
-                                style={{
-                                    boxShadow: 'rgba(53,247,143,0.3) -8px 0px 20px, rgba(235,56,54,0.3) 8px 0px 20px',
-                                }}
+                            <Tooltip
+                                content={
+                                    <span>
+                                        Go to login &nbsp;
+                                        <kbd className="inline-flex h-[22px] w-[22px] select-none items-center justify-center rounded text-sm uppercase bg-zinc-800 text-white/90 border border-slate-400/20 transition duration-200 ease-in-out group-hover:bg-slate-200 group-focus:bg-slate-200 group-focus:text-black">
+                                            L
+                                        </kbd>
+                                    </span>
+                                }
                             >
-                                Sign up
-                            </a>
+                                <a href="/login" className="opacity-80 inline-flex items-center justify-center h-10 px-4 text-sm font-semibold bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-md hover:opacity-100 focus:ring-2 focus:ring-zinc-700 focus:outline-none disabled:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-70 transition-all duration-200 ease-in-out">
+                                    Login <ArrowRightIcon className="ml-1 w-5" aria-hidden="true" />
+                                </a>
+                            </Tooltip>
+                            <Tooltip
+                                content={
+                                    <span>
+                                        Go to sign up &nbsp;
+                                        <kbd className="inline-flex h-[22px] w-[22px] select-none items-center justify-center rounded text-sm uppercase bg-zinc-800 text-white/90 border border-slate-400/20 transition duration-200 ease-in-out group-hover:bg-slate-200 group-focus:bg-slate-200 group-focus:text-black">
+                                            S
+                                        </kbd>
+                                    </span>
+                                }
+                            >
+                                <a
+                                    className="text-sm h-10 pl-4 pr-4 rounded-md gap-1 font-semibold bg-white text-black hover:bg-white/90 focus:ring-2 focus:ring-white/20 focus:outline-none focus:bg-white/90 disabled:hover:bg-white inline-flex items-center border justify-center select-none disabled:cursor-not-allowed disabled:opacity-70 transition ease-in-out duration-200 hidden sm:inline-flex"
+                                    href="/signup"
+                                    style={{
+                                        boxShadow: 'rgba(53,247,143,0.3) -8px 0px 20px, rgba(235,56,54,0.3) 8px 0px 20px',
+                                    }}
+                                >
+                                    Sign up
+                                </a>
+                            </Tooltip>
                         </div>
                     )}
                 </div>

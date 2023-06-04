@@ -61,7 +61,7 @@ export default function Landing() {
                     <p className="mt-6 text-lg leading-8 text-gray-300/75">
                         Seamlessly Integrate with Your Store
                     </p>
-                    <div className='mt-6 opacity-70 hover:opacity-100'>
+                    <div className='mt-6 opacity-80 hover:opacity-100'>
                         <button
                             className="group animate-hero-text-slide-up-fade select-none items-center gap-2 text-sm font-semibold text-slate-100 outline-none hidden transition duration-200 ease-in-out hover:text-slate-200 focus:text-slate-200 sm:inline-flex"
                             type='button'

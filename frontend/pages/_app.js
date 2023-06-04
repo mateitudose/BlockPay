@@ -27,7 +27,12 @@ import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { mainnet, bsc, polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import TawkTo from '@/components/Tawk';
+import Hotjar from '@hotjar/browser';
 
+const siteId = 3519991;
+const hotjarVersion = 6;
+
+Hotjar.init(siteId, hotjarVersion);
 
 const { chains, provider } = configureChains(
   [mainnet, bsc, polygonMumbai],
