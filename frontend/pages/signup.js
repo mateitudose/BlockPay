@@ -1,22 +1,22 @@
 import Image from 'next/image'
 import Google from '@/public/google_logo.svg'
-import logo from "@/public/logo.svg"
 import { useState, useEffect } from 'react'
 import toast, { Toaster } from 'react-hot-toast';
 import { supabase } from '@/lib/supabaseClient'
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/router'
+import { ArrowLeftIcon } from '@heroicons/react/24/outline'
+import GitHub from '@/public/github_logo.svg'
+import PrimaryButton from '@/components/PrimaryButton';
+import SecondaryButton from '@/components/SecondaryButton';
+import logo_white from "@/public/favicon.ico"
 
 
-
-export default function Register() {
+export default function SignUp() {
     const router = useRouter()
-
-    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
     const [shouldRender, setShouldRender] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     async function handleSignedIn() {
         const user = await supabase.auth.getUser();
@@ -29,20 +29,14 @@ export default function Register() {
     useEffect(() => {
         const runPrecheck = async () => {
             const result = await handleSignedIn();
-
             if (!result) {
                 setShouldRender(true);
             } else {
 
             }
         };
-
         runPrecheck();
     }, []);
-
-    const handleUsernameChange = (e) => {
-        setUsername(e.target.value);
-    };
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -52,8 +46,8 @@ export default function Register() {
         setPassword(e.target.value);
     };
 
-    const register = async () => {
-        const error = await supabase.auth.signInWithOAuth({
+    const signupGoogle = async () => {
+        const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
                 redirectTo: 'http://localhost:3000/dashboard'
@@ -65,7 +59,49 @@ export default function Register() {
         }
     };
 
-    const registerEmail = async () => {
+    const signupGithub = async () => {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'github',
+            options: {
+                redirectTo: 'http://localhost:3000/dashboard'
+            }
+        })
+
+        if (error) {
+            toast.error(error.message);
+        }
+    };
+
+    function validateEmail(email) {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    }
+
+    const signupEmail = async (e) => {
+        e.preventDefault();
+
+        if (password.length < 8) {
+            toast.error('Password must be at least 8 characters long.');
+            return;
+        }
+
+        if (password.length > 32) {
+            toast.error('Password must be less than 32 characters long.');
+            return;
+        }
+
+        if (!email || !validateEmail(email)) {
+            toast.error('Please enter a valid email address.');
+            return;
+        }
+
+        if (!password) {
+            toast.error('Please enter a valid password.');
+            return;
+        }
+
+        setLoading(true);
+
         const { data, error } = await supabase.auth.signUp({
             email: email,
             password: password,
@@ -73,15 +109,17 @@ export default function Register() {
                 emailRedirectTo: 'http://localhost:3000/dashboard'
             }
         });
+
         if (error) {
             toast.error(error.message);
+            setLoading(false);
         }
+
         else {
             toast.success('Check your email for the confirmation link!');
+            setLoading(false);
         }
     };
-
-    const [isPasswordHidden, setPasswordHidden] = useState(true);
 
     if (!shouldRender) {
         return <div></div>;
@@ -89,142 +127,147 @@ export default function Register() {
 
     return (
         <>
-            <title>Register | Blockpay</title>
             <Toaster position="top-right"
                 reverseOrder={false} />
-            <div className="h-screen bg-gray-50">
-                <div className="flex min-h-full flex-col items-center justify-center py-12 sm:px-6 lg:px-8">
-                    <div className="sm:mx-auto sm:w-full sm:max-w-md">
+            <title>Sign Up | Blockpay</title>
+            <div className='flex justify-center items-center h-screen bg-black'>
+                <div className="absolute top-0 left-0 m-7">
+                    <SecondaryButton
+                        href="/"
+                        content={
+                            <div className="flex items-center hover:underline">
+                                <ArrowLeftIcon className="w-4" aria-hidden="true" />
+                                <span className="ml-1 font-medium">Home</span>
+                            </div>
+                        }
+                        classNames="h-8 w-fit"
+                    />
+                </div>
+                <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+                    <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                         <Image
-                            className="mx-auto h-12 w-auto"
-                            src={logo}
-                            alt="Blockpay"
+                            className="h-14 w-auto"
+                            src={logo_white}
+                            alt="Blockpay Logo"
                         />
                     </div>
 
-                    <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
 
-                        <div className="bg-white px-4 py-8 shadow rounded-xl sm:px-10">
-                            <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Register your account</h2>
-                            <p className="mt-2 text-center text-sm text-gray-600">
-                                Or{' '}
-                                <a href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
-                                    login into your existing account
-                                </a>
-                            </p>
-                            <div className="mt-6">
-                                <div className="mt-6">
-                                    <div>
-                                        <button
-                                            href=""
-                                            className="inline-flex w-full justify-center rounded-lg bg-white px-4 py-2 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0"
-                                            onClick={register}
-                                        >
-                                            <Image className='mt-1' src={Google} alt="google" width={15} height={20} />
-                                            <span className="ml-2 text-gray-500">Register with Google</span>
-
-                                        </button>
-                                    </div>
-                                    {/* <div>
-                                        <button
-                                            href=""
-                                            className="inline-flex w-full justify-center rounded-lg bg-white px-4 py-2 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0"
-                                        >
-                                            <Image className='mt-0.5' src={Apple} alt="apple" width={14} height={20} />
-                                            <span className="ml-2 text-gray-500">Register with Apple</span>
-                                        </button>
-                                    </div> */}
-                                </div>
-                                <div className="relative my-6">
-                                    <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                                        <div className="w-full border-t border-gray-200" />
-                                    </div>
-                                    <div className="relative flex justify-center text-sm">
-                                        <span className="bg-white px-3 text-gray-400">or</span>
-                                    </div>
+                    <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                        <div className="space-y-6">
+                            <div>
+                                <label htmlFor="email" className="block text-sm leading-6 text-slate-300/75">
+                                    Email address
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        id="email"
+                                        name="email"
+                                        type="email"
+                                        autoComplete="email"
+                                        required
+                                        className="pl-2.5 block w-full rounded-md border-0 bg-zinc-800/80 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-gray-500 sm:text-sm sm:leading-6"
+                                        placeholder='tony@stark.com'
+                                        onChange={(e) => handleEmailChange(e)}
+                                    />
                                 </div>
                             </div>
-                            <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
-                                {/* <div>
-                                    <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
-                                        Username
-                                    </label>
-                                    <div className="mt-2">
-                                        <input
-                                            type="username"
-                                            name="username"
-                                            id="username"
-                                            className="block w-full rounded-md border-0 pl-3.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                            placeholder="blockpayuser"
-                                            required
-                                            value={username}
-                                            onChange={handleUsernameChange}
-                                        />
-                                    </div>
-                                </div> */}
-                                <div>
-                                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                                        Email
-                                    </label>
-                                    <div className="mt-2">
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            id="email"
-                                            className="block w-full rounded-md border-0 pl-3.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                            placeholder="you@example.com"
-                                            required
-                                            value={email}
-                                            onChange={handleEmailChange}
-                                        />
-                                    </div>
-                                </div>
 
-                                <div>
-                                    <div>
-                                        <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                                            Password
-                                        </label>
-                                        <div className="relative mt-2">
-                                            <button type="button" className="text-gray-400 absolute right-3 inset-y-0 my-auto active:text-gray-600"
-                                                onClick={() => setPasswordHidden(!isPasswordHidden)}
-                                            >
-                                                {
-                                                    isPasswordHidden ? (
-                                                        <EyeIcon className='w-6 h-6' />
-                                                    ) : (
-                                                        <EyeSlashIcon className='w-6 h-6' />
-                                                    )
-                                                }
-                                            </button>
-                                            <input
-                                                type={isPasswordHidden ? "password" : "text"}
-                                                placeholder="Enter your password"
-                                                className="block w-full rounded-md border-0 pl-3.5 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                required
-                                                id='password'
-                                                name='password'
-                                                autoComplete='current-password'
-                                                value={password}
-                                                onChange={handlePasswordChange}
-                                            />
-                                        </div>
-                                    </div >
+                            <div>
+                                <div className="flex items-center justify-between">
+                                    <label htmlFor="password" className="block text-sm leading-6 text-slate-300/75">
+                                        Password
+                                    </label>
                                 </div>
+                                <div className="mt-2">
+                                    <input
+                                        id="password"
+                                        name="password"
+                                        type="password"
+                                        autoComplete="current-password"
+                                        required
+                                        className="pl-2.5 block w-full rounded-md border-0  bg-zinc-800/80 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-gray-500 sm:text-sm sm:leading-6"
+                                        placeholder='••••••••'
+                                        onChange={(e) => handlePasswordChange(e)}
+                                    />
+                                </div>
+                            </div>
 
-                                <div className='pt-8'>
-                                    <button
-                                        type="button"
-                                        className="shadow-lg flex w-full justify-center rounded-lg bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                        onClick={registerEmail}
-                                    >
-                                        Register
-                                    </button>
-                                </div>
-                            </form>
+                            <div>
+                                <PrimaryButton
+                                    content={loading ? (
+                                        <>
+                                            <svg className="inline-flex items-center justify-center animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                                                <circle
+                                                    className="opacity-5"
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="10"
+                                                    stroke="black"
+                                                    strokeWidth="4"
+                                                ></circle>
+                                                <path
+                                                    className="opacity-75"
+                                                    fill="black"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                                ></path>
+                                            </svg>
+
+                                            Signing up...
+                                        </>
+                                    ) : (
+                                        'Sign up'
+                                    )}
+                                    onClick={(e) => {
+                                        signupEmail(e)
+                                    }}
+                                    disabled={loading}
+                                />
+                            </div>
                         </div>
+                        <div class="mt-6 mb-6 flex items-center justify-center">
+                            <div class="h-px w-full bg-gray-500/50" />
+                            <span class="mx-4 text-xs text-gray-500 font-normal">
+                                OR
+                            </span>
+                            <div class="h-px w-full bg-gray-500/50" />
+                        </div>
+                        <button
+                            type="button"
+                            className="flex items-center justify-center rounded-md border border-gray-500/20 bg-zinc-800/80 px-3 py-1.5 text-sm font-semibold leading-6 text-white/90 shadow-sm hover:bg-zinc-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white w-full"
+                            onClick={() => signupGoogle()}
+                        >
+                            <div className="flex items-center justify-center mr-2.5">
+                                <Image
+                                    className="h-4 w-4"
+                                    src={Google}
+                                    alt="Google Logo"
+                                />
+                            </div>
+                            Sign up with Google
+
+                        </button>
+                        <button
+                            type="button"
+                            className="mt-3 flex items-center justify-center rounded-md border border-gray-500/20 bg-zinc-800/80 px-3 py-1.5 text-sm font-semibold leading-6 text-white/90 shadow-sm hover:bg-zinc-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white w-full"
+                            onClick={() => signupGithub()}
+                        >
+                            <div className="flex items-center justify-center mr-2.5">
+                                <Image
+                                    className="h-4 w-4"
+                                    src={GitHub}
+                                    alt="GitHub Logo"
+                                />
+                            </div>
+                            Sign up with GitHub
+
+                        </button>
+
+                        <p className="mt-10 text-left text-xs text-gray-400">
+                            By signing up, you agree to our <span className='hover:underline text-sky-500'>Terms of Service</span> and <span className="hover:underline text-sky-500">Privacy Policy</span>.
+                        </p>
                     </div>
-                </div >
+                </div>
             </div >
         </>
     )

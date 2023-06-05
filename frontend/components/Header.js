@@ -8,6 +8,8 @@ import { supabase } from '@/lib/supabaseClient'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/router'
 import Tooltip from '@/components/Tooltip';
+import SecondaryButton from '@/components/SecondaryButton'
+import ColoredButton from './ColoredButton'
 
 
 const navigation = [
@@ -58,9 +60,12 @@ export default function Header() {
                                 </span>
                             }
                         >
-                            <a href="/dashboard" className="opacity-80 inline-flex items-center justify-center h-10 px-4 text-sm font-semibold bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-md hover:opacity-100 focus:ring-2 focus:ring-zinc-700 focus:outline-none disabled:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-70 transition-all duration-200 ease-in-out">
-                                Dashboard <ArrowRightIcon className="ml-1 w-5" aria-hidden="true" />
-                            </a>
+                            <SecondaryButton href="/dashboard" content={
+                                <div className="flex items-center">
+                                    <span className="">Dashboard</span>
+                                    <ArrowRightIcon className="ml-1 w-5" aria-hidden="true" />
+                                </div>
+                            } />
                         </Tooltip>
                     ) : (
                         <div className="flex flex-1 items-center justify-end gap-x-6">
@@ -74,9 +79,12 @@ export default function Header() {
                                     </span>
                                 }
                             >
-                                <a href="/login" className="opacity-80 inline-flex items-center justify-center h-10 px-4 text-sm font-semibold bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-md hover:opacity-100 focus:ring-2 focus:ring-zinc-700 focus:outline-none disabled:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-70 transition-all duration-200 ease-in-out">
-                                    Login <ArrowRightIcon className="ml-1 w-5" aria-hidden="true" />
-                                </a>
+                                    <SecondaryButton href="/dashboard" content={
+                                        <div className="flex items-center">
+                                            <span className="ml-1">Login</span>
+                                            <ArrowRightIcon className="ml-1 w-5" aria-hidden="true" />
+                                        </div>
+                                    } />
                             </Tooltip>
                             <Tooltip
                                 content={
@@ -88,15 +96,7 @@ export default function Header() {
                                     </span>
                                 }
                             >
-                                <a
-                                    className="text-sm h-10 pl-4 pr-4 rounded-md gap-1 font-semibold bg-white text-black hover:bg-white/90 focus:ring-2 focus:ring-white/20 focus:outline-none focus:bg-white/90 disabled:hover:bg-white inline-flex items-center border justify-center select-none disabled:cursor-not-allowed disabled:opacity-70 transition ease-in-out duration-200 hidden sm:inline-flex"
-                                    href="/signup"
-                                    style={{
-                                        boxShadow: 'rgba(53,247,143,0.3) -8px 0px 20px, rgba(235,56,54,0.3) 8px 0px 20px',
-                                    }}
-                                >
-                                    Sign up
-                                </a>
+                                <ColoredButton href="/signup" content={"Sign Up"} />
                             </Tooltip>
                         </div>
                     )}
@@ -125,7 +125,7 @@ export default function Header() {
                     >
                         <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
                             <div className="flex items-center gap-x-6">
-                                <a href="#" className="-m-1.5 p-1.5">
+                                <a href="/" className="-m-1.5 p-1.5">
                                     <span className="sr-only">Your Company</span>
                                     <Image
                                         className="h-9 w-fit"

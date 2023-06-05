@@ -2,6 +2,7 @@ import { ChevronRightIcon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
 import iphone from "@/public/iphone.svg"
 import { useRouter } from 'next/router'
+
 export default function Landing() {
     const router = useRouter()
     return (
@@ -47,7 +48,7 @@ export default function Landing() {
                     <div className="mt-24 sm:mt-32 lg:mt-16">
                         <a href="/changelog" className="inline-flex space-x-6">
                             <span className="rounded-full bg-green-500/10 px-3 py-1 text-sm font-semibold leading-6 text-green-400 ring-1 ring-inset ring-green-500/20">
-                                What's new
+                                Easy to use
                             </span>
                             <span className="inline-flex items-center space-x-2 text-sm font-medium leading-6 text-gray-300">
                                 <span>Just shipped v1.0</span>

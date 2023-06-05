@@ -307,13 +307,13 @@ export default function Dashboard() {
                                     </Transition.Child>
                                     {/* Sidebar component, swap this element with another sidebar if you like */}
                                     <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
-                                        <div className="flex h-16 shrink-0 items-center">
+                                        <a href="/" className="flex h-16 shrink-0 items-center">
                                             <Image
                                                 className="h-8 w-auto"
                                                 src={logo}
-                                                alt="Your Company"
+                                                alt="Blockpay"
                                             />
-                                        </div>
+                                        </a>
                                         <nav className="flex flex-1 flex-col">
                                             <ul role="list" className="flex flex-1 flex-col gap-y-7">
                                                 <li>
@@ -368,13 +368,13 @@ export default function Dashboard() {
                 <div className="shadow-lg hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
                     {/* Sidebar component, swap this element with another sidebar if you like */}
                     <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
-                        <div className="mt-4 flex h-16 shrink-0 items-center">
+                        <a href="/" className="mt-4 flex h-16 shrink-0 items-center">
                             <Image
                                 className="h-8 w-auto"
                                 src={logo}
-                                alt="Your Company"
+                                alt="Blockpay"
                             />
-                        </div>
+                        </a>
                         <nav className="flex flex-1 flex-col">
                             <ul role="list" className="flex flex-1 flex-col gap-y-7">
                                 <li>
@@ -643,7 +643,8 @@ export default function Dashboard() {
                                                             <span className="flex flex-col truncate text-sm text-gray-500">
                                                                 <span className="truncate">{transaction.name}</span>
                                                                 <span>
-                                                                    <span className="font-medium text-gray-900">{parseFloat(parseFloat(transaction.amount).toFixed(8))}</span>{' '}
+                                                                    <span className="font-medium text-gray-900">{parseFloat(parseFloat(transaction.amount).toFixed(8))}</span>
+                                                                    {' '}
                                                                     {transaction.currency}
                                                                 </span>
                                                                 <time dateTime={transaction.date}>{transaction.date}</time>
@@ -698,6 +699,12 @@ export default function Dashboard() {
                                                                 Amount
                                                             </th>
                                                             <th
+                                                                className="bg-gray-50 px-6 py-3 text-right text-sm font-semibold text-gray-900"
+                                                                scope="col"
+                                                            >
+                                                                Crypto
+                                                            </th>
+                                                            <th
                                                                 className="hidden bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900 md:block"
                                                                 scope="col"
                                                             >
@@ -729,6 +736,8 @@ export default function Dashboard() {
                                                                 </td>
                                                                 <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
                                                                     <span className="font-medium text-gray-900">{parseFloat(parseFloat(transaction.amount).toFixed(8))}</span>
+                                                                </td>
+                                                                <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
                                                                     {transaction.currency}
                                                                 </td>
                                                                 <td className="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 md:block">
