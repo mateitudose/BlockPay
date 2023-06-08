@@ -26,6 +26,8 @@ import TimeGreeting from '@/components/TimeGreeting';
 import Badge from '@/components/Badge';
 import toast, { Toaster } from 'react-hot-toast';
 
+import cryptos from '@/components/cryptos.js';
+
 
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: WindowIcon, current: true },
@@ -183,10 +185,11 @@ export default function Dashboard() {
                                 name: data[i].customer_email,
                                 href: "/invoice/" + data[i].id,
                                 amount: data[i].value_to_receive,
-                                currency: data[i].crypto_option,
+                                currency: cryptos.find(crypto => crypto.id == data[i].crypto_option).icon,
                                 status: data[i].status,
                                 date: UTC(data[i].created_at),
                                 date_unix: data[i].created_at,
+                                background_color: cryptos.find(crypto => crypto.id == data[i].crypto_option).background_color,
                             })
                         }
                         transactions.sort((a, b) => b.date_unix - a.date_unix);
@@ -642,11 +645,18 @@ export default function Dashboard() {
                                                             <BanknotesIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                                                             <span className="flex flex-col truncate text-sm text-gray-500">
                                                                 <span className="truncate">{transaction.name}</span>
-                                                                <span>
-                                                                    <span className="font-medium text-gray-900">{parseFloat(parseFloat(transaction.amount).toFixed(8))}</span>
-                                                                    {' '}
-                                                                    {transaction.currency}
-                                                                </span>
+                                                                <div className='flex items-center justify-end'>
+                                                                    <span className="font-medium text-gray-900">
+                                                                        {parseFloat(parseFloat(transaction.amount).toFixed(8))}
+                                                                    </span>
+                                                                    <Image
+                                                                        src={transaction.currency}
+                                                                        alt={transaction.currency}
+                                                                        width={24}
+                                                                        height={24}
+                                                                        className={`ml-2 inline-block rounded-md ${transaction.background_color}`}
+                                                                    />
+                                                                </div>
                                                                 <time dateTime={transaction.date}>{transaction.date}</time>
                                                             </span>
                                                         </span>
@@ -699,12 +709,6 @@ export default function Dashboard() {
                                                                 Amount
                                                             </th>
                                                             <th
-                                                                className="bg-gray-50 px-6 py-3 text-right text-sm font-semibold text-gray-900"
-                                                                scope="col"
-                                                            >
-                                                                Crypto
-                                                            </th>
-                                                            <th
                                                                 className="hidden bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900 md:block"
                                                                 scope="col"
                                                             >
@@ -735,10 +739,18 @@ export default function Dashboard() {
                                                                     </div>
                                                                 </td>
                                                                 <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                                    <span className="font-medium text-gray-900">{parseFloat(parseFloat(transaction.amount).toFixed(8))}</span>
-                                                                </td>
-                                                                <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                                    {transaction.currency}
+                                                                    <div className='flex items-center justify-end'>
+                                                                        <span className="font-medium text-gray-900">
+                                                                            {parseFloat(parseFloat(transaction.amount).toFixed(8))}
+                                                                        </span>
+                                                                        <Image
+                                                                            src={transaction.currency}
+                                                                            alt={transaction.currency}
+                                                                            width={24}
+                                                                            height={24}
+                                                                            className={`ml-2 inline-block rounded-md ${transaction.background_color}`}
+                                                                        />
+                                                                    </div>
                                                                 </td>
                                                                 <td className="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 md:block">
 
