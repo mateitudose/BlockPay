@@ -11,9 +11,9 @@ const Badge = ({ color, text, icon }) => {
             ring: 'ring-red-600/10',
         },
         yellow: {
-            bg: 'bg-yellow-50',
-            text: 'text-yellow-800',
-            ring: 'ring-yellow-600/20',
+            bg: 'bg-yellow-500/20',
+            text: 'text-yellow-500',
+            ring: 'ring-yellow-300/20',
         },
         green: {
             bg: 'bg-green-50',

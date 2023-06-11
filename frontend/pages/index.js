@@ -7,8 +7,8 @@ export default function Home() {
   const router = useRouter()
   useEffect(() => {
     function handleKeyPress(event) {
+      event.preventDefault();
       let key = (event.key).toLowerCase();
-      console.log('Key pressed:', key);
 
       if (key === 's') {
         router.push('/signup')

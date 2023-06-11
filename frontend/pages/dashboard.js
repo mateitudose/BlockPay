@@ -20,7 +20,7 @@ import {
     from '@heroicons/react/20/solid'
 import { useRouter } from 'next/router';
 import { supabase } from '@/lib/supabaseClient'
-import logo from "@/public/logo.svg"
+import logo_white from "@/public/logo_white.svg"
 import Image from 'next/image'
 import TimeGreeting from '@/components/TimeGreeting';
 import Badge from '@/components/Badge';
@@ -190,6 +190,8 @@ export default function Dashboard() {
                                 date: UTC(data[i].created_at),
                                 date_unix: data[i].created_at,
                                 background_color: cryptos.find(crypto => crypto.id == data[i].crypto_option).background_color,
+                                price: data[i].price_in_usd,
+                                crypto_name: cryptos.find(crypto => crypto.id == data[i].crypto_option).sym,
                             })
                         }
                         transactions.sort((a, b) => b.date_unix - a.date_unix);
@@ -313,7 +315,7 @@ export default function Dashboard() {
                                         <a href="/" className="flex h-16 shrink-0 items-center">
                                             <Image
                                                 className="h-8 w-auto"
-                                                src={logo}
+                                                src={logo_white}
                                                 alt="Blockpay"
                                             />
                                         </a>
@@ -370,11 +372,11 @@ export default function Dashboard() {
                 {/* Static sidebar for desktop */}
                 <div className="shadow-lg hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
                     {/* Sidebar component, swap this element with another sidebar if you like */}
-                    <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
+                    <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-red-500 bg-black px-6 pb-4">
                         <a href="/" className="mt-4 flex h-16 shrink-0 items-center">
                             <Image
                                 className="h-8 w-auto"
-                                src={logo}
+                                src={logo_white}
                                 alt="Blockpay"
                             />
                         </a>
@@ -425,8 +427,8 @@ export default function Dashboard() {
                 </div>
 
                 <div className="lg:pl-72">
-                    <div className="sticky top-0 z-40 lg:mx-auto lg:max-w-7xl">
-                        <div className="flex h-16 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-0 lg:shadow-none">
+                    <div className="sticky top-0 z-40 lg:mx-auto">
+                        <div className="flex h-16 items-center gap-x-4 border-b border-red-500 bg-black px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-0 lg:shadow-none">
                             <button
                                 type="button"
                                 className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
@@ -435,9 +437,6 @@ export default function Dashboard() {
                                 <span className="sr-only">Open sidebar</span>
                                 <Bars3Icon className="h-6 w-6" aria-hidden="true" />
                             </button>
-
-                            {/* Separator */}
-                            <div className="h-6 w-px bg-gray-200 lg:hidden" aria-hidden="true" />
 
                             <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6 lg:pl-4">
                                 <form className="relative flex flex-1" action="#" method="GET">
@@ -536,7 +535,7 @@ export default function Dashboard() {
                         </div>
                     </div>
 
-                    <main className="py-10 bg-slate-50/80 h-screen relative">
+                    <main className="py-10 bg-black h-full min-h-screen relative">
                         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"><main className="flex-1 pb-8">
                             {/* Page header */}
                             <div className="bg-white shadow rounded-lg">
@@ -602,11 +601,11 @@ export default function Dashboard() {
 
                             <div className="mt-8">
                                 <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-                                    <h2 className="text-lg font-medium leading-6 text-gray-900">Cashflow</h2>
+                                    <h2 className="text-lg font-medium leading-6 text-white">Cashflow</h2>
                                     <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                                         {/* Card */}
                                         {cards.map((card) => (
-                                            <div href={card.href} key={card.name} className="overflow-hidden rounded-lg bg-white shadow">
+                                            <div href={card.href} key={card.name} className="overflow-hidden rounded-lg bg-gray-800 shadow">
                                                 <div className="p-5">
                                                     <div className="flex items-center">
                                                         <div className="flex-shrink-0">
@@ -614,9 +613,9 @@ export default function Dashboard() {
                                                         </div>
                                                         <div className="ml-5 w-0 flex-1">
                                                             <dl>
-                                                                <dt className="truncate text-sm font-medium text-gray-500">{card.name}</dt>
+                                                                <dt className="truncate text-sm font-medium text-gray-400">{card.name}</dt>
                                                                 <dd>
-                                                                    <div className="text-lg font-medium text-gray-900">{card.amount}</div>
+                                                                    <div className="text-lg font-medium text-white">{card.amount}</div>
                                                                 </dd>
                                                             </dl>
                                                         </div>
@@ -628,9 +627,10 @@ export default function Dashboard() {
                                             </div>
                                         ))}
                                     </div>
+
                                 </div>
 
-                                <h2 className="mx-auto mt-8 max-w-6xl px-4 text-lg font-medium leading-6 text-gray-900 sm:px-6 lg:px-8">
+                                <h2 className="mx-auto mt-8 max-w-6xl px-4 text-lg font-medium leading-6 text-white sm:px-6 lg:px-8">
                                     Recent activity
                                 </h2>
 
@@ -689,117 +689,84 @@ export default function Dashboard() {
                                 </div>
 
                                 {/* Activity table (small breakpoint and up) */}
-                                <div className="hidden sm:block">
-                                    <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-                                        <div className="mt-2 flex flex-col">
-                                            <div className="min-w-full overflow-hidden overflow-x-auto align-middle shadow sm:rounded-lg">
-                                                <table className="min-w-full divide-y divide-gray-200">
-                                                    <thead>
-                                                        <tr>
-                                                            <th
-                                                                className="bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900"
-                                                                scope="col"
-                                                            >
-                                                                Invoices
-                                                            </th>
-                                                            <th
-                                                                className="bg-gray-50 px-6 py-3 text-right text-sm font-semibold text-gray-900"
-                                                                scope="col"
-                                                            >
-                                                                Amount
-                                                            </th>
-                                                            <th
-                                                                className="hidden bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900 md:block"
-                                                                scope="col"
-                                                            >
-                                                                Status
-                                                            </th>
-                                                            <th
-                                                                className="bg-gray-50 px-6 py-3 text-right text-sm font-semibold text-gray-900"
-                                                                scope="col"
-                                                            >
-                                                                Date
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody className="divide-y divide-gray-200 bg-white">
-                                                        {loaded && transactions.slice(page * itemsPerPage, (page + 1) * itemsPerPage).map((transaction) => (
-                                                            <tr key={transaction.id} className="bg-white">
-                                                                <td className="w-full max-w-0 whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                                                                    <div className="flex">
-                                                                        <a href={transaction.href} className="group inline-flex space-x-2 truncate text-sm">
-                                                                            <BanknotesIcon
-                                                                                className="h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                                                                                aria-hidden="true"
-                                                                            />
-                                                                            <p className="truncate text-gray-500 group-hover:text-gray-900">
-                                                                                {transaction.name}
-                                                                            </p>
-                                                                        </a>
-                                                                    </div>
-                                                                </td>
-                                                                <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                                    <div className='flex items-center justify-end'>
-                                                                        <span className="font-medium text-gray-900">
-                                                                            {parseFloat(parseFloat(transaction.amount).toFixed(8))}
-                                                                        </span>
-                                                                        <Image
-                                                                            src={transaction.currency}
-                                                                            alt={transaction.currency}
-                                                                            width={24}
-                                                                            height={24}
-                                                                            className={`ml-2 inline-block rounded-md ${transaction.background_color}`}
-                                                                        />
-                                                                    </div>
-                                                                </td>
-                                                                <td className="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 md:block">
+                                <div className="hidden sm:block mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                                    <div className="mt-2 flex flex-col min-w-full overflow-hidden overflow-x-auto align-middle shadow sm:rounded-md">
+                                        <div className="border border-gray-500 rounded-lg overflow-hidden">
+                                            <table className="min-w-full divide-y divide-gray-700 text-gray-200 bg-gray-900 rounded-md">
+                                                <thead className="bg-gray-800">
+                                                    <tr>
+                                                        <th className="px-6 py-3 text-left text-sm font-semibold" scope="col">Email</th>
+                                                        <th className="px-6 py-3 text-center text-sm font-semibold" scope="col">Price</th>
+                                                        <th className="px-6 py-3 text-center text-sm font-semibold" scope="col">Amount</th>
+                                                        <th className="px-6 py-3 text-center text-sm font-semibold" scope="col">Crypto</th>
+                                                        <th className="hidden px-6 py-3 text-center text-sm font-semibold md:table-cell" scope="col">Status</th>
+                                                        <th className="px-6 py-3 text-right text-sm font-semibold" scope="col">Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="bg-black divide-y divide-gray-700">
+                                                    {loaded && transactions.slice(page * itemsPerPage, (page + 1) * itemsPerPage).map((transaction) => (
+                                                        <tr key={transaction.id}>
+                                                            <td className="px-6 py-4 text-left text-sm whitespace-nowrap">
+                                                                <div className="flex">
+                                                                    <a href={transaction.href} className="group inline-flex space-x-2 truncate text-sm">
+                                                                        {/* <BanknotesIcon className="h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500" aria-hidden="true" /> */}
+                                                                        <p className="truncate text-gray-400 group-hover:text-gray-500">{transaction.name}</p>
+                                                                    </a>
+                                                                </div>
+                                                            </td>
+                                                            <td className="hidden px-6 py-4 text-center text-sm md:table-cell">
+                                                                <div className="text-sm">
+                                                                    <span className='text-white/60'>$</span>{transaction.price}
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-6 py-4 text-sm text-center whitespace-nowrap">
+                                                                <div className="flex items-center justify-center">
+                                                                    <span className="font-mono">{parseFloat(transaction.amount).toFixed(8)}</span>
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-6 py-4 text-sm text-center whitespace-nowrap">
+                                                                <div className="flex items-center justify-center">
+                                                                    <span className="font-mono">&nbsp; {transaction.crypto_name}</span>
+                                                                    <Image src={transaction.currency} alt={transaction.currency} width={24} height={24} className={`ml-2 inline-block rounded-md ${transaction.background_color}`} />
+                                                                </div>
+                                                            </td>
 
-                                                                    <div className="text-sm">
-                                                                        <Badge color={changeStatus(transaction.status)} text={transaction.status} />
-                                                                    </div>
-                                                                </td>
-                                                                <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                                    <time dateTime={transaction.date}>{transaction.date}</time>
-                                                                </td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                                {/* Pagination */}
-                                                <nav
-                                                    className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6"
-                                                    aria-label="Pagination"
-                                                >
-                                                    <div className="hidden sm:block">
-                                                        <p className="text-sm text-gray-700">
-                                                            Showing <span className="font-medium">1</span> to <span className="font-medium">10</span> of{' '}
-                                                            <span className="font-medium">{transactions.length}</span> results
-                                                        </p>
-                                                    </div>
-                                                    <div className="flex flex-1 justify-between gap-x-3 sm:justify-end">
-                                                        <button
-                                                            onClick={prevPage}
-                                                            className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:ring-gray-400"
-                                                        >
-                                                            Previous
-                                                        </button>
-                                                        <button
-                                                            onClick={nextPage}
-                                                            className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:ring-gray-400"
-                                                        >
-                                                            Next
-                                                        </button>
-                                                    </div>
-                                                </nav>
-                                            </div>
+
+                                                            <td className="hidden px-6 py-4 text-center text-sm md:table-cell">
+                                                                <div className="text-sm">
+                                                                    <Badge color={changeStatus(transaction.status)} text={transaction.status} />
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-6 py-4 text-sm text-right whitespace-nowrap">
+                                                                <time dateTime={transaction.date}>{transaction.date}</time>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+
+                                            <nav className="flex items-center justify-between border-t border-gray-700 bg-gray-900 px-4 py-3 sm:px-6" aria-label="Pagination">
+                                                <div className="hidden sm:block">
+                                                    <p className="text-sm text-gray-400">
+                                                        Showing <span className="font-medium">1</span> to <span className="font-medium">10</span> of <span className="font-medium">{transactions.length}</span> results
+                                                    </p>
+                                                </div>
+                                                <div className="flex flex-1 justify-between gap-x-3 sm:justify-end">
+                                                    <button onClick={prevPage} className="relative inline-flex items-center rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-gray-400 ring-1 ring-inset ring-gray-600 hover:ring-gray-500">Previous</button>
+                                                    <button onClick={nextPage} className="relative inline-flex items-center rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-gray-400 ring-1 ring-inset ring-gray-600 hover:ring-gray-500">Next</button>
+                                                </div>
+                                            </nav>
                                         </div>
                                     </div>
                                 </div>
+
+
+
                             </div>
                         </main></div>
                     </main>
-                </div>
-            </div>
+                </div >
+            </div >
         </>
     )
 }

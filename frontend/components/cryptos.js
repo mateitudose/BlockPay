@@ -20,6 +20,7 @@ const cryptos = [
         symbol: "BTC",
         chain: "Bitcoin Mainnet",
         background_color: "bg-[#f7931a]",
+        sym: "BTC",
     },
     {
         id: "ETH",
@@ -28,6 +29,7 @@ const cryptos = [
         symbol: "ETH",
         chain: "Ethereum Mainnet",
         background_color: "bg-[#627EEA]",
+        sym: "ETH",
     },
     {
         id: "BNB",
@@ -36,6 +38,7 @@ const cryptos = [
         symbol: "BNB",
         chain: "Binance Smart Chain Mainnet",
         background_color: "bg-[#F0B90B]",
+        sym: "BNB",
     },
     {
         id: "LTC",
@@ -44,6 +47,7 @@ const cryptos = [
         symbol: "LTC",
         chain: "Litecoin Mainnet",
         background_color: "bg-[#bebebe]",
+        sym: "LTC",
     },
     {
         id: "AVAX",
@@ -52,6 +56,7 @@ const cryptos = [
         symbol: "AVAX",
         chain: "Avalanche Mainnet",
         background_color: "bg-[#E84142]",
+        sym: "AVAX",
     },
     {
         id: "ARB",
@@ -60,6 +65,7 @@ const cryptos = [
         symbol: "ARB",
         chain: "Arbitrum Mainnet",
         background_color: "bg-[#213147]",
+        sym: "ARB",
     },
     {
         id: "MATIC",
@@ -68,6 +74,7 @@ const cryptos = [
         symbol: "MATIC",
         chain: "Polygon Mainnet",
         background_color: "bg-[#7b3fe4]",
+        sym: "MATIC",
     },
     {
         id: "SOL",
@@ -76,6 +83,7 @@ const cryptos = [
         symbol: "SOL",
         chain: "Solana Mainnet",
         background_color: "bg-[#000]",
+        sym: "SOL",
     },
     {
         id: "USDT(ERC-20)",
@@ -84,6 +92,7 @@ const cryptos = [
         symbol: "USDT",
         chain: "Ethereum Mainnet (ERC-20)",
         background_color: "bg-[#53ae94]",
+        sym: "USDT",
     },
     {
         id: 'USDT(BEP-20)',
@@ -92,6 +101,7 @@ const cryptos = [
         symbol: "USDT",
         chain: "Binance Smart Chain Mainnet (BEP-20)",
         background_color: "bg-[#53ae94]",
+        sym: "USDT",
     },
     {
         id: 'BUSD(ERC-20)',
@@ -100,6 +110,7 @@ const cryptos = [
         symbol: "BUSD",
         chain: "Ethereum Mainnet (ERC-20)",
         background_color: "bg-[#F0B90B]",
+        sym: "BUSD",
     },
     {
         id: 'BUSD(BEP-20)',
@@ -108,6 +119,7 @@ const cryptos = [
         symbol: "BUSD",
         chain: "Binance Smart Chain Mainnet (BEP-20)",
         background_color: "bg-[#F0B90B]",
+        sym: "BUSD",
     },
     {
         id: 'USDC(ERC-20)',
@@ -116,6 +128,7 @@ const cryptos = [
         symbol: "USDC",
         chain: "Ethereum Mainnet (ERC-20)",
         background_color: "bg-[#2775ca]",
+        sym: "USDC",
     },
     {
         id: 'USDC(BEP-20)',
@@ -124,6 +137,7 @@ const cryptos = [
         symbol: "USDC",
         chain: "Binance Smart Chain Mainnet (BEP-20)",
         background_color: "bg-[#2775ca]",
+        sym: "USDC",
     },
 ]
 
