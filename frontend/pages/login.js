@@ -9,7 +9,7 @@ import {
     ArrowLeftIcon
 } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/router'
-import logo_white from "@/public/favicon.ico"
+import logo from "@/public/favicon.ico"
 
 import PrimaryButton from '@/components/PrimaryButton';
 import SecondaryButton from '@/components/SecondaryButton';
@@ -147,7 +147,7 @@ export default function Login() {
                     <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                         <Image
                             className="h-14 w-auto"
-                            src={logo_white}
+                            src={logo}
                             alt="Blockpay Logo"
                         />
                     </div>

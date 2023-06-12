@@ -8,7 +8,7 @@ import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import GitHub from '@/public/github_logo.svg'
 import PrimaryButton from '@/components/PrimaryButton';
 import SecondaryButton from '@/components/SecondaryButton';
-import logo_white from "@/public/favicon.ico"
+import logo from "@/public/favicon.ico"
 
 
 export default function SignUp() {
@@ -147,7 +147,7 @@ export default function SignUp() {
                     <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                         <Image
                             className="h-14 w-auto"
-                            src={logo_white}
+                            src={logo}
                             alt="Blockpay Logo"
                         />
                     </div>

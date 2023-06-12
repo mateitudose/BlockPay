@@ -20,7 +20,7 @@ import {
     from '@heroicons/react/20/solid'
 import { useRouter } from 'next/router';
 import { supabase } from '@/lib/supabaseClient'
-import logo_white from "@/public/logo_white.svg"
+import logo from "@/public/logo.svg"
 import Image from 'next/image'
 import TimeGreeting from '@/components/TimeGreeting';
 import Badge from '@/components/Badge';
@@ -315,7 +315,7 @@ export default function Dashboard() {
                                         <a href="/" className="flex h-16 shrink-0 items-center">
                                             <Image
                                                 className="h-8 w-auto"
-                                                src={logo_white}
+                                                src={logo}
                                                 alt="Blockpay"
                                             />
                                         </a>
@@ -376,7 +376,7 @@ export default function Dashboard() {
                         <a href="/" className="mt-4 flex h-16 shrink-0 items-center">
                             <Image
                                 className="h-8 w-auto"
-                                src={logo_white}
+                                src={logo}
                                 alt="Blockpay"
                             />
                         </a>

@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
-import logo_white from "@/public/logo_white.svg"
+import logo from "@/public/logo.svg"
 import { supabase } from '@/lib/supabaseClient'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/router'
@@ -38,7 +38,7 @@ export default function Header() {
                 <div className="flex lg:flex-1">
                     <a href="#" className="-m-1.5 p-1.5">
                         <span className="sr-only">Your Company</span>
-                        <Image className="h-9 w-fit" src={logo_white} alt="" />
+                        <Image className="h-9 w-fit" src={logo} alt="" />
                     </a>
                 </div>
                 <div className="hidden lg:flex lg:gap-x-12">
@@ -79,12 +79,12 @@ export default function Header() {
                                     </span>
                                 }
                             >
-                                    <SecondaryButton href="/dashboard" content={
-                                        <div className="flex items-center">
-                                            <span className="ml-1">Login</span>
-                                            <ArrowRightIcon className="ml-1 w-5" aria-hidden="true" />
-                                        </div>
-                                    } />
+                                <SecondaryButton href="/dashboard" content={
+                                    <div className="flex items-center">
+                                        <span className="ml-1">Login</span>
+                                        <ArrowRightIcon className="ml-1 w-5" aria-hidden="true" />
+                                    </div>
+                                } />
                             </Tooltip>
                             <Tooltip
                                 content={
@@ -129,7 +129,7 @@ export default function Header() {
                                     <span className="sr-only">Blockpay</span>
                                     <Image
                                         className="h-9 w-fit"
-                                        src={logo_white}
+                                        src={logo}
                                         alt=""
                                     />
                                 </a>
