@@ -47,8 +47,8 @@ export default function Landing() {
                 <div className="mx-auto max-w-2xl flex-shrink-0 lg:mx-0 lg:max-w-xl lg:pt-8">
                     <div className="mt-24 sm:mt-32 lg:mt-16">
                         <a href="/changelog" className="inline-flex space-x-6">
-                            <span className="rounded-full bg-green-500/10 px-3 py-1 text-sm font-semibold leading-6 text-green-400 ring-1 ring-inset ring-green-500/20">
-                                Easy to use
+                            <span className="hover:underline rounded-full bg-green-500/10 px-3 py-1 text-sm font-semibold leading-6 text-green-400 ring-1 ring-inset ring-green-500/20">
+                                Easy to use &rarr;
                             </span>
                             <span className="inline-flex items-center space-x-2 text-sm font-medium leading-6 text-gray-300">
                                 <span>Just shipped v1.0</span>
