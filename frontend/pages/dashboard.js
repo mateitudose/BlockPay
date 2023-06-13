@@ -245,12 +245,13 @@ export default function Dashboard() {
 
     function changeColor(n) {
         if (n > 0)
-            return "green";
+            return { color: "green-500", arrow: "\u2191" };
         else if (n < 0)
-            return "red";
+            return { color: "red-500", arrow: "\u2193" };
         else
-            return "yellow";
+            return { color: "yellow-500", arrow: "\u2212" };
     }
+
 
     function changeStatus(status) {
         if (status === "Awaiting payment")
@@ -605,22 +606,24 @@ export default function Dashboard() {
                                     <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                                         {/* Card */}
                                         {cards.map((card) => (
-                                            <div href={card.href} key={card.name} className="overflow-hidden rounded-lg bg-gray-800 shadow">
+                                            <div href={card.href} key={card.name} className="overflow-hidden rounded-lg bg-gray-800">
                                                 <div className="p-5">
                                                     <div className="flex items-center">
-                                                        <div className="flex-shrink-0">
-                                                            <card.icon className="h-6 w-6 text-gray-400" aria-hidden="true" />
-                                                        </div>
-                                                        <div className="ml-5 w-0 flex-1">
+                                                        <div className="w-0 flex-1">
                                                             <dl>
-                                                                <dt className="truncate text-sm font-medium text-gray-400">{card.name}</dt>
+                                                                <dt className="truncate text-sm font-medium text-gray-200 mb-6">{card.name}</dt>
                                                                 <dd>
-                                                                    <div className="text-lg font-medium text-white">{card.amount}</div>
+                                                                    <div className="text-3xl font-medium text-white">{card.amount}</div>
                                                                 </dd>
+                                                                <div className='mt-2 text-sm'>
+                                                                    <span className={`text-${changeColor(card.change).color}`}>
+                                                                        {changeColor(card.change).arrow}&nbsp;{card.change}%
+                                                                    </span>
+                                                                    <span className='text-white/60'>
+                                                                        &nbsp;from yesterday
+                                                                    </span>
+                                                                </div>
                                                             </dl>
-                                                        </div>
-                                                        <div className='mt-4 text-sm'>
-                                                            <Badge color={changeColor(card.change)} text={`${card.change}%`} />
                                                         </div>
                                                     </div>
                                                 </div>
