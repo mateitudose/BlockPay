@@ -31,14 +31,15 @@ export default function Chart() {
         labels: ['January', 'February', 'March', 'April', 'May', 'June'],
         datasets: [
             {
-                label: 'My First Dataset',
                 data: [65, 59, 80, 81, 56, 55],
                 fill: true, // Enable filling the area under the line
                 backgroundColor: 'rgba(75, 192, 192, 0.2)', // Set the background color
                 borderColor: 'rgb(75, 192, 192)',
-                tension: 0.1
+                tension: 0.5,
+                pointRadius: 0,
             }
         ]
+
     };
 
     const options = {
@@ -46,11 +47,14 @@ export default function Chart() {
         legend: {
             display: false,
         },
+        title: {
+            display: false,
+        },
         scales: {
             x: {
-                display: true,
+                display: false,
                 title: {
-                    display: true,
+                    display: false,
                     text: 'Months'
                 },
                 grid: {
@@ -58,15 +62,26 @@ export default function Chart() {
                 }
             },
             y: {
-                display: true,
+                display: false,
                 title: {
-                    display: true,
+                    display: false,
                     text: 'Value'
                 },
                 grid: {
                     display: false
                 }
             }
+        },
+        plugins: {
+            legend: {
+                display: false,
+            },
+            title: {
+                display: false,
+            },
+            tooltip: {
+                enabled: false,
+            },
         }
     };
 
@@ -83,7 +98,7 @@ export default function Chart() {
     }, []);
 
     return (
-        <div className="w-full h-full">
+        <div className="w-[400px] h-[400px]">
             <canvas ref={canvasRef} />
         </div>
     );
