@@ -37,10 +37,7 @@ const navigation = [
     { name: 'Subscriptions', href: '/subscriptions', icon: CurrencyDollarIcon, current: false },
 ]
 
-
-
-let transactions = []
-
+let transactions = [];
 
 const UTC = (timestamp) => {
     const date = new Date(timestamp);
@@ -80,9 +77,9 @@ export default function Dashboard() {
 
 
     const [cards, setCards] = useState([
-        { name: 'Total Revenue', href: '#', icon: BanknotesIcon, amount: '0', change: 0, hourlyData: [] },
-        { name: 'Orders', href: '#', icon: BuildingStorefrontIcon, amount: '0', change: 0, hourlyData: [] },
-        // { name: 'Subscription Revenue', href: '#', icon: CreditCardIcon, amount: '0', change: 0 },
+        { name: 'Total Revenue', href: '#', amount: '$0', change: 0, hourlyData: [] },
+        { name: 'Orders', href: '#', amount: '0', change: 0, hourlyData: [] },
+        // { name: 'Subscription Revenue', href: '#', amount: '0', change: 0, hourlyData: [] },
     ]);
 
     const itemsPerPage = 10;
@@ -137,11 +134,9 @@ export default function Dashboard() {
                     0
                 );
 
-                hourlyDataR.push({ value: i });
-                hourlyDataI.push({ value: i });
+                hourlyDataR.push({ value: i * 0 });
+                hourlyDataI.push({ value: i * 0 });
             }
-
-            console.log(hourlyDataR);
 
             setCards((prevCards) => {
                 const newCards = [...prevCards];
@@ -149,6 +144,7 @@ export default function Dashboard() {
                 newCards[1].hourlyData = hourlyDataI;
                 return newCards;
             });
+
         }
     }
 
@@ -300,8 +296,9 @@ export default function Dashboard() {
 
         getUser();
         getInvoices();
-        getCompletedInvoices();
-        getDataForPastDay();
+        getCompletedInvoices().then(() => {
+            getDataForPastDay();
+        });
         setLoaded(true);
     }, []);
 
@@ -575,26 +572,33 @@ export default function Dashboard() {
                                                     <div className="p-5">
                                                         <div className="flex items-center">
                                                             <div className="w-0 flex-1">
-                                                                <dl>
-                                                                    <dt className="truncate text-sm font-medium text-gray-200 mb-6">{card.name}</dt>
-                                                                    <dd>
-                                                                        <div className="text-3xl font-medium text-white">{card.amount}</div>
-                                                                    </dd>
-                                                                    <div className='mt-4 text-sm'>
-                                                                        <span className={`text-${changeColor(card.change).color}`}>
-                                                                            {changeColor(card.change).arrow}&nbsp;{card.change}%
-                                                                        </span>
-                                                                        <span className='text-white/60'>
-                                                                            &nbsp;from yesterday
-                                                                        </span>
+                                                                <dl className="grid grid-cols-2 h-full items-end gap-4">
+                                                                    <div>
+                                                                        <dt className="truncate text-sm font-medium text-gray-200 mb-6">{card.name}</dt>
+                                                                        <dd>
+                                                                            <div className="text-3xl font-medium text-white">{card.amount}</div>
+                                                                        </dd>
+                                                                        <div className='mt-4 text-sm'>
+                                                                            <span className={`text-${changeColor(card.change).color}`}>
+                                                                                {changeColor(card.change).arrow}&nbsp;{card.change == "0.00" ? 0 : card.change}%
+                                                                            </span>
+                                                                            <span className='text-white/60'>
+                                                                                &nbsp;from yesterday
+                                                                            </span>
+                                                                        </div>
                                                                     </div>
                                                                     {loaded
                                                                         ?
-                                                                        <Chart data={card.hourlyData} n={card.change} />
+                                                                        <div className='self-end justify-self-end'>
+                                                                            <Chart data={[]} n={card.change} />
+                                                                        </div>
                                                                         :
-                                                                        <Chart data={[{ value: 0 }, { value: 0 }]} n={card.change} />
+                                                                        <div className='self-end justify-self-end'>
+                                                                            <Chart data={[{ value: 0 }, { value: 0 }]} n={card.change} />
+                                                                        </div>
                                                                     }
                                                                 </dl>
+
                                                             </div>
                                                         </div>
                                                     </div>
