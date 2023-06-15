@@ -96,54 +96,52 @@ export default function Dashboard() {
         const user = await supabase.auth.getUser();
         if (user) {
             const date = new Date();
-            const startOfDate = new Date(
-                date.getFullYear(),
-                date.getMonth(),
-                date.getDate()
-            ).getTime();
+            const startOfDate = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
+            const endOfDate = startOfDate + 24 * 60 * 60 * 1000
 
-            const startOfHour = startOfDate - 24 * 60 * 60 * 1000;
-            const endOfHour = startOfDate;
-
-            const { data: invoices, error } = await supabase
+            const { data: invoicesToday, error: errorToday } = await supabase
                 .from('invoices')
                 .select('*')
                 .eq('merchant_id', user.data.user != null ? user.data.user.id : 0)
                 .eq('status', 'Confirmed')
-                .gte('confirm_date', startOfHour)
-                .lt('confirm_date', endOfHour);
+                .gte('confirm_date', startOfDate)
+                .lt('confirm_date', endOfDate)
 
-            if (error) {
-                toast.error(error.message);
+            if (errorToday) {
+                console.log(errorToday.message);
             }
 
             let hourlyDataR = [];
             let hourlyDataI = [];
+            if (invoicesToday != null) {
+                for (let i = 0; i < 24; i++) {
+                    const startOfHour = startOfDate + i * 60 * 60 * 1000;
+                    const endOfHour = startOfHour + 60 * 60 * 1000;
 
-            for (let i = 0; i < 24; i++) {
-                const startOfHour = startOfDate + i * 60 * 60 * 1000;
-                const endOfHour = startOfHour + 60 * 60 * 1000;
+                    const invoicesInHour = invoicesToday.filter(
+                        (invoice) =>
+                            invoice.confirm_date >= startOfHour && invoice.confirm_date < endOfHour
+                    );
 
-                const invoicesInHour = invoices.filter(
-                    (invoice) =>
-                        invoice.confirm_date >= startOfHour && invoice.confirm_date < endOfHour
-                );
+                    const revenue = invoicesInHour.reduce(
+                        (total, invoice) => total + invoice.price_in_usd,
+                        0
+                    );
 
-                const revenue = invoicesInHour.reduce(
-                    (total, invoice) => total + invoice.price_in_usd,
-                    0
-                );
+                    hourlyDataR.push({ value: parseFloat(revenue) });
+                    hourlyDataI.push({ value: parseFloat(invoicesInHour.length) });
+                }
+            
+                console.log(hourlyDataR);
+                console.log(hourlyDataI);
 
-                hourlyDataR.push({ value: i * 0 });
-                hourlyDataI.push({ value: i * 0 });
+                setCards((prevCards) => {
+                    const newCards = [...prevCards];
+                    newCards[0].hourlyData = hourlyDataR;
+                    newCards[1].hourlyData = hourlyDataI;
+                    return newCards;
+                });
             }
-
-            setCards((prevCards) => {
-                const newCards = [...prevCards];
-                newCards[0].hourlyData = hourlyDataR;
-                newCards[1].hourlyData = hourlyDataI;
-                return newCards;
-            });
 
         }
     }
@@ -338,11 +336,11 @@ export default function Dashboard() {
 
     function changeColor(n) {
         if (n > 0)
-            return { color: "green-500", arrow: "\u2191" };
+            return { color: "text-green-500", arrow: "\u2191" };
         else if (n < 0)
-            return { color: "red-500", arrow: "\u2193" };
+            return { color: "text-red-500", arrow: "\u2193" };
         else
-            return { color: "yellow-500", arrow: "\u2212" };
+            return { color: "text-yellow-500", arrow: "\u2212" };
     }
 
     function changeStatus(status) {
@@ -579,7 +577,7 @@ export default function Dashboard() {
                                                                             <div className="text-3xl font-medium text-white">{card.amount}</div>
                                                                         </dd>
                                                                         <div className='mt-4 text-sm'>
-                                                                            <span className={`text-${changeColor(card.change).color}`}>
+                                                                            <span className={changeColor(card.change).color}>
                                                                                 {changeColor(card.change).arrow}&nbsp;{card.change == "0.00" ? 0 : card.change}%
                                                                             </span>
                                                                             <span className='text-white/60'>
@@ -590,7 +588,7 @@ export default function Dashboard() {
                                                                     {loaded
                                                                         ?
                                                                         <div className='self-end justify-self-end'>
-                                                                            <Chart data={[]} n={card.change} />
+                                                                            <Chart data={card.hourlyData} n={card.change} />
                                                                         </div>
                                                                         :
                                                                         <div className='self-end justify-self-end'>
