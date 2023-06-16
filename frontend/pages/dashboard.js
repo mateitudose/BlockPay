@@ -1,5 +1,5 @@
 import { Fragment, useState, useEffect } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
+import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
     Bars3Icon,
     Cog8ToothIcon,
@@ -9,11 +9,15 @@ import {
     BanknotesIcon,
     Square3Stack3DIcon,
     CurrencyDollarIcon,
+    ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline'
 import {
     ChevronRightIcon,
+    ChevronDownIcon,
 }
     from '@heroicons/react/20/solid'
+
+import { LogOut, MoreHorizontal, Settings2, UserCircle } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { supabase } from '@/lib/supabaseClient'
 import logo from "@/public/logo.svg"
@@ -127,9 +131,6 @@ export default function Dashboard() {
                     hourlyDataR.push({ value: parseFloat(revenue) });
                     hourlyDataI.push({ value: parseFloat(invoicesInHour.length) });
                 }
-            
-                console.log(hourlyDataR);
-                console.log(hourlyDataI);
 
                 setCards((prevCards) => {
                     const newCards = [...prevCards];
@@ -435,18 +436,72 @@ export default function Dashboard() {
                                                     </ul>
                                                 </li>
 
-                                                <li className="mt-auto">
-                                                    <a
-                                                        href="/settings/general"
-                                                        className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
+                                                <Menu as="div" className="relative inline-block text-left lg:pr-4">
+                                                    <div>
+                                                        <Menu.Button className="inline-flex w-full justify-center gap-x-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                                            <span className="inline-block h-5 w-5 overflow-hidden rounded-full bg-gray-100">
+                                                                <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                                                    <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                                                                </svg>
+                                                            </span>
+                                                            {username}
+                                                            <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                                        </Menu.Button>
+                                                    </div>
+
+                                                    <Transition
+                                                        as={Fragment}
+                                                        enter="transition ease-out duration-100"
+                                                        enterFrom="transform opacity-0 scale-95"
+                                                        enterTo="transform opacity-100 scale-100"
+                                                        leave="transition ease-in duration-75"
+                                                        leaveFrom="transform opacity-100 scale-100"
+                                                        leaveTo="transform opacity-0 scale-95"
                                                     >
-                                                        <Cog8ToothIcon
-                                                            className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
-                                                            aria-hidden="true"
-                                                        />
-                                                        Settings
-                                                    </a>
-                                                </li>
+                                                        <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                                            <div className="px-4 py-3">
+                                                                <p className="text-sm">Signed in as</p>
+                                                                <p className="truncate text-sm font-medium text-gray-900">{email}</p>
+                                                            </div>
+                                                            <div className="py-1">
+                                                                <Menu.Item>
+                                                                    {({ active }) => (
+                                                                        <a
+                                                                            href="/settings/general"
+                                                                            className={classNames(
+                                                                                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                                                                'items-center gap-x-1.5 block px-4 py-2 text-sm'
+                                                                            )}
+                                                                        >
+                                                                            <Cog8ToothIcon
+                                                                                className="-ml-0.5 h-5 w-5"
+                                                                                aria-hidden="true"
+                                                                            />Account settings
+                                                                        </a>
+                                                                    )}
+                                                                </Menu.Item>
+
+                                                            </div>
+                                                            <div className="py-1">
+                                                                <Menu.Item>
+                                                                    {({ active }) => (
+                                                                        <button
+                                                                            type="submit"
+                                                                            className={classNames(
+                                                                                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                                                                'inline-flex items-center gap-x-1.5 block w-full px-4 py-2 text-left text-sm'
+                                                                            )}
+                                                                            onClick={handleSignOut}
+                                                                        >
+                                                                            <ArrowRightOnRectangleIcon className="-ml-2 h-5 w-5" aria-hidden="true" />
+                                                                            Sign out
+                                                                        </button>
+                                                                    )}
+                                                                </Menu.Item>
+                                                            </div>
+                                                        </Menu.Items>
+                                                    </Transition>
+                                                </Menu>
                                             </ul>
                                         </nav>
                                     </div>
@@ -496,18 +551,65 @@ export default function Dashboard() {
                                     </ul>
                                 </li>
 
-                                <li className="mt-auto">
-                                    <a
-                                        href="/settings/general"
-                                        className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
+                                {/* aicia */}
+                                <Menu as="div" className="relative inline-block text-left lg:pr-4 mt-auto">
+                                    <div>
+                                        <Menu.Button className="inline-flex w-full justify-center items-center gap-x-2 rounded-md bg-[#0a0a0a] px-3 py-2 text-sm font-semibold text-zinc-300/80 shadow-sm hover:bg-[#18191E]">
+                                            <UserCircle className="h-4 w-4 text-zinc-300/80" aria-hidden="true" />
+                                            {email}
+                                            <MoreHorizontal className="-mr-1 h-3 w-3 text-zinc-300/80" aria-hidden="true" />
+                                        </Menu.Button>
+                                    </div>
+
+                                    <Transition
+                                        as={Fragment}
+                                        enter="transition ease-out duration-100"
+                                        enterFrom="transform opacity-0 scale-95"
+                                        enterTo="transform opacity-100 scale-100"
+                                        leave="transition ease-in duration-75"
+                                        leaveFrom="transform opacity-100 scale-100"
+                                        leaveTo="transform opacity-0 scale-95"
                                     >
-                                        <Cog8ToothIcon
-                                            className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
-                                            aria-hidden="true"
-                                        />
-                                        Settings
-                                    </a>
-                                </li>
+                                        <Menu.Items className="absolute bottom-full mb-2 z-10 w-56 origin-top-right rounded-md bg-[#0a0a0a] shadow-lg ring-1 ring-gray-500/30 ring-opacity-5 focus:outline-none">
+                                            <div className="py-1">
+                                                <Menu.Item>
+                                                    {({ active }) => (
+                                                        <a
+                                                            href="/settings/general"
+                                                            className={classNames(
+                                                                active ? 'bg-[#18191E] rounded-md inline-block' : '',
+                                                                'flex text-zinc-300/80 items-center gap-x-1.5 px-4 py-2 text-sm'
+                                                            )}
+                                                        >
+                                                            <Settings2
+                                                                className="-ml-0.5 h-5 w-5"
+                                                                aria-hidden="true"
+                                                            />Account settings
+                                                        </a>
+                                                    )}
+                                                </Menu.Item>
+                                            </div>
+                                            <div className="py-1">
+                                                <Menu.Item>
+                                                    {({ active }) => (
+                                                        <a
+                                                            href="/settings/general"
+                                                            className={classNames(
+                                                                active ? ' bg-[#18191E] px-4 rounded-md inline-block' : '',
+                                                                'flex text-zinc-300/80 items-center gap-x-1.5 px-4 py-2 text-sm'
+                                                            )}
+                                                        >
+                                                            <LogOut
+                                                                className="-ml-0.5 h-5 w-5"
+                                                                aria-hidden="true"
+                                                            />Log out
+                                                        </a>
+                                                    )}
+                                                </Menu.Item>
+                                            </div>
+                                        </Menu.Items>
+                                    </Transition>
+                                </Menu>
                             </ul>
                         </nav>
                     </div>
@@ -562,7 +664,7 @@ export default function Dashboard() {
                                         <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                                             {/* Card */}
                                             {cards.map((card) => (
-                                                <div href={card.href} key={card.name} className="overflow-hidden rounded-lg bg-[#18191E]">
+                                                <div href={card.href} key={card.name} className="overflow-hidden rounded-lg bg-[#18191E] border border-gray-500/30">
                                                     <div className="p-5">
                                                         <div className="flex items-center">
                                                             <div className="w-0 flex-1">
@@ -646,7 +748,7 @@ export default function Dashboard() {
                                             <div className="flex flex-1 justify-between">
                                                 <button
                                                     onClick={prevPage}
-                                                    className="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                                                    className="relative inline-flex items-center rounded-md bg-[white] px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                                                 >
                                                     Previous
                                                 </button>
@@ -724,8 +826,8 @@ export default function Dashboard() {
                                                         </p>
                                                     </div>
                                                     <div className="flex flex-1 justify-between gap-x-3 sm:justify-end">
-                                                        <button onClick={prevPage} className="relative inline-flex items-center rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-gray-400 ring-1 ring-inset ring-gray-600 hover:ring-gray-500">Previous</button>
-                                                        <button onClick={nextPage} className="relative inline-flex items-center rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-gray-400 ring-1 ring-inset ring-gray-600 hover:ring-gray-500">Next</button>
+                                                        <button onClick={prevPage} className="relative inline-flex items-center rounded-md bg-[#18191E] px-3 py-2 text-sm font-semibold text-gray-400 ring-1 ring-inset ring-gray-500/30 hover:ring-gray-500">Previous</button>
+                                                        <button onClick={nextPage} className="relative inline-flex items-center rounded-md bg-[#18191E] px-3 py-2 text-sm font-semibold text-gray-400 ring-1 ring-inset ring-gray-500/30 hover:ring-gray-500">Next</button>
                                                     </div>
                                                 </nav>
                                             </div>
