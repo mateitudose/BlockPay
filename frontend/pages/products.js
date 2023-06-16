@@ -218,7 +218,7 @@ export default function Products() {
     }, []);
 
     if (!shouldRender) {
-        return <div></div>;
+        return <div className="bg-[#0a0a0a]"></div>;
     }
 
     function changeColor(n) {

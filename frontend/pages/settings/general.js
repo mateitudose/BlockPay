@@ -119,7 +119,7 @@ export default function General() {
     };
 
     if (!shouldRender) {
-        return <div></div>;
+        return <div className="bg-[#0a0a0a]"></div>;
     }
 
 

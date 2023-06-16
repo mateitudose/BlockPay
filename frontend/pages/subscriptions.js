@@ -265,7 +265,7 @@ export default function Subscriptions() {
     }, []);
 
     if (!shouldRender) {
-        return <div></div>;
+        return <div className="bg-[#0a0a0a]"></div>;
     }
 
     function changeColor(n) {
@@ -746,8 +746,8 @@ export default function Subscriptions() {
                 </div>
 
                 <div className="lg:pl-72">
-                    <div className="sticky top-0 z-40 lg:mx-auto lg:max-w-7xl">
-                        <div className="flex h-16 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-0 lg:shadow-none">
+                    <div className="sticky top-0 z-40 lg:mx-auto">
+                        <div className="flex justify-between h-16 items-center gap-x-4 border-b border-gray-500/30 bg-[#0a0a0a] px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-0 lg:shadow-none">
                             <button
                                 type="button"
                                 className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
@@ -758,112 +758,26 @@ export default function Subscriptions() {
                             </button>
 
                             {/* Separator */}
-                            <div className="h-6 w-px bg-gray-200 lg:hidden" aria-hidden="true" />
+                            <div className="h-6 w-px bg-gray-500/30 lg:hidden" aria-hidden="true" />
 
-                            <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6 lg:pl-4">
-                                <form className="relative flex flex-1" action="#" method="GET">
-                                    {/* <label htmlFor="search-field" className="sr-only">
-                                        Search
-                                    </label>
-                                    <MagnifyingGlassIcon
-                                        className="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400"
-                                        aria-hidden="true"
-                                    />
-                                    <input
-                                        id="search-field"
-                                        className="block h-full w-full border-0 py-0 pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
-                                        placeholder="Search..."
-                                        type="search"
-                                        name="search"
-                                    /> */}
-                                </form>
-                                <div className="flex items-center gap-x-4 lg:gap-x-6">
-                                    {/* <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
-                                        <span className="sr-only">View notifications</span>
-                                        <BellIcon className="h-6 w-6" aria-hidden="true" />
-                                    </button> */}
+                            <div className="flex flex-1 gap-x-4 lg:gap-x-6 lg:pl-4">
+                            </div>
 
-                                    {/* Separator */}
-                                    <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" aria-hidden="true" />
+                            {/* Separator */}
+                            <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-500/30" aria-hidden="true" />
 
-                                    {/* Profile dropdown */}
-                                    <div className="hidden lg:block">
-                                        <ConnectButton
-                                            label='Connect Web3'
-                                        />
-                                    </div>
-                                    <Menu as="div" className="relative inline-block text-left lg:pr-4">
-                                        <div>
-                                            <Menu.Button className="inline-flex w-full justify-center gap-x-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                                <span className="inline-block h-5 w-5 overflow-hidden rounded-full bg-gray-100">
-                                                    <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                                                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                                                    </svg>
-                                                </span>
-                                                {username}
-                                                <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
-                                            </Menu.Button>
-                                        </div>
-
-                                        <Transition
-                                            as={Fragment}
-                                            enter="transition ease-out duration-100"
-                                            enterFrom="transform opacity-0 scale-95"
-                                            enterTo="transform opacity-100 scale-100"
-                                            leave="transition ease-in duration-75"
-                                            leaveFrom="transform opacity-100 scale-100"
-                                            leaveTo="transform opacity-0 scale-95"
-                                        >
-                                            <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                                <div className="px-4 py-3">
-                                                    <p className="text-sm">Signed in as</p>
-                                                    <p className="truncate text-sm font-medium text-gray-900">{email}</p>
-                                                </div>
-                                                <div className="py-1">
-                                                    <Menu.Item>
-                                                        {({ active }) => (
-                                                            <a
-                                                                href="/settings/general"
-                                                                className={classNames(
-                                                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                                    'inline-flex items-center gap-x-1.5 block px-4 py-2 text-sm'
-                                                                )}
-                                                            >
-                                                                <Cog8ToothIcon
-                                                                    className="-ml-0.5 h-5 w-5"
-                                                                    aria-hidden="true"
-                                                                />Account settings
-                                                            </a>
-                                                        )}
-                                                    </Menu.Item>
-
-                                                </div>
-                                                <div className="py-1">
-                                                    <Menu.Item>
-                                                        {({ active }) => (
-                                                            <button
-                                                                type="submit"
-                                                                className={classNames(
-                                                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                                    'inline-flex items-center gap-x-1.5 block w-full px-4 py-2 text-left text-sm'
-                                                                )}
-                                                                onClick={handleSignOut}
-                                                            >
-                                                                <ArrowRightOnRectangleIcon className="-ml-2 h-5 w-5" aria-hidden="true" />
-                                                                Sign out
-                                                            </button>
-                                                        )}
-                                                    </Menu.Item>
-                                                </div>
-                                            </Menu.Items>
-                                        </Transition>
-                                    </Menu>
-                                </div>
+                            {/* Profile dropdown */}
+                            <div className="hidden lg:block mr-6">
+                                <ConnectButton
+                                    label='Connect Web3'
+                                />
                             </div>
                         </div>
                     </div>
 
-                    <main className="py-10 bg-slate-50/80 h-screen relative">
+
+
+                    <main className="py-10 bg-[#0a0a0a] h-screen relative">
                         <div className="px-4 sm:px-6 lg:px-24">
                             <div className="sm:flex sm:items-center">
                                 <div className="sm:flex-auto">
@@ -946,7 +860,7 @@ export default function Subscriptions() {
                                                             </button>
                                                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                                                 <button
-                                                                    className="text-indigo-600 hover:text-indigo-900"
+                                                                    className="text-white/80 hover:text-white/90 flex items-center"
                                                                     onClick={() => {
                                                                         setCurrentID(subscription.id_hash);
                                                                         setSubscriptionName(subscription.name);
@@ -954,7 +868,7 @@ export default function Subscriptions() {
                                                                         setOpenEdit(true);
                                                                     }}
                                                                 >
-                                                                    Edit
+                                                                    Edit <Edit className='ml-1 w-4 h-4' aria-hidden="true" />
                                                                 </button>
                                                             </td>
                                                         </tr>
