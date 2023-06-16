@@ -1,20 +1,16 @@
 import { Fragment, useState, useEffect } from 'react'
-import { Dialog, Menu, Transition } from '@headlessui/react'
+import { Dialog, Transition } from '@headlessui/react'
 import {
     Bars3Icon,
     Cog8ToothIcon,
     XMarkIcon,
-    ArrowRightOnRectangleIcon,
     WindowIcon,
     BuildingStorefrontIcon,
     BanknotesIcon,
     Square3Stack3DIcon,
     CurrencyDollarIcon,
-    UserCircleIcon,
 } from '@heroicons/react/24/outline'
 import {
-    ChevronDownIcon,
-    CheckCircleIcon,
     ChevronRightIcon,
 }
     from '@heroicons/react/20/solid'
@@ -22,7 +18,6 @@ import { useRouter } from 'next/router';
 import { supabase } from '@/lib/supabaseClient'
 import logo from "@/public/logo.svg"
 import Image from 'next/image'
-import TimeGreeting from '@/components/TimeGreeting';
 import Badge from '@/components/Badge';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -113,6 +108,7 @@ export default function Dashboard() {
 
             let hourlyDataR = [];
             let hourlyDataI = [];
+
             if (invoicesToday != null) {
                 for (let i = 0; i < 24; i++) {
                     const startOfHour = startOfDate + i * 60 * 60 * 1000;
