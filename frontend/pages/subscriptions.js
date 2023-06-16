@@ -14,6 +14,14 @@ import {
     ChevronDownIcon,
 } from '@heroicons/react/20/solid'
 
+import {
+    UserCircle,
+    LogOut,
+    MoreHorizontal,
+    Edit,
+    Settings2,
+} from 'lucide-react'
+
 import { useRouter } from 'next/router';
 import { supabase } from '@/lib/supabaseClient'
 import logo from "@/public/logo.svg"
@@ -636,14 +644,14 @@ export default function Subscriptions() {
                 {/* Static sidebar for desktop */}
                 <div className="shadow-lg hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
                     {/* Sidebar component, swap this element with another sidebar if you like */}
-                    <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
-                        <div className="mt-4 flex h-16 shrink-0 items-center">
+                    <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-500/30 bg-[#0a0a0a] px-6 pb-4">
+                        <a href="/" className="mt-4 flex h-16 shrink-0 items-center">
                             <Image
                                 className="h-8 w-auto"
                                 src={logo}
-                                alt="Your Company"
+                                alt="Blockpay"
                             />
-                        </div>
+                        </a>
                         <nav className="flex flex-1 flex-col">
                             <ul role="list" className="flex flex-1 flex-col gap-y-7">
                                 <li>
@@ -654,14 +662,14 @@ export default function Subscriptions() {
                                                     href={item.href}
                                                     className={classNames(
                                                         item.current
-                                                            ? 'bg-gray-50 text-indigo-600'
-                                                            : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
-                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                                                            ? 'bg-gray-700/40 text-white/90'
+                                                            : 'text-white/50 hover:text-white/90 hover:bg-gray-700/50',
+                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-medium'
                                                     )}
                                                 >
                                                     <item.icon
                                                         className={classNames(
-                                                            item.current ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600',
+                                                            item.current ? 'text-white/90' : 'text-white/50 group-hover:text-white/80',
                                                             'h-6 w-6 shrink-0'
                                                         )}
                                                         aria-hidden="true"
@@ -673,18 +681,65 @@ export default function Subscriptions() {
                                     </ul>
                                 </li>
 
-                                <li className="mt-auto">
-                                    <a
-                                        href="/settings/general"
-                                        className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
+                                {/* aicia */}
+                                <Menu as="div" className="relative inline-block text-left lg:pr-4 mt-auto">
+                                    <div>
+                                        <Menu.Button className="inline-flex w-full justify-center items-center gap-x-2 rounded-md bg-[#0a0a0a] px-3 py-2 text-sm font-semibold text-zinc-300/80 shadow-sm hover:bg-[#18191E]">
+                                            <UserCircle className="h-4 w-4 text-zinc-300/80" aria-hidden="true" />
+                                            {email}
+                                            <MoreHorizontal className="-mr-1 h-3 w-3 text-zinc-300/80" aria-hidden="true" />
+                                        </Menu.Button>
+                                    </div>
+
+                                    <Transition
+                                        as={Fragment}
+                                        enter="transition ease-out duration-100"
+                                        enterFrom="transform opacity-0 scale-95"
+                                        enterTo="transform opacity-100 scale-100"
+                                        leave="transition ease-in duration-75"
+                                        leaveFrom="transform opacity-100 scale-100"
+                                        leaveTo="transform opacity-0 scale-95"
                                     >
-                                        <Cog8ToothIcon
-                                            className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
-                                            aria-hidden="true"
-                                        />
-                                        Settings
-                                    </a>
-                                </li>
+                                        <Menu.Items className="absolute bottom-full mb-2 z-10 w-56 origin-top-right rounded-md bg-[#0a0a0a] shadow-lg ring-1 ring-gray-500/30 ring-opacity-5 focus:outline-none">
+                                            <div className="py-1">
+                                                <Menu.Item>
+                                                    {({ active }) => (
+                                                        <a
+                                                            href="/settings/general"
+                                                            className={classNames(
+                                                                active ? 'bg-[#18191E] rounded-md inline-block' : '',
+                                                                'flex text-zinc-300/80 items-center gap-x-1.5 px-4 py-2 text-sm'
+                                                            )}
+                                                        >
+                                                            <Settings2
+                                                                className="-ml-0.5 h-5 w-5"
+                                                                aria-hidden="true"
+                                                            />Account settings
+                                                        </a>
+                                                    )}
+                                                </Menu.Item>
+                                            </div>
+                                            <div className="py-1">
+                                                <Menu.Item>
+                                                    {({ active }) => (
+                                                        <a
+                                                            className={classNames(
+                                                                active ? ' bg-[#18191E] px-4 rounded-md inline-block' : '',
+                                                                'flex text-zinc-300/80 items-center gap-x-1.5 px-4 py-2 text-sm'
+                                                            )}
+                                                            onClick={handleSignOut}
+                                                        >
+                                                            <LogOut
+                                                                className="-ml-0.5 h-5 w-5"
+                                                                aria-hidden="true"
+                                                            />Log out
+                                                        </a>
+                                                    )}
+                                                </Menu.Item>
+                                            </div>
+                                        </Menu.Items>
+                                    </Transition>
+                                </Menu>
                             </ul>
                         </nav>
                     </div>

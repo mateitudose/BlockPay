@@ -31,28 +31,6 @@ export default function Login() {
     }
 
     useEffect(() => {
-        if (canvasRef.current) {
-            const ctx = canvasRef.current.getContext('2d');
-
-            // Create gradient
-            let gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, 'rgba(75, 192, 192, 0.5)');
-            gradient.addColorStop(0.5, 'rgba(75, 192, 192, 0.25)');
-            gradient.addColorStop(1, 'rgba(75, 192, 192, 0)');
-
-            // Assign gradient to data
-            data.datasets[0].backgroundColor = gradient;
-
-            // Create chart
-            chartRef.current = new ChartJS(ctx, {
-                type: 'line',
-                data,
-                options
-            });
-        }
-    }, []);
-
-    useEffect(() => {
         const runPrecheck = async () => {
             const result = await handleSignedIn();
 

@@ -5,7 +5,7 @@ import { useState } from 'react'
 
 import '@rainbow-me/rainbowkit/styles.css';
 import {
-  RainbowKitProvider,
+  RainbowKitProvider, darkTheme,
 } from '@rainbow-me/rainbowkit';
 import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import {
@@ -79,7 +79,7 @@ export default function App({ Component, pageProps }) {
 
   return (
     <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider chains={chains} >
+      <RainbowKitProvider chains={chains} theme={darkTheme} >
         <SessionContextProvider supabaseClient={supabase} initialSession={pageProps.initialSession}>
           <TawkTo />
           <HotJar />

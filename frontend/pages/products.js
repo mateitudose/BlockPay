@@ -11,6 +11,14 @@ import {
 } from '@heroicons/react/24/outline'
 
 import {
+    UserCircle,
+    LogOut,
+    MoreHorizontal,
+    Edit,
+    Settings2,
+} from 'lucide-react'
+
+import {
     ChevronDownIcon,
 } from '@heroicons/react/20/solid'
 
@@ -287,13 +295,13 @@ export default function Products() {
                                                     </button>
                                                 </div>
                                             </Transition.Child>
-                                            <div className="h-full overflow-y-auto bg-white p-8">
+                                            <div className="h-full overflow-y-auto bg-[#0a0a0a] p-8">
                                                 <div className="space-y-6 pb-16">
                                                     <div>
                                                         <div className="mt-4">
                                                             <h2 className='my-4 font-medium'>Product Details</h2>
                                                             <div>
-                                                                <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
+                                                                <label htmlFor="name" className="block text-sm font-medium leading-6 text-zinc-300">
                                                                     Product name
                                                                 </label>
                                                                 <div className="mt-2">
@@ -301,7 +309,7 @@ export default function Products() {
                                                                         type="text"
                                                                         name="name"
                                                                         id="Name"
-                                                                        className="pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                        className="pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-zinc-300 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                                         placeholder="Name"
                                                                         required
                                                                         value={productName}
@@ -313,7 +321,7 @@ export default function Products() {
                                                     </div>
                                                     <div>
                                                         <div>
-                                                            <label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">
+                                                            <label htmlFor="price" className="block text-sm font-medium leading-6 text-zinc-300">
                                                                 Price
                                                             </label>
                                                             <div className="relative mt-2 rounded-md shadow-sm">
@@ -324,7 +332,7 @@ export default function Products() {
                                                                     type="number"
                                                                     name="price"
                                                                     id="price"
-                                                                    className="block w-full rounded-md border lg:border-0 py-1.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                    className="block w-full rounded-md border lg:border-0 py-1.5 pl-7 pr-12 text-zinc-300 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                                     placeholder="0.00"
                                                                     aria-describedby="price-currency"
                                                                     required
@@ -342,7 +350,7 @@ export default function Products() {
                                                     <div className="flex">
                                                         <button
                                                             type="button"
-                                                            className="flex-1 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                                            className="flex-1 rounded-md bg-white/80 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                                                             onClick={async () => {
                                                                 await addProduct(productName, price);
                                                                 setOpen(false);
@@ -409,13 +417,13 @@ export default function Products() {
                                                     </button>
                                                 </div>
                                             </Transition.Child>
-                                            <div className="h-full overflow-y-auto bg-white p-8">
+                                            <div className="h-full overflow-y-auto bg-[#0a0a0a] p-8">
                                                 <div className="space-y-6 pb-16">
                                                     <div>
                                                         <div className="mt-4">
                                                             <h2 className='my-4 font-medium'>Product Details</h2>
                                                             <div>
-                                                                <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
+                                                                <label htmlFor="name" className="block text-sm font-medium leading-6 text-zinc-300">
                                                                     Product name
                                                                 </label>
                                                                 <div className="mt-2">
@@ -423,7 +431,7 @@ export default function Products() {
                                                                         type="text"
                                                                         name="name"
                                                                         id="Name"
-                                                                        className="pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                        className="pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-zinc-300 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                                         placeholder={productName}
                                                                         required
                                                                         value={productName}
@@ -435,7 +443,7 @@ export default function Products() {
                                                     </div>
                                                     <div>
                                                         <div>
-                                                            <label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">
+                                                            <label htmlFor="price" className="block text-sm font-medium leading-6 text-zinc-300">
                                                                 Price
                                                             </label>
                                                             <div className="relative mt-2 rounded-md shadow-sm">
@@ -446,7 +454,7 @@ export default function Products() {
                                                                     type="number"
                                                                     name="price"
                                                                     id="price"
-                                                                    className="block w-full rounded-md border lg:border-0 py-1.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                    className="block w-full rounded-md border lg:border-0 py-1.5 pl-7 pr-12 text-zinc-300 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                                     placeholder={price}
                                                                     aria-describedby="price-currency"
                                                                     required
@@ -534,7 +542,7 @@ export default function Products() {
                                         </div>
                                     </Transition.Child>
                                     {/* Sidebar component, swap this element with another sidebar if you like */}
-                                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
+                                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-[#0a0a0a] px-6 pb-4">
                                         <div className="flex h-16 shrink-0 items-center">
                                             <Image
                                                 className="h-8 w-auto"
@@ -553,7 +561,7 @@ export default function Products() {
                                                                     className={classNames(
                                                                         item.current
                                                                             ? 'bg-gray-50 text-indigo-600'
-                                                                            : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
+                                                                            : 'text-zinc-300 hover:text-indigo-600 hover:bg-gray-50',
                                                                         'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
                                                                     )}
                                                                 >
@@ -575,7 +583,7 @@ export default function Products() {
                                                 <li className="mt-auto">
                                                     <a
                                                         href="/settings/general"
-                                                        className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
+                                                        className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-zinc-300 hover:bg-gray-50 hover:text-indigo-600"
                                                     >
                                                         <Cog8ToothIcon
                                                             className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
@@ -596,14 +604,14 @@ export default function Products() {
                 {/* Static sidebar for desktop */}
                 <div className="shadow-lg hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
                     {/* Sidebar component, swap this element with another sidebar if you like */}
-                    <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
-                        <div className="mt-4 flex h-16 shrink-0 items-center">
+                    <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-500/30 bg-[#0a0a0a] px-6 pb-4">
+                        <a href="/" className="mt-4 flex h-16 shrink-0 items-center">
                             <Image
                                 className="h-8 w-auto"
                                 src={logo}
-                                alt="Your Company"
+                                alt="Blockpay"
                             />
-                        </div>
+                        </a>
                         <nav className="flex flex-1 flex-col">
                             <ul role="list" className="flex flex-1 flex-col gap-y-7">
                                 <li>
@@ -614,14 +622,14 @@ export default function Products() {
                                                     href={item.href}
                                                     className={classNames(
                                                         item.current
-                                                            ? 'bg-gray-50 text-indigo-600'
-                                                            : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
-                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                                                            ? 'bg-gray-700/40 text-white/90'
+                                                            : 'text-white/50 hover:text-white/90 hover:bg-gray-700/50',
+                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-medium'
                                                     )}
                                                 >
                                                     <item.icon
                                                         className={classNames(
-                                                            item.current ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600',
+                                                            item.current ? 'text-white/90' : 'text-white/50 group-hover:text-white/80',
                                                             'h-6 w-6 shrink-0'
                                                         )}
                                                         aria-hidden="true"
@@ -633,29 +641,76 @@ export default function Products() {
                                     </ul>
                                 </li>
 
-                                <li className="mt-auto">
-                                    <a
-                                        href="/settings/general"
-                                        className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
+                                {/* aicia */}
+                                <Menu as="div" className="relative inline-block text-left lg:pr-4 mt-auto">
+                                    <div>
+                                        <Menu.Button className="inline-flex w-full justify-center items-center gap-x-2 rounded-md bg-[#0a0a0a] px-3 py-2 text-sm font-semibold text-zinc-300/80 shadow-sm hover:bg-[#18191E]">
+                                            <UserCircle className="h-4 w-4 text-zinc-300/80" aria-hidden="true" />
+                                            {email}
+                                            <MoreHorizontal className="-mr-1 h-3 w-3 text-zinc-300/80" aria-hidden="true" />
+                                        </Menu.Button>
+                                    </div>
+
+                                    <Transition
+                                        as={Fragment}
+                                        enter="transition ease-out duration-100"
+                                        enterFrom="transform opacity-0 scale-95"
+                                        enterTo="transform opacity-100 scale-100"
+                                        leave="transition ease-in duration-75"
+                                        leaveFrom="transform opacity-100 scale-100"
+                                        leaveTo="transform opacity-0 scale-95"
                                     >
-                                        <Cog8ToothIcon
-                                            className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
-                                            aria-hidden="true"
-                                        />
-                                        Settings
-                                    </a>
-                                </li>
+                                        <Menu.Items className="absolute bottom-full mb-2 z-10 w-56 origin-top-right rounded-md bg-[#0a0a0a] shadow-lg ring-1 ring-gray-500/30 ring-opacity-5 focus:outline-none">
+                                            <div className="py-1">
+                                                <Menu.Item>
+                                                    {({ active }) => (
+                                                        <a
+                                                            href="/settings/general"
+                                                            className={classNames(
+                                                                active ? 'bg-[#18191E] rounded-md inline-block' : '',
+                                                                'flex text-zinc-300/80 items-center gap-x-1.5 px-4 py-2 text-sm'
+                                                            )}
+                                                        >
+                                                            <Settings2
+                                                                className="-ml-0.5 h-5 w-5"
+                                                                aria-hidden="true"
+                                                            />Account settings
+                                                        </a>
+                                                    )}
+                                                </Menu.Item>
+                                            </div>
+                                            <div className="py-1">
+                                                <Menu.Item>
+                                                    {({ active }) => (
+                                                        <a
+                                                            className={classNames(
+                                                                active ? ' bg-[#18191E] px-4 rounded-md inline-block' : '',
+                                                                'flex text-zinc-300/80 items-center gap-x-1.5 px-4 py-2 text-sm'
+                                                            )}
+                                                            onClick={handleSignOut}
+                                                        >
+                                                            <LogOut
+                                                                className="-ml-0.5 h-5 w-5"
+                                                                aria-hidden="true"
+                                                            />Log out
+                                                        </a>
+                                                    )}
+                                                </Menu.Item>
+                                            </div>
+                                        </Menu.Items>
+                                    </Transition>
+                                </Menu>
                             </ul>
                         </nav>
                     </div>
                 </div>
 
                 <div className="lg:pl-72">
-                    <div className="sticky top-0 z-40 lg:mx-auto lg:max-w-7xl">
-                        <div className="flex h-16 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-0 lg:shadow-none">
+                    <div className="sticky top-0 z-40 lg:mx-auto">
+                        <div className="flex h-16 items-center gap-x-4 border-b border-gray-500/30 bg-[#0a0a0a] px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-0 lg:shadow-none">
                             <button
                                 type="button"
-                                className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
+                                className="-m-2.5 p-2.5 text-zinc-300 lg:hidden"
                                 onClick={() => setSidebarOpen(true)}
                             >
                                 <span className="sr-only">Open sidebar</span>
@@ -663,121 +718,25 @@ export default function Products() {
                             </button>
 
                             {/* Separator */}
-                            <div className="h-6 w-px bg-gray-200 lg:hidden" aria-hidden="true" />
-
-                            <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6 lg:pl-4">
-                                <form className="relative flex flex-1" action="#" method="GET">
-                                    {/* <label htmlFor="search-field" className="sr-only">
-                                        Search
-                                    </label>
-                                    <MagnifyingGlassIcon
-                                        className="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400"
-                                        aria-hidden="true"
-                                    />
-                                    <input
-                                        id="search-field"
-                                        className="block h-full w-full border-0 py-0 pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
-                                        placeholder="Search..."
-                                        type="search"
-                                        name="search"
-                                    /> */}
-                                </form>
-                                <div className="flex items-center gap-x-4 lg:gap-x-6">
-                                    {/* <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
-                                        <span className="sr-only">View notifications</span>
-                                        <BellIcon className="h-6 w-6" aria-hidden="true" />
-                                    </button> */}
-
-                                    {/* Separator */}
-                                    <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" aria-hidden="true" />
-
-                                    {/* Profile dropdown */}
-                                    <Menu as="div" className="relative inline-block text-left lg:pr-4">
-                                        <div>
-                                            <Menu.Button className="inline-flex w-full justify-center gap-x-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                                <span className="inline-block h-5 w-5 overflow-hidden rounded-full bg-gray-100">
-                                                    <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                                                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                                                    </svg>
-                                                </span>
-                                                {username}
-                                                <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
-                                            </Menu.Button>
-                                        </div>
-
-                                        <Transition
-                                            as={Fragment}
-                                            enter="transition ease-out duration-100"
-                                            enterFrom="transform opacity-0 scale-95"
-                                            enterTo="transform opacity-100 scale-100"
-                                            leave="transition ease-in duration-75"
-                                            leaveFrom="transform opacity-100 scale-100"
-                                            leaveTo="transform opacity-0 scale-95"
-                                        >
-                                            <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                                <div className="px-4 py-3">
-                                                    <p className="text-sm">Signed in as</p>
-                                                    <p className="truncate text-sm font-medium text-gray-900">{email}</p>
-                                                </div>
-                                                <div className="py-1">
-                                                    <Menu.Item>
-                                                        {({ active }) => (
-                                                            <a
-                                                                href="/settings/general"
-                                                                className={classNames(
-                                                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                                    'inline-flex items-center gap-x-1.5 block px-4 py-2 text-sm'
-                                                                )}
-                                                            >
-                                                                <Cog8ToothIcon
-                                                                    className="-ml-0.5 h-5 w-5"
-                                                                    aria-hidden="true"
-                                                                />Account settings
-                                                            </a>
-                                                        )}
-                                                    </Menu.Item>
-
-                                                </div>
-                                                <div className="py-1">
-                                                    <Menu.Item>
-                                                        {({ active }) => (
-                                                            <button
-                                                                type="submit"
-                                                                className={classNames(
-                                                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                                    'inline-flex items-center gap-x-1.5 block w-full px-4 py-2 text-left text-sm'
-                                                                )}
-                                                                onClick={handleSignOut}
-                                                            >
-                                                                <ArrowRightOnRectangleIcon className="-ml-2 h-5 w-5" aria-hidden="true" />
-                                                                Sign out
-                                                            </button>
-                                                        )}
-                                                    </Menu.Item>
-                                                </div>
-                                            </Menu.Items>
-                                        </Transition>
-                                    </Menu>
-                                </div>
-                            </div>
+                            <div className="h-6 w-px bg-gray-500/30 lg:hidden" aria-hidden="true" />
                         </div>
                     </div>
 
-                    <main className="py-10 bg-slate-50/80 h-screen relative">
+                    <main className="py-10 bg-[#0a0a0a] h-screen relative">
                         <div className="px-4 sm:px-6 lg:px-24">
                             <div className="sm:flex sm:items-center">
                                 <div className="sm:flex-auto">
-                                    <h1 className="text-base font-semibold leading-6 text-gray-900">
+                                    <h1 className="text-base font-semibold leading-6 text-zinc-300">
                                         Products
                                     </h1>
-                                    <p className="mt-2 text-sm text-gray-700">
+                                    <p className="mt-2 text-sm text-zinc-300">
                                         A list of all the products in your account including their name, id, price and link.
                                     </p>
                                 </div>
                                 <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
                                     <button
                                         type="button"
-                                        className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        className="block rounded-md bg-white px-3 py-2 text-center text-sm font-semibold text-black shadow-sm hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                                         onClick={async () => {
                                             await addProduct(productName, price);
                                             setOpen(true)
@@ -790,20 +749,20 @@ export default function Products() {
                             <div className="mt-8 flow-root">
                                 <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                     <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                                        <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-                                            <table className="min-w-full divide-y divide-gray-300">
-                                                <thead className="bg-gray-50">
+                                        <div className="border border-gray-500/30 rounded-lg overflow-hidden">
+                                            <table className="min-w-full divide-y divide-gray-500/30 text-gray-200 bg-gray-900 rounded-md">
+                                                <thead className="bg-[#18191E]">
                                                     <tr>
-                                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-zinc-300 sm:pl-6">
                                                             Product Name
                                                         </th>
-                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-300">
                                                             ID
                                                         </th>
-                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-300">
                                                             Price
                                                         </th>
-                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-300">
                                                             Link
                                                         </th>
                                                         <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
@@ -811,24 +770,24 @@ export default function Products() {
                                                         </th>
                                                     </tr>
                                                 </thead>
-                                                <tbody className="divide-y divide-gray-200 bg-white">
+                                                <tbody className="bg-[#0a0a0a] divide-y divide-gray-500/30">
                                                     {loaded && products.map((product) => (
                                                         <tr key={product.id}>
-                                                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-zinc-300 sm:pl-6">
                                                                 {product.name}
                                                             </td>
-                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 font-mono">{product.id_hash}</td>
-                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-black font-medium">
-                                                                <span className='text-gray-500'>
+                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-zinc-300 font-mono">{product.id_hash}</td>
+                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-zinc-300 font-medium">
+                                                                <span className='text-zinc-300'>
                                                                     $
                                                                 </span>
                                                                 {product.price}
-                                                                <span className='text-gray-500'>
+                                                                <span className='text-zinc-300'>
                                                                     USD
                                                                 </span>
                                                             </td>
                                                             <button
-                                                                className="font-mono whitespace-nowrap px-3 py-4 text-sm text-gray-500 hover:underline hover:cursor-pointer"
+                                                                className="font-mono whitespace-nowrap px-3 py-4 text-sm text-zinc-300 hover:underline hover:cursor-pointer"
                                                                 onClick={() => {
                                                                     navigator.clipboard.writeText(`http://localhost:3000/c/${product.id_hash}`);
                                                                     toast.success('Copied link to clipboard!');
@@ -838,7 +797,7 @@ export default function Products() {
                                                             </button>
                                                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                                                 <button
-                                                                    className="text-indigo-600 hover:text-indigo-900"
+                                                                    className="text-white/80 hover:text-white/90 flex items-center"
                                                                     onClick={() => {
                                                                         setCurrentID(product.id_hash);
                                                                         setProductName(product.name);
@@ -846,7 +805,7 @@ export default function Products() {
                                                                         setOpenEdit(true);
                                                                     }}
                                                                 >
-                                                                    Edit
+                                                                    Edit <Edit className='ml-1 w-4 h-4' aria-hidden="true" />
                                                                 </button>
                                                             </td>
                                                         </tr>
