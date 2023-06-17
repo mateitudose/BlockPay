@@ -14,8 +14,7 @@ import {
 import {
     ChevronRightIcon,
     ChevronDownIcon,
-}
-    from '@heroicons/react/20/solid'
+} from '@heroicons/react/20/solid'
 
 import { LogOut, MoreHorizontal, Settings2, UserCircle } from 'lucide-react';
 import { useRouter } from 'next/router';
@@ -29,6 +28,7 @@ import cryptos from '@/components/cryptos.js';
 import SecondaryButton from '@/components/SecondaryButton';
 import Chart from '@/components/Chart';
 
+import { redirect } from 'next/navigation';
 
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: WindowIcon, current: true },
@@ -327,7 +327,7 @@ export default function Dashboard() {
     }, []);
 
     if (!shouldRender) {
-        return <div className="bg-[#0a0a0a]"></div>;
+        return <div className="bg-[#0a0a0a] z-50 w-screen h-screen"></div>;
     }
 
     function changeColor(n) {

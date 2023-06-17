@@ -101,7 +101,7 @@ const Invoice = ({ invoice }) => {
     }, []);
 
     if (!shouldRender) {
-        return <div className="bg-[#0a0a0a]"></div>;
+        return <div className="bg-[#0a0a0a] z-50 w-screen h-screen"></div>;
     }
 
     return (

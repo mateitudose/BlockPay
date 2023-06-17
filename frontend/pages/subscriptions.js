@@ -265,7 +265,7 @@ export default function Subscriptions() {
     }, []);
 
     if (!shouldRender) {
-        return <div className="bg-[#0a0a0a]"></div>;
+        return <div className="bg-[#0a0a0a] z-50 w-screen h-screen"></div>;
     }
 
     function changeColor(n) {
@@ -342,13 +342,13 @@ export default function Subscriptions() {
                                                     </button>
                                                 </div>
                                             </Transition.Child>
-                                            <div className="h-full overflow-y-auto bg-white p-8">
+                                            <div className="h-full overflow-y-auto bg-[#0a0a0a] p-8">
                                                 <div className="space-y-6 pb-16">
                                                     <div>
                                                         <div className="mt-4">
                                                             <h2 className='my-4 font-medium'>Subscription Details</h2>
                                                             <div>
-                                                                <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
+                                                                <label htmlFor="name" className="block text-sm font-medium leading-6 text-zinc-300">
                                                                     Subscription name
                                                                 </label>
                                                                 <div className="mt-2">
@@ -356,7 +356,7 @@ export default function Subscriptions() {
                                                                         type="text"
                                                                         name="name"
                                                                         id="Name"
-                                                                        className="pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                        className="pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-zinc-300 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                                         placeholder="Name"
                                                                         required
                                                                         value={subscriptionName}
@@ -368,7 +368,7 @@ export default function Subscriptions() {
                                                     </div>
                                                     <div>
                                                         <div>
-                                                            <label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">
+                                                            <label htmlFor="price" className="block text-sm font-medium leading-6 text-zinc-300">
                                                                 Price
                                                             </label>
                                                             <div className="relative mt-2 rounded-md shadow-sm">
@@ -379,7 +379,7 @@ export default function Subscriptions() {
                                                                     type="number"
                                                                     name="price"
                                                                     id="price"
-                                                                    className="block w-full rounded-md border lg:border-0 py-1.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                    className="block w-full rounded-md border lg:border-0 py-1.5 pl-7 pr-12 text-zinc-300 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                                     placeholder="0.00"
                                                                     aria-describedby="price-currency"
                                                                     required
@@ -394,7 +394,7 @@ export default function Subscriptions() {
                                                             </div>
                                                         </div>
                                                         <div className='mt-6'>
-                                                            <label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">
+                                                            <label htmlFor="price" className="block text-sm font-medium leading-6 text-zinc-300">
                                                                 Referral Percentage
                                                             </label>
                                                             <div className="relative mt-2 rounded-md shadow-sm">
@@ -402,7 +402,7 @@ export default function Subscriptions() {
                                                                     type="number"
                                                                     name="referral"
                                                                     id="referral"
-                                                                    className="block w-full rounded-md border lg:border-0 py-1.5 pl-2.5 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                    className="block w-full rounded-md border lg:border-0 py-1.5 pl-2.5 pr-12 text-zinc-300 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                                     placeholder="0"
                                                                     required
                                                                     value={referral}
@@ -486,13 +486,13 @@ export default function Subscriptions() {
                                                     </button>
                                                 </div>
                                             </Transition.Child>
-                                            <div className="h-full overflow-y-auto bg-white p-8">
+                                            <div className="h-full overflow-y-auto bg-[#0a0a0a] p-8">
                                                 <div className="space-y-6 pb-16">
                                                     <div>
                                                         <div className="mt-4">
                                                             <h2 className='my-4 font-medium'>Subscription Details</h2>
                                                             <div>
-                                                                <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
+                                                                <label htmlFor="name" className="block text-sm font-medium leading-6 text-zinc-300">
                                                                     Subscription name
                                                                 </label>
                                                                 <div className="mt-2">
@@ -500,7 +500,7 @@ export default function Subscriptions() {
                                                                         type="text"
                                                                         name="name"
                                                                         id="Name"
-                                                                        className="pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                        className="pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-zinc-300 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                                                         placeholder={subscriptionName}
                                                                         required
                                                                         value={subscriptionName}
@@ -792,10 +792,10 @@ export default function Subscriptions() {
                                             text="You must connect your Web3 wallet in order to subscribe."
                                         />
                                     </div>
-                                    <h1 className="text-base font-semibold leading-6 text-gray-900">
+                                    <h1 className="text-base font-semibold leading-6 text-zinc-300">
                                         Subscriptions
                                     </h1>
-                                    <p className="mt-2 text-sm text-gray-700">
+                                    <p className="mt-2 text-sm text-zinc-300">
                                         A list of all the subscriptions in your account including their name, id, price and link.
                                     </p>
                                 </div>
@@ -812,20 +812,20 @@ export default function Subscriptions() {
                             <div className="mt-8 flow-root">
                                 <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                     <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                                        <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-                                            <table className="min-w-full divide-y divide-gray-300">
-                                                <thead className="bg-gray-50">
+                                        <div className="overflow-hidden shadow border border-gray-500/30 ring-opacity-5 sm:rounded-lg">
+                                            <table className="min-w-full divide-y divide-gray-500/30">
+                                                <thead className="bg-[#18191E]">
                                                     <tr>
-                                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-zinc-300 sm:pl-6">
                                                             Subscription Name
                                                         </th>
-                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-300">
                                                             ID
                                                         </th>
-                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-300">
                                                             Price
                                                         </th>
-                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-300">
                                                             Link
                                                         </th>
                                                         <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
@@ -833,24 +833,24 @@ export default function Subscriptions() {
                                                         </th>
                                                     </tr>
                                                 </thead>
-                                                <tbody className="divide-y divide-gray-200 bg-white">
+                                                <tbody className="divide-y divide-gray-500/30 bg-[#0a0a0a]">
                                                     {loaded && subscriptions.map((subscription) => (
                                                         <tr key={subscription.id}>
-                                                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-zinc-300 sm:pl-6">
                                                                 {subscription.name}
                                                             </td>
-                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 font-mono">{subscription.id_hash}</td>
-                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-black font-medium">
-                                                                <span className='text-gray-500'>
+                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-zinc-300 font-mono">{subscription.id_hash}</td>
+                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-zinc-300 font-medium">
+                                                                <span className='text-zinc-300'>
                                                                     $
                                                                 </span>
                                                                 {subscription.price}
-                                                                <span className='text-gray-500'>
+                                                                <span className='text-zinc-300'>
                                                                     USD
                                                                 </span>
                                                             </td>
                                                             <button
-                                                                className="font-mono whitespace-nowrap px-3 py-4 text-sm text-gray-500 hover:underline hover:cursor-pointer"
+                                                                className="font-mono whitespace-nowrap px-3 py-4 text-sm text-zinc-300 hover:underline hover:cursor-pointer"
                                                                 onClick={() => {
                                                                     navigator.clipboard.writeText(`http://localhost:3000/s/${subscription.id_hash}`);
                                                                     toast.success('Copied link to clipboard!');
