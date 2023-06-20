@@ -40,9 +40,9 @@ import { useContractWrite, useContractRead, useAccount } from 'wagmi'
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: WindowIcon, current: false },
-    { name: 'Products', href: '/products', icon: Square3Stack3DIcon, current: false },
-    { name: 'Subscriptions', href: '/subscriptions', icon: CurrencyDollarIcon, current: true },
+    { name: 'Dashboard', href: '/dashboard', icon: WindowIcon, current: false, shortcut: 'D' },
+    { name: 'Products', href: '/products', icon: Square3Stack3DIcon, current: false, shortcut: 'P' },
+    { name: 'Subscriptions', href: '/subscriptions', icon: CurrencyDollarIcon, current: true, shortcut: 'S' },
 ]
 
 let subscriptions = [];
@@ -79,6 +79,28 @@ export default function Subscriptions() {
     const handlePriceChange = (e) => {
         setPrice(e.target.value);
     }
+
+    useEffect(() => {
+        function handleKeyPress(event) {
+            let key = (event.key).toLowerCase();
+
+            if (event.metaKey && key === 'p') {
+                event.preventDefault();
+                router.push('/products')
+            }
+
+            if (event.metaKey && key === 'd') {
+                event.preventDefault();
+                router.push('/dashboard')
+            }
+        }
+
+        window.addEventListener('keydown', handleKeyPress);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+        };
+    }, []);
 
     const { data: dataCreatePlan, isLoading: isLoadingCreatePlan, isSuccess: isSuccessCreatePlan, writeAsync: createPlan } = useContractWrite({
         address: "0x14710BDb76743e217C3F936aE3ecb4673F45369c",
@@ -614,6 +636,17 @@ export default function Subscriptions() {
                                                                         aria-hidden="true"
                                                                     />
                                                                     {item.name}
+                                                                    <div className='ml-auto hidden group-hover:block opacity-80 items-center'>
+                                                                        <kbd className="font-sans inline-flex h-5 w-5 select-none items-center justify-center rounded text-sm text-white/90 border border-gray-500/30 transition duration-200 ease-in-out">
+                                                                            ⌘
+                                                                        </kbd>
+                                                                        <span>
+                                                                            &nbsp;
+                                                                        </span>
+                                                                        <kbd className="font-sans inline-flex h-5 w-5 select-none items-center justify-center rounded text-sm text-white/90 border border-gray-500/30 transition duration-200 ease-in-out">
+                                                                            {item.shortcut}
+                                                                        </kbd>
+                                                                    </div>
                                                                 </a>
                                                             </li>
                                                         ))}
@@ -675,6 +708,17 @@ export default function Subscriptions() {
                                                         aria-hidden="true"
                                                     />
                                                     {item.name}
+                                                    <div className='ml-auto hidden group-hover:block opacity-80 items-center'>
+                                                        <kbd className="font-sans inline-flex h-5 w-5 select-none items-center justify-center rounded text-sm text-white/90 border border-gray-500/30 transition duration-200 ease-in-out">
+                                                            ⌘
+                                                        </kbd>
+                                                        <span>
+                                                            &nbsp;
+                                                        </span>
+                                                        <kbd className="font-sans inline-flex h-5 w-5 select-none items-center justify-center rounded text-sm text-white/90 border border-gray-500/30 transition duration-200 ease-in-out">
+                                                            {item.shortcut}
+                                                        </kbd>
+                                                    </div>
                                                 </a>
                                             </li>
                                         ))}

@@ -28,12 +28,10 @@ import cryptos from '@/components/cryptos.js';
 import SecondaryButton from '@/components/SecondaryButton';
 import Chart from '@/components/Chart';
 
-import { redirect } from 'next/navigation';
-
 const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: WindowIcon, current: true },
-    { name: 'Products', href: '/products', icon: Square3Stack3DIcon, current: false },
-    { name: 'Subscriptions', href: '/subscriptions', icon: CurrencyDollarIcon, current: false },
+    { name: 'Dashboard', href: '/dashboard', icon: WindowIcon, current: true, shortcut: 'D' },
+    { name: 'Products', href: '/products', icon: Square3Stack3DIcon, current: false, shortcut: 'P' },
+    { name: 'Subscriptions', href: '/subscriptions', icon: CurrencyDollarIcon, current: false, shortcut: 'S' },
 ]
 
 let transactions = [];
@@ -90,6 +88,29 @@ export default function Dashboard() {
     const prevPage = () => {
         setPage(prevPage => Math.max(prevPage - 1, 0));
     };
+
+    useEffect(() => {
+        function handleKeyPress(event) {
+            let key = (event.key).toLowerCase();                        
+
+            if (event.metaKey && key === 'p') {
+                event.preventDefault();
+                router.push('/products')
+            }
+
+            if (event.metaKey && key === 's') {
+                event.preventDefault();
+                router.push('/subscriptions')
+            }
+        }
+
+        window.addEventListener('keydown', handleKeyPress);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+        };
+    }, []);
+
 
     async function getDataForPastDay() {
         const user = await supabase.auth.getUser();
@@ -536,6 +557,17 @@ export default function Dashboard() {
                                                         aria-hidden="true"
                                                     />
                                                     {item.name}
+                                                    <div className='ml-auto hidden group-hover:block opacity-80 items-center'>
+                                                        <kbd className="font-sans inline-flex h-5 w-5 select-none items-center justify-center rounded text-sm text-white/90 border border-gray-500/30 transition duration-200 ease-in-out">
+                                                            ⌘
+                                                        </kbd>
+                                                        <span>
+                                                            &nbsp;
+                                                        </span>
+                                                        <kbd className="font-sans inline-flex h-5 w-5 select-none items-center justify-center rounded text-sm text-white/90 border border-gray-500/30 transition duration-200 ease-in-out">
+                                                            {item.shortcut}
+                                                        </kbd>
+                                                    </div>
                                                 </a>
                                             </li>
                                         ))}

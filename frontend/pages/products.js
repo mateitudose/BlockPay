@@ -31,9 +31,9 @@ import toast, { Toaster } from 'react-hot-toast';
 
 
 const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: WindowIcon, current: false },
-    { name: 'Products', href: '/products', icon: Square3Stack3DIcon, current: true },
-    { name: 'Subscriptions', href: '/subscriptions', icon: CurrencyDollarIcon, current: false },
+    { name: 'Dashboard', href: '/dashboard', icon: WindowIcon, current: false, shortcut: 'D' },
+    { name: 'Products', href: '/products', icon: Square3Stack3DIcon, current: true, shortcut: 'P' },
+    { name: 'Subscriptions', href: '/subscriptions', icon: CurrencyDollarIcon, current: false, shortcut: 'S' },
 ]
 
 
@@ -87,6 +87,28 @@ export default function Products() {
     const handlePriceChange = (e) => {
         setPrice(e.target.value);
     }
+
+    useEffect(() => {
+        function handleKeyPress(event) {
+            let key = (event.key).toLowerCase();
+
+            if (event.metaKey && key === 'd') {
+                event.preventDefault();
+                router.push('/dashboard')
+            }
+
+            if (event.metaKey && key === 's') {
+                event.preventDefault();
+                router.push('/subscriptions')
+            }
+        }
+
+        window.addEventListener('keydown', handleKeyPress);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+        };
+    }, []);
 
     useEffect(() => {
         const getUser = async () => {
@@ -635,6 +657,17 @@ export default function Products() {
                                                         aria-hidden="true"
                                                     />
                                                     {item.name}
+                                                    <div className='ml-auto hidden group-hover:block opacity-80 items-center'>
+                                                        <kbd className="font-sans inline-flex h-5 w-5 select-none items-center justify-center rounded text-sm text-white/90 border border-gray-500/30 transition duration-200 ease-in-out">
+                                                            ⌘
+                                                        </kbd>
+                                                        <span>
+                                                            &nbsp;
+                                                        </span>
+                                                        <kbd className="font-sans inline-flex h-5 w-5 select-none items-center justify-center rounded text-sm text-white/90 border border-gray-500/30 transition duration-200 ease-in-out">
+                                                            {item.shortcut}
+                                                        </kbd>
+                                                    </div>
                                                 </a>
                                             </li>
                                         ))}

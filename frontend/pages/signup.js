@@ -39,7 +39,7 @@ export default function SignUp() {
     }, []);
 
     const handleEmailChange = (e) => {
-        setEmail(e.target.value);
+        setEmail((e.target.value).toLowerCase());
     };
 
     const handlePasswordChange = (e) => {
