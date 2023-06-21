@@ -1,23 +1,20 @@
-import Script from 'next/script'
+import Head from 'next/head';
 
-const GoogleTagManager = () => {
-    return (
-        <div>
-            <Script
-                strategy="afterInteractive"
-                src="https://www.googletagmanager.com/gtag/js?id=G-6L10JWMQRR"
-            />
-            <Script strategy="afterInteractive">
-                {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
+const HotJar = () => (
+    <Head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-6L10JWMQRR" />
+        <script
+            dangerouslySetInnerHTML={{
+                __html:
+                    `
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+                        gtag('config', 'G-6L10JWMQRR');
+                    `
+            }}
+        />
+    </Head>
+);
 
-          gtag('config', 'G-6L10JWMQRR');
-        `}
-            </Script>
-        </div>
-    );
-}
-
-export default GoogleTagManager;
+export default HotJar;
