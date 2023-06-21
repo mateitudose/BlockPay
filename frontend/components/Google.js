@@ -10,7 +10,9 @@ const HotJar = () => (
                         window.dataLayer = window.dataLayer || [];
                         function gtag(){dataLayer.push(arguments);}
                         gtag('js', new Date());
-                        gtag('config', 'G-6L10JWMQRR');
+                        gtag('config', 'G-6L10JWMQRR', { 
+                            page_path: window.location.pathname, 
+                        });
                     `
             }}
         />
