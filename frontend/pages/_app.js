@@ -26,8 +26,9 @@ import {
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { mainnet, bsc, polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
-import TawkTo from '@/components/Tawk';
+import Hubspot from '@/components/Hubspot';
 import HotJar from '@/components/HotJar';
+import Google from '@/components/Google';
 
 const { chains, provider } = configureChains(
   [mainnet, bsc, polygonMumbai],
@@ -81,8 +82,9 @@ export default function App({ Component, pageProps }) {
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains} >
         <SessionContextProvider supabaseClient={supabase} initialSession={pageProps.initialSession}>
-          <TawkTo />
+          <Hubspot />
           <HotJar />
+          <Google />
           <Component {...pageProps} />
         </SessionContextProvider>
       </RainbowKitProvider>

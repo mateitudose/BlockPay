@@ -5,24 +5,25 @@ import { useRouter } from 'next/router'
 
 export default function Home() {
   const router = useRouter()
-  
+
   useEffect(() => {
     function handleKeyPress(event) {
-      event.preventDefault();
-      let key = (event.key).toLowerCase();
+      if (event && (event.key || event.metaKey)) {
+        event.preventDefault();
+        let key = (event.key).toLowerCase();
 
-      if (key === 's') {
-        router.push('/signup')
+        if (key === 's') {
+          router.push('/signup')
+        }
+
+        if (key === 'l') {
+          router.push('/login')
+        }
+
+        if (key === 'd') {
+          router.push('/dashboard')
+        }
       }
-
-      if (key === 'l') {
-        router.push('/login')
-      }
-
-      if (key === 'd') {
-        router.push('/dashboard')
-      }
-
     }
 
     // Add the event listener when the component mounts

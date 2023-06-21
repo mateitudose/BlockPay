@@ -82,16 +82,18 @@ export default function Subscriptions() {
 
     useEffect(() => {
         function handleKeyPress(event) {
-            let key = (event.key).toLowerCase();
+            if (event && (event.key || event.metaKey)) {
+                let key = (event.key).toLowerCase();
 
-            if (event.metaKey && key === 'p') {
-                event.preventDefault();
-                router.push('/products')
-            }
+                if (event.metaKey && key === 'p') {
+                    event.preventDefault();
+                    router.push('/products')
+                }
 
-            if (event.metaKey && key === 'd') {
-                event.preventDefault();
-                router.push('/dashboard')
+                if (event.metaKey && key === 'd') {
+                    event.preventDefault();
+                    router.push('/dashboard')
+                }
             }
         }
 

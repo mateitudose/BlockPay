@@ -90,16 +90,18 @@ export default function Products() {
 
     useEffect(() => {
         function handleKeyPress(event) {
-            let key = (event.key).toLowerCase();
+            if (event && (event.key || event.metaKey)) {
+                let key = (event.key).toLowerCase();
 
-            if (event.metaKey && key === 'd') {
-                event.preventDefault();
-                router.push('/dashboard')
-            }
+                if (event.metaKey && key === 'd') {
+                    event.preventDefault();
+                    router.push('/dashboard')
+                }
 
-            if (event.metaKey && key === 's') {
-                event.preventDefault();
-                router.push('/subscriptions')
+                if (event.metaKey && key === 's') {
+                    event.preventDefault();
+                    router.push('/subscriptions')
+                }
             }
         }
 
@@ -372,7 +374,7 @@ export default function Products() {
                                                     <div className="flex">
                                                         <button
                                                             type="button"
-                                                            className="flex-1 rounded-md bg-[#18191E] px-3 py-2 text-sm font-semibold text-zinc-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                                                            className="flex-1 rounded-md bg-[#18191E] px-3 py-2 text-sm font-semibold text-zinc-300 shadow-sm hover:ring-1 hover:ring-gray-500/30"
                                                             onClick={async () => {
                                                                 await addProduct(productName, price);
                                                                 setOpen(false);
@@ -476,7 +478,7 @@ export default function Products() {
                                                                     type="number"
                                                                     name="price"
                                                                     id="price"
-                                                                    className="block w-full rounded-md border lg:border-0 py-1.5 pl-7 pr-12 text-zinc-300 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                    className="bg-[#18191E] block w-full rounded-md border lg:border-0 py-1.5 pl-7 pr-12 text-zinc-300 ring-1 ring-inset ring-gray-500/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                                                     placeholder={price}
                                                                     aria-describedby="price-currency"
                                                                     required
@@ -494,7 +496,7 @@ export default function Products() {
                                                     <div className="flex justify-between space-x-2">
                                                         <button
                                                             type="button"
-                                                            className="flex-1 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                                            className="flex-1 rounded-md bg-[#18191E] px-3 py-2 text-sm font-semibold text-zinc-300 shadow-sm hover:text-zinc-100 hover:ring-1 hover:ring-gray-500/30"
                                                             onClick={async () => {
                                                                 await updateProduct(currentID, productName, price);
                                                                 setOpenEdit(false);
@@ -504,7 +506,7 @@ export default function Products() {
                                                         </button>
                                                         <button
                                                             type="button"
-                                                            className="flex-1 rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                                                            className="flex-1 rounded-md bg-red-700 px-3 py-2 text-sm font-semibold text-zinc-300 shadow-sm hover:text-zinc-100 hover:ring-1 hover:ring-red-500"
                                                             onClick={async () => {
                                                                 await deleteProduct(currentID);
                                                                 setOpenEdit(false);
@@ -769,7 +771,7 @@ export default function Products() {
                                 <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
                                     <button
                                         type="button"
-                                        className="block rounded-md bg-white px-3 py-2 text-center text-sm font-semibold text-black shadow-sm hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                                        className="block rounded-md bg-white px-3 py-2 text-center text-sm font-semibold text-black shadow-sm hover:bg-white/90"
                                         onClick={async () => {
                                             setOpen(true)
                                         }}
