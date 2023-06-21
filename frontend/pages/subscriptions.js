@@ -912,7 +912,7 @@ export default function Subscriptions() {
                                                                         setOpenEdit(true);
                                                                     }}
                                                                 >
-                                                                    Edit <Edit className='ml-1 w-4 h-4' aria-hidden="true" />
+                                                                    Edit <Edit className='ml-1 w-3 h-3' aria-hidden="true" />
                                                                 </button>
                                                             </td>
                                                         </tr>

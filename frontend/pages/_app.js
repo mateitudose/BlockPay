@@ -79,13 +79,7 @@ export default function App({ Component, pageProps }) {
 
   return (
     <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider chains={chains} theme={midnightTheme({
-        accentColor: '#fff',
-        accentColorForeground: 'black',
-        borderRadius: 'medium',
-        fontStack: 'system',
-        overlayBlur: 'small',
-      })} >
+      <RainbowKitProvider chains={chains} >
         <SessionContextProvider supabaseClient={supabase} initialSession={pageProps.initialSession}>
           <TawkTo />
           <HotJar />

@@ -321,7 +321,7 @@ export default function Products() {
                                                 <div className="space-y-6 pb-16">
                                                     <div>
                                                         <div className="mt-4">
-                                                            <h2 className='my-4 font-medium'>Product Details</h2>
+                                                            <h2 className='my-4 font-medium text-white'>Product Details</h2>
                                                             <div>
                                                                 <label htmlFor="name" className="block text-sm font-medium leading-6 text-zinc-300">
                                                                     Product name
@@ -331,7 +331,7 @@ export default function Products() {
                                                                         type="text"
                                                                         name="name"
                                                                         id="Name"
-                                                                        className="pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-zinc-300 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                        className="bg-[#18191E] pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-zinc-300 shadow-sm ring-1 ring-inset ring-gray-500/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                                                         placeholder="Name"
                                                                         required
                                                                         value={productName}
@@ -354,7 +354,7 @@ export default function Products() {
                                                                     type="number"
                                                                     name="price"
                                                                     id="price"
-                                                                    className="block w-full rounded-md border lg:border-0 py-1.5 pl-7 pr-12 text-zinc-300 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                    className="bg-[#18191E] block w-full rounded-md border lg:border-0 py-1.5 pl-7 pr-12 text-zinc-300 ring-1 ring-inset ring-gray-500/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                                                     placeholder="0.00"
                                                                     aria-describedby="price-currency"
                                                                     required
@@ -372,7 +372,7 @@ export default function Products() {
                                                     <div className="flex">
                                                         <button
                                                             type="button"
-                                                            className="flex-1 rounded-md bg-white/80 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                                                            className="flex-1 rounded-md bg-[#18191E] px-3 py-2 text-sm font-semibold text-zinc-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                                                             onClick={async () => {
                                                                 await addProduct(productName, price);
                                                                 setOpen(false);
@@ -443,7 +443,7 @@ export default function Products() {
                                                 <div className="space-y-6 pb-16">
                                                     <div>
                                                         <div className="mt-4">
-                                                            <h2 className='my-4 font-medium'>Product Details</h2>
+                                                            <h2 className='my-4 font-medium text-white'>Product Details</h2>
                                                             <div>
                                                                 <label htmlFor="name" className="block text-sm font-medium leading-6 text-zinc-300">
                                                                     Product name
@@ -453,7 +453,7 @@ export default function Products() {
                                                                         type="text"
                                                                         name="name"
                                                                         id="Name"
-                                                                        className="pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-zinc-300 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                        className="bg-[#18191E] pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-zinc-300 shadow-sm ring-1 ring-inset ring-gray-500/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                                                         placeholder={productName}
                                                                         required
                                                                         value={productName}
@@ -771,7 +771,6 @@ export default function Products() {
                                         type="button"
                                         className="block rounded-md bg-white px-3 py-2 text-center text-sm font-semibold text-black shadow-sm hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                                         onClick={async () => {
-                                            await addProduct(productName, price);
                                             setOpen(true)
                                         }}
                                     >
@@ -804,20 +803,19 @@ export default function Products() {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="bg-[#0a0a0a] divide-y divide-gray-500/30">
-                                                    {loaded && products.map((product) => (
+                                                    {loaded && products.slice().reverse().map((product) => (
                                                         <tr key={product.id}>
                                                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-zinc-300 sm:pl-6">
                                                                 {product.name}
                                                             </td>
-                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-zinc-300 font-mono">{product.id_hash}</td>
+                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-zinc-300 font-mono">
+                                                                {product.id_hash}
+                                                            </td>
                                                             <td className="whitespace-nowrap px-3 py-4 text-sm text-zinc-300 font-medium">
                                                                 <span className='text-zinc-300'>
                                                                     $
                                                                 </span>
                                                                 {product.price}
-                                                                <span className='text-zinc-300'>
-                                                                    USD
-                                                                </span>
                                                             </td>
                                                             <button
                                                                 className="font-mono whitespace-nowrap px-3 py-4 text-sm text-zinc-300 hover:underline hover:cursor-pointer"
@@ -838,7 +836,7 @@ export default function Products() {
                                                                         setOpenEdit(true);
                                                                     }}
                                                                 >
-                                                                    Edit <Edit className='ml-1 w-4 h-4' aria-hidden="true" />
+                                                                    Edit <Edit className='ml-1 w-3 h-3' aria-hidden="true" />
                                                                 </button>
                                                             </td>
                                                         </tr>

@@ -558,13 +558,13 @@ export default function Dashboard() {
                                                     />
                                                     {item.name}
                                                     <div className='ml-auto hidden group-hover:block opacity-80 items-center'>
-                                                        <kbd className="font-sans inline-flex h-5 w-5 select-none items-center justify-center rounded text-sm text-white/90 border border-gray-500/30 transition duration-200 ease-in-out">
+                                                        <kbd className="font-sans inline-flex h-[18px] w-[18px] select-none items-center justify-center rounded text-[12px] text-white/90 border border-gray-500/30 transition duration-200 ease-in-out">
                                                             ⌘
                                                         </kbd>
                                                         <span>
                                                             &nbsp;
                                                         </span>
-                                                        <kbd className="font-sans inline-flex h-5 w-5 select-none items-center justify-center rounded text-sm text-white/90 border border-gray-500/30 transition duration-200 ease-in-out">
+                                                        <kbd className="font-sans inline-flex h-[18px] w-[18px] select-none items-center justify-center rounded text-[12px] text-white/90 border border-gray-500/30 transition duration-200 ease-in-out">
                                                             {item.shortcut}
                                                         </kbd>
                                                     </div>
