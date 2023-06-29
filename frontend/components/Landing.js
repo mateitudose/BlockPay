@@ -3,7 +3,7 @@ import Image from 'next/image'
 import iphone from "@/public/iphone.svg"
 import { useRouter } from 'next/router'
 
-import { ChevronRight } from 'lucide-react'
+import { ArrowUpRight, ChevronRight, MoveUpRight } from 'lucide-react'
 
 export default function Landing() {
     const router = useRouter()
@@ -50,39 +50,53 @@ export default function Landing() {
                     <div className="mt-24 sm:mt-32 lg:mt-16">
                         <a href="/changelog" className="inline-flex space-x-6">
                             <span className="hover:underline rounded-full bg-green-500/10 px-3 py-1 text-sm font-semibold leading-6 text-green-400 ring-1 ring-inset ring-green-500/20">
-                                Early Access &rarr;
+                                Early Access
                             </span>
-                            <span className="inline-flex items-center space-x-2 text-sm font-medium leading-6 text-gray-300">
+                            {/* <span className="inline-flex items-center space-x-2 text-sm font-medium leading-6 text-gray-300">
                                 <span>Just shipped v1.0</span>
                                 <ChevronRightIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />
-                            </span>
+                            </span> */}
                         </a>
                     </div>
-                    <h1 className="mt-10 pb-1 text-5xl  font-bold tracking-tight bg-gradient-to-br from-white to-white/25 bg-clip-text text-transparent">
-                        Effortless Crypto Integration for Ecom
+                    <h1 className="mt-10 pb-1 text-4xl  font-bold tracking-tight bg-gradient-to-br from-white to-white/25 bg-clip-text text-transparent">
+                        Effortless Crypto Integration for Online Payments
                     </h1>
                     <p className="mt-5 text-lg leading-8 text-gray-300/75">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tristique quam ex, eu porta lorem lacinia nec. </p>
-                    <div className='mt-6 hover:opacity-80'>
-                        <a
-                            className="px-3 py-2 rounded-xl bg-white text-black items-center space-x-2 font-semibold text-base leading-7 hover:underline hover:bg-gray-100 hover:text-black"
-                            type='button'
-                            href='/signup'
-                        >
-                            <span className="flex items-center">
-                                Get Started <ChevronRight className='ml-1 w-4 h-4 inline-block text-gray-500' />
-                            </span>
-                        </a>
+                    <div className='inline-flex'>
+                        <div className='relative group mt-6 transform hover:scale-105 transition duration-200'>
+                            <div className="relative group">
+                                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#EB3836] to-[#0062CD] rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                                <a
+                                    className="relative px-6 py-3 bg-white rounded-full leading-none flex items-center"
+                                    href="/signup"
+                                >
+                                    <span className="flex items-center justify-center font-semibold text-base">
+                                        Get Started <ArrowUpRight className='ml-1 w-5 h-5 inline-block' />
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
 
+                        <div className='ml-2 mt-6'>
+                            <a
+                                className="relative px-5 py-3 text-white hover:bg-white/5 rounded-full leading-none flex items-center"
+                                href="/contact"
+                            >
+                                <span className="flex items-center justify-center font-semibold text-base">
+                                    Contact us <ChevronRight className='ml-1 w-4 h-4 inline-block' />
+                                </span>
+                            </a>
+                        </div>
                     </div>
                 </div>
-                <div className="mt-16 sm:mt-24 lg:mt-0 lg:flex-shrink-0 lg:flex-grow">
+                {/* <div className="mt-16 sm:mt-24 lg:mt-0 lg:flex-shrink-0 lg:flex-grow">
                     <Image
                         src={iphone}
                         alt="App screenshot"
                         className="mx-auto w-[22.875rem] max-w-full drop-shadow-xl"
                     />
-                </div>
+                </div> */}
             </div>
         </div>
     )

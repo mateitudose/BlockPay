@@ -27,7 +27,7 @@ import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { mainnet, bsc, polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import Intercom from '@/components/Intercom';
-import Intercom from '@/components/Intercom';
+import HotJar from '@/components/HotJar';
 import Google from '@/components/Google';
 
 const { chains, provider } = configureChains(
@@ -83,7 +83,7 @@ export default function App({ Component, pageProps }) {
       <RainbowKitProvider chains={chains} >
         <SessionContextProvider supabaseClient={supabase} initialSession={pageProps.initialSession}>
           <Intercom />
-          <Intercom />
+          <HotJar />
           <Google />
           <Component {...pageProps} />
         </SessionContextProvider>

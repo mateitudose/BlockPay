@@ -11,9 +11,15 @@ import Tooltip from '@/components/Tooltip';
 import SecondaryButton from '@/components/SecondaryButton'
 import ColoredButton from './ColoredButton'
 
+import { ArrowUpRight } from 'lucide-react'
+
 
 const navigation = [
-    { name: 'Dashboard', href: '/dashboard' },
+    { name: 'Home', href: '/home' },
+    { name: 'Why Blockpay?', href: '/features' },
+    { name: 'Pricing', href: '/pricing' },
+    { name: 'About', href: '/about' },
+    { name: 'Contact', href: '/contact' },
 ]
 
 export default function Header() {
@@ -48,58 +54,23 @@ export default function Header() {
                         </a>
                     ))}
                 </div>
-                <div className="flex flex-1 items-center justify-end gap-x-6">
-                    {signedIn ? (
-                        <Tooltip
-                            content={
-                                <span>
-                                    Go to dashboard &nbsp;
-                                    <kbd className="inline-flex h-[22px] w-[22px] select-none items-center justify-center rounded text-sm uppercase bg-zinc-800 text-white/90 border border-slate-400/20 transition duration-200 ease-in-out group-hover:bg-slate-200 group-focus:bg-slate-200 group-focus:text-black">
-                                        D
-                                    </kbd>
+                <div className="flex flex-1 items-center justify-end gap-x-4">
+                    <a className="hover:bg-white/5 text-zinc-300 px-5 py-3 flex items-center rounded-full text-sm font-semibold " href="/dashboard" >
+                        Sign in
+                    </a>
+                    <div className='relative group transform hover:scale-105 transition duration-200'>
+                        <div className="relative group">
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-[#EB3836] to-[#0062CD] rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                            <a
+                                className="relative px-5 py-3 bg-white rounded-full leading-none flex items-center"
+                                href="/signup"
+                            >
+                                <span className="flex items-center justify-center font-semibold text-sm">
+                                    Get Started <ArrowUpRight className='ml-1 w-5 h-5 inline-block' />
                                 </span>
-                            }
-                        >
-                            <SecondaryButton href="/dashboard" content={
-                                <div className="flex items-center">
-                                    <span className="">Dashboard</span>
-                                    <ArrowRightIcon className="ml-1 w-5" aria-hidden="true" />
-                                </div>
-                            } />
-                        </Tooltip>
-                    ) : (
-                        <div className="flex flex-1 items-center justify-end gap-x-6">
-                            <Tooltip
-                                content={
-                                    <span>
-                                        Go to login &nbsp;
-                                        <kbd className="inline-flex h-[22px] w-[22px] select-none items-center justify-center rounded text-sm uppercase bg-zinc-800 text-white/90 border border-slate-400/20 transition duration-200 ease-in-out group-hover:bg-slate-200 group-focus:bg-slate-200 group-focus:text-black">
-                                            L
-                                        </kbd>
-                                    </span>
-                                }
-                            >
-                                <SecondaryButton href="/dashboard" content={
-                                    <div className="flex items-center">
-                                        <span className="ml-1">Login</span>
-                                        <ArrowRightIcon className="ml-1 w-5" aria-hidden="true" />
-                                    </div>
-                                } />
-                            </Tooltip>
-                            <Tooltip
-                                content={
-                                    <span>
-                                        Go to sign up &nbsp;
-                                        <kbd className="inline-flex h-[22px] w-[22px] select-none items-center justify-center rounded text-sm uppercase bg-zinc-800 text-white/90 border border-slate-400/20 transition duration-200 ease-in-out group-hover:bg-slate-200 group-focus:bg-slate-200 group-focus:text-black">
-                                            S
-                                        </kbd>
-                                    </span>
-                                }
-                            >
-                                <ColoredButton href="/signup" content={"Sign Up"} />
-                            </Tooltip>
+                            </a>
                         </div>
-                    )}
+                    </div>
                 </div>
                 <div className="flex lg:hidden">
                     <button

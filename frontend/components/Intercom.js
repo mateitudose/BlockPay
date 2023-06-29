@@ -7,9 +7,9 @@ const Intercom = () => (
                 __html:
                     `
                         window.intercomSettings = {
-    api_base: "https://api-iam.intercom.io",
-    app_id: "v0bx84zb"
-  };
+                            api_base: "https://api-iam.intercom.io",
+                            app_id: "v0bx84zb"
+                        };
                     `
             }}
         />

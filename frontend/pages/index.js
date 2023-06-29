@@ -2,7 +2,6 @@ import Header from "@/components/Header"
 import Landing from "@/components/Landing"
 import { useEffect } from 'react';
 import { useRouter } from 'next/router'
-import Head from "next/head";
 
 const keyMap = {
   s: '/signup',
@@ -35,6 +34,7 @@ export default function Home() {
 
   return (
     <div>
+      <title>Blockpay | Payment Processor</title>
       <Header />
       <Landing />
     </div>
