@@ -2,26 +2,24 @@ import Header from "@/components/Header"
 import Landing from "@/components/Landing"
 import { useEffect } from 'react';
 import { useRouter } from 'next/router'
+import Head from "next/head";
+
+const keyMap = {
+  s: '/signup',
+  l: '/login',
+  d: '/dashboard'
+}
 
 export default function Home() {
   const router = useRouter()
 
   useEffect(() => {
     function handleKeyPress(event) {
-      if (event && (event.key || event.metaKey)) {
-        event.preventDefault();
+      if (event && event.key) {
         let key = (event.key).toLowerCase();
-
-        if (key === 's') {
-          router.push('/signup')
-        }
-
-        if (key === 'l') {
-          router.push('/login')
-        }
-
-        if (key === 'd') {
-          router.push('/dashboard')
+        if (keyMap[key]) {
+          event.preventDefault();
+          router.push(keyMap[key])
         }
       }
     }
@@ -36,9 +34,9 @@ export default function Home() {
   }, []); // Empty dependency array ensures that the effect runs only once
 
   return (
-    <>
+    <div>
       <Header />
       <Landing />
-    </>
+    </div>
   )
 }

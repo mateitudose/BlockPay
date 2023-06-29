@@ -5,7 +5,7 @@ import { useState } from 'react'
 
 import '@rainbow-me/rainbowkit/styles.css';
 import {
-  RainbowKitProvider, darkTheme, midnightTheme,
+  RainbowKitProvider
 } from '@rainbow-me/rainbowkit';
 import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import {
@@ -26,8 +26,8 @@ import {
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { mainnet, bsc, polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
-import Hubspot from '@/components/Hubspot';
-import HotJar from '@/components/HotJar';
+import Intercom from '@/components/Intercom';
+import Intercom from '@/components/Intercom';
 import Google from '@/components/Google';
 
 const { chains, provider } = configureChains(
@@ -82,8 +82,8 @@ export default function App({ Component, pageProps }) {
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains} >
         <SessionContextProvider supabaseClient={supabase} initialSession={pageProps.initialSession}>
-          <Hubspot />
-          <HotJar />
+          <Intercom />
+          <Intercom />
           <Google />
           <Component {...pageProps} />
         </SessionContextProvider>

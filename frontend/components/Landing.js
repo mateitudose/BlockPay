@@ -3,6 +3,8 @@ import Image from 'next/image'
 import iphone from "@/public/iphone.svg"
 import { useRouter } from 'next/router'
 
+import { ChevronRight } from 'lucide-react'
+
 export default function Landing() {
     const router = useRouter()
     return (
@@ -48,7 +50,7 @@ export default function Landing() {
                     <div className="mt-24 sm:mt-32 lg:mt-16">
                         <a href="/changelog" className="inline-flex space-x-6">
                             <span className="hover:underline rounded-full bg-green-500/10 px-3 py-1 text-sm font-semibold leading-6 text-green-400 ring-1 ring-inset ring-green-500/20">
-                                Easy to use &rarr;
+                                Early Access &rarr;
                             </span>
                             <span className="inline-flex items-center space-x-2 text-sm font-medium leading-6 text-gray-300">
                                 <span>Just shipped v1.0</span>
@@ -56,25 +58,22 @@ export default function Landing() {
                             </span>
                         </a>
                     </div>
-                    <h1 className="mt-10 text-4xl font-bold tracking-tight bg-gradient-to-br from-white to-white/25 bg-clip-text text-transparent">
-                        Unlock the Speed of Crypto
+                    <h1 className="mt-10 pb-1 text-5xl  font-bold tracking-tight bg-gradient-to-br from-white to-white/25 bg-clip-text text-transparent">
+                        Effortless Crypto Integration for Ecom
                     </h1>
-                    <p className="mt-6 text-lg leading-8 text-gray-300/75">
-                        Seamlessly Integrate with Your Store
-                    </p>
-                    <div className='mt-6 opacity-80 hover:opacity-100'>
-                        <button
-                            className="group animate-hero-text-slide-up-fade select-none items-center gap-2 text-sm font-semibold text-slate-100 outline-none hidden transition duration-200 ease-in-out hover:text-slate-200 focus:text-slate-200 sm:inline-flex"
+                    <p className="mt-5 text-lg leading-8 text-gray-300/75">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tristique quam ex, eu porta lorem lacinia nec. </p>
+                    <div className='mt-6 hover:opacity-80'>
+                        <a
+                            className="px-3 py-2 rounded-xl bg-white text-black items-center space-x-2 font-semibold text-base leading-7 hover:underline hover:bg-gray-100 hover:text-black"
                             type='button'
-                            onClick={() => router.push('/signup')}
+                            href='/signup'
                         >
+                            <span className="flex items-center">
+                                Get Started <ChevronRight className='ml-1 w-4 h-4 inline-block text-gray-500' />
+                            </span>
+                        </a>
 
-                            Press
-                            <kbd className="inline-flex h-[22px] w-[22px] select-none items-center justify-center rounded text-sm uppercase bg-slate-100 text-black transition duration-200 ease-in-out group-hover:bg-slate-200 group-focus:bg-slate-200 group-focus:text-black">
-                                S
-                            </kbd>
-                            to sign up
-                        </button>
                     </div>
                 </div>
                 <div className="mt-16 sm:mt-24 lg:mt-0 lg:flex-shrink-0 lg:flex-grow">

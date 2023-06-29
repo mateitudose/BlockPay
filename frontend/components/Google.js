@@ -1,6 +1,6 @@
 import Head from 'next/head';
 
-const HotJar = () => (
+const Google = () => (
     <Head>
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-6L10JWMQRR" />
         <script
@@ -19,4 +19,4 @@ const HotJar = () => (
     </Head>
 );
 
-export default HotJar;
+export default Google;
