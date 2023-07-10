@@ -271,7 +271,6 @@ export default function Products() {
                 <Toaster position="top-right"
                     reverseOrder={false} />
                 <title>Products | Blockpay</title>
-                {/* Add product */}
                 <Transition.Root show={open} as={Fragment}>
                     <Dialog as="div" className="relative z-50" onClose={setOpen}>
                         <Transition.Child
