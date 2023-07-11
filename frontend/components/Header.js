@@ -55,14 +55,14 @@ export default function Header() {
                     ))}
                 </div>
                 <div className="flex flex-1 items-center justify-end gap-x-4">
-                    <a className="hover:bg-white/5 text-zinc-300 px-5 py-3 flex items-center rounded-full text-sm font-semibold " href="/dashboard" >
+                    <a className="hidden lg:block hover:bg-white/5 text-zinc-300 px-5 py-3 items-center rounded-full text-sm font-semibold " href="/dashboard" >
                         Sign in
                     </a>
                     <div className='relative group transform hover:scale-105 transition duration-200'>
                         <div className="relative group">
                             <div className="absolute -inset-0.5 bg-gradient-to-r from-[#EB3836] to-[#0062CD] rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
                             <a
-                                className="relative px-5 py-3 bg-white rounded-full leading-none flex items-center"
+                                className="relative px-3 py-2 lg:px-5 lg:py-3  bg-white rounded-full leading-none flex items-center"
                                 href="/signup"
                             >
                                 <span className="flex items-center justify-center font-semibold text-sm">

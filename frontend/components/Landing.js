@@ -85,18 +85,50 @@ export default function Landing() {
                 </div>
                 <div className="items-center justify-center mx-auto max-w-7xl px-6 pb-24 pt-10 sm:pb-32 lg:flex lg:px-8 lg:py-40">
                     <div className="mx-auto max-w-6xl flex-shrink-0 lg:mx-0 lg:max-w-6xl lg:pt-8">
-                        <h1 className="text-center mt-4 pb-1 text-7xl  font-bold tracking-tight bg-gradient-to-br from-white to-white/50     bg-clip-text text-transparent">
+                        <h1 className="hidden lg:block text-center mt-4 pb-1 text-7xl font-bold tracking-tight bg-gradient-to-br from-white to-white/50     bg-clip-text text-transparent">
                             The only payment processor you need to
                             <span className="">
                                 &nbsp;thrive&nbsp;
                             </span>
                             in the digital age
                         </h1>
-                        <p className="text-center mt-5 text-lg leading-8 text-gray-300/75">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tristique quam ex, eu porta lorem lacinia nec. </p>
+                        <h1 className="block lg:hidden text-center mt-24 pb-1 text-4xl font-bold tracking-tight bg-gradient-to-br from-white to-white/50     bg-clip-text text-transparent">
+                            The only payment processor you need to thrive in the digital age
+                        </h1>
+                        <p className="hidden lg:block text-center mt-5 text-lg leading-8 text-gray-300/75">
+                            Empower your business with our seamless and secure crypto-payment solutions, designed to adapt, scale, and thrive in today's evolving digital economy.
+                        </p>
+                        <p className="block lg:hidden text-center mt-5 text-sm leading-6 text-gray-300/75">
+                            Empower your business with our seamless and secure crypto-payment solutions, designed to adapt, scale, and thrive in today's evolving digital economy.
+                        </p>
                         <div className='mt-12 flex flex-row justify-center items-center'>
 
+                            <div className='inline-flex'>
+                                <div className='relative group transform hover:scale-105 transition duration-200'>
+                                    <div className="relative group">
+                                        <div className="absolute -inset-0.5 bg-gradient-to-r from-[#EB3836] to-[#0062CD] rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                                        <a
+                                            className="relative px-6 py-3 bg-white rounded-full leading-none flex items-center"
+                                            href="/signup"
+                                        >
+                                            <span className="flex items-center justify-center font-semibold text-base">
+                                                Get Started <ArrowUpRight className='ml-1 w-5 h-5 inline-block' />
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
 
+                                <div className='ml-2'>
+                                    <a
+                                        className="relative px-5 py-3 text-white hover:bg-white/5 rounded-full leading-none flex items-center"
+                                        href="/contact"
+                                    >
+                                        <span className="flex items-center justify-center font-semibold text-base">
+                                            Contact us <ChevronRight className='ml-1 w-4 h-4 inline-block' />
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     {/* <h1 class="mx-auto max-w-4xl font-display text-5xl font-medium tracking-tight text-slate-900 sm:text-7xl">

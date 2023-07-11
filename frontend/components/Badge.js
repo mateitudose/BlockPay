@@ -1,44 +1,44 @@
 const Badge = ({ color, text, icon }) => {
     const colorClasses = {
         gray: {
-            bg: 'bg-gray-50',
-            text: 'text-gray-600',
-            ring: 'ring-gray-500/10',
+            bg: 'bg-gray-400/10',
+            text: 'text-gray-400',
+            ring: 'ring-gray-400/20',
         },
         red: {
-            bg: 'bg-red-50',
-            text: 'text-red-700',
-            ring: 'ring-red-600/10',
+            bg: 'bg-red-400/10',
+            text: 'text-red-400',
+            ring: 'ring-red-400/20',
         },
         yellow: {
-            bg: 'bg-yellow-500/20',
+            bg: 'bg-yellow-400/10',
             text: 'text-yellow-500',
-            ring: 'ring-yellow-300/20',
+            ring: 'ring-yellow-400/20',
         },
         green: {
-            bg: 'bg-green-50',
-            text: 'text-green-700',
-            ring: 'ring-green-600/20',
+            bg: 'bg-green-500/10',
+            text: 'text-green-400',
+            ring: 'ring-green-500/20',
         },
         blue: {
-            bg: 'bg-blue-50',
-            text: 'text-blue-700',
-            ring: 'ring-blue-700/10',
+            bg: 'bg-blue-400/10',
+            text: 'text-blue-400',
+            ring: 'ring-blue-400/30',
         },
         indigo: {
-            bg: 'bg-indigo-50',
-            text: 'text-indigo-700',
-            ring: 'ring-indigo-700/10',
+            bg: 'bg-indigo-400/10',
+            text: 'text-indigo-400',
+            ring: 'ring-indigo-400/30',
         },
         purple: {
-            bg: 'bg-purple-50',
-            text: 'text-purple-700',
-            ring: 'ring-purple-700/10',
+            bg: 'bg-purple-400/10',
+            text: 'text-purple-400',
+            ring: 'ring-purple-400/30',
         },
         pink: {
-            bg: 'bg-pink-50',
-            text: 'text-pink-700',
-            ring: 'ring-pink-700/10',
+            bg: 'bg-pink-400/10',
+            text: 'text-pink-400',
+            ring: 'ring-pink-400/20',
         },
     };
 
