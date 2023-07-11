@@ -11,6 +11,7 @@ import Polygon from "@/public/Crypto/Polygon.svg"
 import Solana from "@/public/Crypto/Solana.svg"
 import Litecoin from "@/public/Crypto/Litecoin.svg"
 import Avax from "@/public/Crypto/Avax.svg"
+import WBTC from "@/public/Crypto/WBTC.svg"
 
 const cryptos = [
     {
@@ -138,6 +139,15 @@ const cryptos = [
         chain: "Binance Smart Chain Mainnet (BEP-20)",
         background_color: "bg-[#2775ca]",
         sym: "USDC",
+    },
+    {
+        id: 'WBTC',
+        name: 'Wrapped Bitcoin',
+        icon: WBTC,
+        symbol: "WBTC",
+        chain: "Ethereum Mainnet (ERC-20)",
+        background_color: "bg-transparent",
+        sym: "WBTC",
     },
 ]
 

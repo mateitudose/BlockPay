@@ -21,7 +21,7 @@ import BNB from "@/public/Crypto/BNB.svg"
 import BUSD from "@/public/Crypto/BUSD.svg"
 import Dai from "@/public/Crypto/Dai.svg"
 import Polygon from "@/public/Crypto/Polygon.svg"
-import logo from "@/public/logo.svg"
+import logo from "@/public/logo_dark.svg"
 
 import Image from "next/image"
 import toast, { Toaster } from 'react-hot-toast';
@@ -214,14 +214,6 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                             Order summary
                         </h2>
                         <dl className='space-y-6 text-sm font-medium'>
-                            <div className="flex items-center pb-6">
-                                <BuildingStorefrontIcon
-                                    className="drop-shadow inline-block h-8 w-8 py-1.5 rounded-full bg-gray-50"
-                                    alt="Store logo"
-                                />
-                                <span className="text-base ml-2">{storeName}</span>
-                            </div>
-
                         </dl>
 
                         <dl className="pt-6 text-sm font-medium">

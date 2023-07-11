@@ -324,7 +324,7 @@ const Invoice = ({ invoice }) => {
                                         </div>
                                         <div className="flex flex-col items-center justify-center border-t border-gray border-opacity-20 pt-6 text-black text-md text-center">
                                             <div className="mb-4">
-                                                <Badge color="red" text={`Sending the funds through a different chain other than the Binance Smart Chain (BEP20) will result in your funds being permanently lost.`} />
+                                                <Badge color="red" text={`Sending the funds through a different chain other than the ${crypto.chain} will result in your funds being permanently lost.`} />
                                             </div>
 
                                             <div className="flex items-center align-center justify-center">

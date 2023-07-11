@@ -39,7 +39,7 @@ const Badge = ({ color, text, icon }) => {
             bg: 'bg-pink-400/10',
             text: 'text-pink-400',
             ring: 'ring-pink-400/20',
-        },
+        },                                      
     };
 
     const classes = colorClasses[color];

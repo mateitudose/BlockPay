@@ -18,9 +18,9 @@ import BNB from "@/public/Crypto/BNB.svg"
 import BUSD from "@/public/Crypto/BUSD.svg"
 import Arbitrum from "@/public/Crypto/Arbitrum.svg"
 import Polygon from "@/public/Crypto/Polygon.svg"
-import Solana from "@/public/Crypto/Solana.svg"
+import WBTC from "@/public/Crypto/WBTC.svg"
 import Avax from "@/public/Crypto/Avax.svg"
-import logo from "@/public/logo.svg"
+import logo from "@/public/logo_dark.svg"
 
 import Image from "next/image"
 import toast, { Toaster } from 'react-hot-toast';
@@ -100,7 +100,7 @@ const Checkout = ({ checkout }) => {
             'AVAX': 'avalanche-2',
             'ARB': 'arbitrum',
             'MATIC': 'matic-network',
-            'SOL': 'solana'
+            'WBTC': 'wrapped-bitcoin'
         };
 
         // get the main part of cryptoId (before any parentheses)
@@ -162,13 +162,6 @@ const Checkout = ({ checkout }) => {
                             Order summary
                         </h2>
                         <dl className='space-y-6 text-sm font-medium'>
-                            <div className="flex items-center pb-6">
-                                <BuildingStorefrontIcon
-                                    className="drop-shadow inline-block h-8 w-8 py-1.5 rounded-full bg-gray-50"
-                                    alt="Store logo"
-                                />
-                                <span className="text-base ml-2">{storeName}</span>
-                            </div>
                             <span className="text-base block">Order details</span>
 
                             <div className="pb-6 flex items-center justify-between">
@@ -404,19 +397,17 @@ const Checkout = ({ checkout }) => {
                                                 <span className='hidden lg:block'>Polygon</span>
                                             </button>
                                             <button
-                                                className="drop-shadow shadow-[#14F195] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#14F195] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
-                                                onClick={() => setSelectedCrypto("SOL")}
+                                                className="drop-shadow shadow-[#f7931a] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#f7931a] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
+                                                onClick={() => setSelectedCrypto("WBTC")}
                                             >
                                                 <Image
-                                                    src={Solana}
-                                                    alt="Solana"
+                                                    src={WBTC}
+                                                    alt="WBTC"
                                                     width={18}
                                                     height={18}
                                                     className="mr-2 lg:w-6 lg:h-6"
                                                 />
-
-                                                <span className='block lg:hidden'>SOL</span>
-                                                <span className='hidden lg:block'>Solana</span>
+                                                WBTC
                                             </button>
                                         </div>
                                     ) : (
