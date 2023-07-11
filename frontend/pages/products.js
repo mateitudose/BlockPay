@@ -257,7 +257,7 @@ export default function Products() {
     function changeStatus(status) {
         if (status === "Awaiting payment")
             return "yellow";
-        else if (status === "Voided")
+        else if (status === "Cancelled")
             return "red";
         else if (status === "Confirmed")
             return "green";

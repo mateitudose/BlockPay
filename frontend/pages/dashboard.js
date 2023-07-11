@@ -16,7 +16,7 @@ import {
     ChevronDownIcon,
 } from '@heroicons/react/20/solid'
 
-import { LogOut, MoreHorizontal, Settings2, UserCircle } from 'lucide-react';
+import { ArrowUpRight, LogOut, MoreHorizontal, Settings2, UserCircle } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { supabase } from '@/lib/supabaseClient'
 import logo from "@/public/logo.svg"
@@ -27,6 +27,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import cryptos from '@/components/cryptos.js';
 import SecondaryButton from '@/components/SecondaryButton';
 import Chart from '@/components/Chart';
+import Link from 'next/link';
 
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: WindowIcon, current: true, shortcut: 'D' },
@@ -365,7 +366,7 @@ export default function Dashboard() {
     function changeStatus(status) {
         if (status === "Awaiting payment")
             return "yellow";
-        else if (status === "Voided")
+        else if (status === "Cancelled")
             return "red";
         else if (status === "Confirmed")
             return "green";
@@ -669,13 +670,12 @@ export default function Dashboard() {
                                         name="search"
                                     /> */}
                                 </form>
-                                <div className="mr-6 flex items-center">
-                                    <SecondaryButton
-                                        onClick={() => setModalOpen(true)}
-                                        content="Feedback"
-                                    />
-
-                                </div>
+                                <Link
+                                    className="mr-6 text-zinc-300 flex items-center hover:bg-white/5 p-5 rounded-full"
+                                    href="/docs"
+                                >
+                                    Docs <ArrowUpRight className='ml-1 w-4 h-4 inline-block' />
+                                </Link>
                             </div>
                         </div>
                     </div>
