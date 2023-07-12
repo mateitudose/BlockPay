@@ -11,10 +11,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@supabase/supabase-js": "^2.15.0",
+    "@supabase/supabase-js": "^2.26.0",
     "bn.js": "^5.2.1",
     "ethers": "^6.3.0",
     "nodemon": "^2.0.22",
-    "web3": "^0.20.7"
+    "web3": "^4.0.3"
   }
 }

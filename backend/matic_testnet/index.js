@@ -1,4 +1,4 @@
-const Web3 = require('web3');
+const { Web3 } = require('web3');
 const { createClient } = require('@supabase/supabase-js');
 const { Wallet } = require('ethers');
 
