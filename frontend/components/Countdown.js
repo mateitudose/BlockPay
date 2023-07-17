@@ -1,27 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import Badge from '@/components/Badge';
+import Badge from '@/components/LightBadge';
 
-const Countdown = ({ unixTimestamp }) => {
-    const [timeLeft, setTimeLeft] = useState(30 * 60); // 30 minutes in seconds
-
-    useEffect(() => {
-        const targetTime = new Date(unixTimestamp).getTime() + 30 * 60 * 1000;
-        const updateTimeLeft = () => {
-            const currentTime = new Date().getTime();
-            const diff = targetTime - currentTime;
-            setTimeLeft(Math.floor(diff / 1000));
-        };
-
-        updateTimeLeft(); 
-        const interval = setInterval(updateTimeLeft, 1000); 
-
-        return () => {
-            clearInterval(interval);
-        };
-    }, [unixTimestamp]);
-
+const Countdown = ({ timeLeft }) => {
     const formatTime = (seconds) => {
-        if(seconds < 0) return '00:00';
+        if (seconds < 0) {
+            return '00:00'
+        };
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
         return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;

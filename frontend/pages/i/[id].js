@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { useRouter } from 'next/router'
-import Badge from '@/components/Badge';
+import Badge from '@/components/LightBadge';
 import Countdown from '@/components/Countdown';
 import UTC from '@/components/UTC';
 import QRCodeGenerator from '@/components/QRCodeGenerator';
-import logo from "@/public/logo.svg"
+import logo from "@/public/logo_dark.svg"
 
 import {
     CheckCircleIcon,
@@ -25,6 +25,7 @@ const Invoice = ({ invoice }) => {
     const [status, setStatus] = useState(invoice.status);
     const [shouldRender, setShouldRender] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [timeLeft, setTimeLeft] = useState(30 * 60); // 30 minutes in seconds
 
     useEffect(() => {
         const channel = supabase
@@ -50,6 +51,29 @@ const Invoice = ({ invoice }) => {
             channel.unsubscribe()
         }
     }, [invoice.id]);
+
+    useEffect(() => {
+        async function updateStatus() {
+            console.log(timeLeft, status, invoice.id, invoice.status);
+            if (timeLeft <= 0 && status === 'Awaiting payment') {
+                const { data, error } = await supabase
+                    .from('invoices')
+                    .update({
+                        status: 'Cancelled'
+                    })
+                    .eq('id', invoice.id);
+                if (error) {
+                    console.error(error);
+                }
+                else {
+                    setStatus('Cancelled');
+                    setShouldRender(true);
+                }
+            }
+        }
+        updateStatus();
+    }, [timeLeft, status]);
+
 
 
     const [isCopied, setIsCopied] = useState(false);
@@ -93,25 +117,12 @@ const Invoice = ({ invoice }) => {
     };
 
     useEffect(() => {
-        const voided = async () => {
-            let tTime = new Date(invoice.created_at).getTime() + 30 * 60 * 1000;
-            let time = new Date().getTime();
-            if (tTime < time) {
-                const { data, error } = await supabase
-                    .from('invoices')
-                    .update({ voided: true })
-                    .eq('id', invoice.id)
-                if (error) {
-                    toast.error(error.message);
-                }
-            }
-            return (tTime < time);
-        }
-
         const runPrecheck = async () => {
-            const result = await voided();
-
-            if (result) {
+            const { data: result } = await supabase
+                .from('invoices')
+                .select('*')
+                .eq('id', invoice.id)
+            if (result[0].status === 'Cancelled') {
                 setShouldRender(true);
                 setIsLoading(false);
             }
@@ -122,6 +133,21 @@ const Invoice = ({ invoice }) => {
 
         runPrecheck();
     }, []);
+
+    useEffect(() => {
+        const targetTime = new Date(invoice.created_at).getTime() + 30 * 60 * 1000;
+        const updateTimeLeft = () => {
+            const currentTime = new Date().getTime();
+            const diff = targetTime - currentTime;
+            setTimeLeft(Math.floor(diff / 1000));
+        };
+
+        updateTimeLeft();
+        const interval = setInterval(updateTimeLeft, 1000);
+        return () => {
+            clearInterval(interval);
+        };
+    }, [invoice.created_at]);
 
 
 
@@ -300,7 +326,7 @@ const Invoice = ({ invoice }) => {
                                                     <span className='text-black/50 text-xs'>{invoice.id}</span>
                                                 </div>
                                             </dt>
-                                            <dd><Countdown unixTimestamp={invoice.created_at} /></dd>
+                                            <dd><Countdown timeLeft={timeLeft} /></dd>
                                         </div>
 
                                         <div className="flex items-center justify-between">

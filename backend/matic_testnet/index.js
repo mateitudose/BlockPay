@@ -2,8 +2,8 @@ const { Web3 } = require('web3');
 const { createClient } = require('@supabase/supabase-js');
 const { Wallet } = require('ethers');
 
-const providerUrl = 'wss://alpha-dry-friday.matic-testnet.discover.quiknode.pro/fd98487de5185e948eba15342c3243f55013200e/';
-const web3 = new Web3(new Web3.providers.WebsocketProvider(providerUrl));
+const provider = new Web3.providers.WebsocketProvider('wss://winter-green-moon.matic-testnet.quiknode.pro/a9195176acadcc1ef8b6e4492cca1342aabed9bc/');
+const web3 = new Web3(provider);
 
 const supabase = createClient(
     'https://ecozdwjnqcnxnyjfaxlm.supabase.co',

@@ -71,7 +71,6 @@ const Checkout = ({ checkout }) => {
                 crypto_option: selectedCrypto,
                 price_in_usd: checkout.price_in_usd,
                 value_to_receive: (await fetchCryptoPrice(selectedCrypto, checkout.price_in_usd)).cryptoAmount,
-                confirmed: false,
                 address: '',
                 status: 'Awaiting payment',
                 exchange_rate: (await fetchCryptoPrice(selectedCrypto, checkout.price_in_usd)).cryptoPrice,
