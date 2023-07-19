@@ -66,6 +66,7 @@ const Checkout = ({ checkout }) => {
             .insert({
                 id: id,
                 merchant_id: checkout.merchant_id,
+                product_id: checkout.id,
                 customer_email: email,
                 created_at: new Date().getTime(),
                 crypto_option: selectedCrypto,

@@ -40,28 +40,6 @@ const navigation = [
 
 let products = [];
 
-
-const UTC = (timestamp) => {
-    const date = new Date(timestamp);
-
-    const timeFormatter = new Intl.DateTimeFormat('default', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-    });
-
-    const dateFormatter = new Intl.DateTimeFormat('default', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-    });
-
-    const formattedTime = timeFormatter.format(date);
-    const formattedDate = dateFormatter.format(date);
-
-    return (`${formattedTime} - ${formattedDate}`);
-};
-
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
@@ -78,6 +56,7 @@ export default function Products() {
     const [openEdit, setOpenEdit] = useState(false);
     const [productName, setProductName] = useState('');
     const [price, setPrice] = useState('');
+    const [content, setContent] = useState('');
     const [currentID, setCurrentID] = useState('');
 
     const handleProductNameChange = (e) => {
@@ -86,7 +65,11 @@ export default function Products() {
 
     const handlePriceChange = (e) => {
         setPrice(e.target.value);
-    }
+    };
+
+    const handleContentChange = (e) => {
+        setContent(e.target.value);
+    };
 
     useEffect(() => {
         function handleKeyPress(event) {
@@ -180,21 +163,34 @@ export default function Products() {
         router.push('/login');
     };
 
-    const addProduct = async (product_name, price) => {
+    const addProduct = async (product_name, price, content) => {
+        let uuid = (uuidv4().split('-')).pop();
         const user = await supabase.auth.getUser();
         const { data, error } = await supabase
             .from('checkout')
             .insert({
-                id: (uuidv4().split('-')).pop(),
+                id: uuid,
                 merchant_id: user.data.user.id,
                 product_name: product_name,
                 price_in_usd: price,
             });
+        if (!error) {
+            const { data2, error2 } = await supabase
+                .from('product_content')
+                .insert({
+                    id: uuid,
+                    content: content,
+                });
+            if (error2) {
+                toast.error(error2.message);
+            }
+            else {
+                toast.success(`Product ${product_name} added`);
+                router.reload();
+            }
+        }
         if (error) {
             toast.error(error.message);
-        } else {
-            toast.success(`Product ${product_name} added`);
-            router.reload();
         }
     };
 
@@ -370,12 +366,31 @@ export default function Products() {
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div>
+                                                        <div>
+                                                            <label htmlFor="price" className="block text-sm font-medium leading-6 text-zinc-300">
+                                                                Content
+                                                            </label>
+                                                            <div className="relative mt-2 rounded-md shadow-sm">
+                                                                <textarea
+                                                                    type="text"
+                                                                    name="price"
+                                                                    id="price"
+                                                                    className="bg-[#18191E] pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-zinc-300 shadow-sm ring-1 ring-inset ring-gray-500/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                                                                    placeholder="Add your content here"
+                                                                    required
+                                                                    value={content}
+                                                                    onChange={handleContentChange}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <div className="flex">
                                                         <button
                                                             type="button"
                                                             className="flex-1 rounded-md bg-[#18191E] px-3 py-2 text-sm font-semibold text-zinc-300 shadow-sm hover:ring-1 hover:ring-gray-500/30"
                                                             onClick={async () => {
-                                                                await addProduct(productName, price);
+                                                                await addProduct(productName, price, content);
                                                                 setOpen(false);
                                                             }}
                                                         >

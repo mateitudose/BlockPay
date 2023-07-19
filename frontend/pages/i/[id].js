@@ -52,29 +52,6 @@ const Invoice = ({ invoice }) => {
         }
     }, [invoice.id]);
 
-    useEffect(() => {
-        async function updateStatus() {
-            console.log(timeLeft, status, invoice.id, invoice.status);
-            if (timeLeft <= 0 && status === 'Awaiting payment') {
-                const { data, error } = await supabase
-                    .from('invoices')
-                    .update({
-                        status: 'Cancelled'
-                    })
-                    .eq('id', invoice.id);
-                if (error) {
-                    console.error(error);
-                }
-                else {
-                    setStatus('Cancelled');
-                    setShouldRender(true);
-                }
-            }
-        }
-        updateStatus();
-    }, [timeLeft, status]);
-
-
 
     const [isCopied, setIsCopied] = useState(false);
     const [isCopied2, setIsCopied2] = useState(false);
@@ -131,6 +108,26 @@ const Invoice = ({ invoice }) => {
             }
         };
 
+        const updateStatus = async () => {
+            console.log(timeLeft, status, invoice.id, invoice.status);
+            if (timeLeft <= 0 && status === 'Awaiting payment') {
+                const { data, error } = await supabase
+                    .from('invoices')
+                    .update({
+                        status: 'Cancelled'
+                    })
+                    .eq('id', invoice.id)
+                if (error) {
+                    console.error(error);
+                }
+                else if (data) {
+                    setStatus('Cancelled');
+                    setShouldRender(true);
+                }
+            }
+        }
+
+        updateStatus();
         runPrecheck();
     }, []);
 
