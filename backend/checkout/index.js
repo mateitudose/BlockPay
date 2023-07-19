@@ -11,7 +11,7 @@ const resend = new Resend('re_8H11yqtV_7xzii1qU7dVSYBEQBV8G3mAg');
 const sendEmail = async (email, content, product_name) => {
     try {
         const data = await resend.emails.send({
-            from: 'Blockpay@email.onblockpay.com',
+            from: 'Blockpay <orders@email.onblockpay.com>',
             to: email,
             subject: `Order confirmation - ${product_name}`,
             html:
@@ -28,8 +28,8 @@ const sendEmail = async (email, content, product_name) => {
                 <table align="center" role="presentation" cellSpacing="0" cellPadding="0" border="0" width="100%"
                     style="max-width:37.5em;width:480px;margin:0 auto;padding:20px 0 48px">
                     <tr style="width:100%">
-                        <td><img alt="Blockpay" src="https://block-pay-sooty.vercel.app/_next/static/media/logo_dark.82e3b508.svg"
-                                width="128" height="64" style="display:block;outline:none;border:none;text-decoration:none" />
+                        <td><img alt="Blockpay" src="https://i.ibb.co/V9Sn4c5/logo-dark-png.png"
+                                width="231" height="57" style="display:block;outline:none;border:none;text-decoration:none" />
                             <p style="font-size:24px;line-height:1.25;margin:16px 0">
                                 <strong>${email}</strong>, thank you for your purchase!
                             </p>
