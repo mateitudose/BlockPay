@@ -415,8 +415,10 @@ const Checkout = ({ checkout }) => {
                                             <button
                                                 className="drop-shadow shadow-[#627EEA] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#627EEA] bg-white px-4 py- shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                 onClick={() => {
-                                                    setSelectedCrypto(selectedCrypto + "(ERC-20)")
-                                                    setShowChains(true)
+                                                    if (selectedCrypto === "USDT" || selectedCrypto === "BUSD" || selectedCrypto === "USDC") {
+                                                        setSelectedCrypto(selectedCrypto + "(ERC-20)")
+                                                        setShowChains(true)
+                                                    }
                                                 }}
                                             >
                                                 <Image
@@ -431,8 +433,10 @@ const Checkout = ({ checkout }) => {
                                             <button
                                                 className="drop-shadow shadow-[#F0B90B] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#F0B90B] bg-white px-4 py- shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
                                                 onClick={() => {
-                                                    setSelectedCrypto(selectedCrypto + "(BEP-20)")
-                                                    setShowChains(true)
+                                                    if (selectedCrypto === "USDT" || selectedCrypto === "BUSD" || selectedCrypto === "USDC") { 
+                                                        setSelectedCrypto(selectedCrypto + "(BEP-20)")
+                                                        setShowChains(true)
+                                                    }
                                                 }}
                                             >
                                                 <Image

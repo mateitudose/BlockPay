@@ -31,9 +31,11 @@ import Badge from '@/components/Badge';
 import toast, { Toaster } from 'react-hot-toast';
 
 import Web3 from 'web3';
-const web3 = new Web3(new Web3.providers.HttpProvider("https://rpc.ankr.com/polygon_mumbai"));
+const web3 = new Web3(new Web3.providers.HttpProvider("https://winter-green-moon.matic-testnet.quiknode.pro/a9195176acadcc1ef8b6e4492cca1342aabed9bc/"));
 
 import ABI from '@/lib/ABI.json';
+const contract = new web3.eth.Contract(ABI, "0x14710BDb76743e217C3F936aE3ecb4673F45369c");
+
 
 import { useContractWrite, useContractRead, useAccount } from 'wagmi'
 
@@ -186,14 +188,13 @@ export default function Subscriptions() {
         router.push('/login');
     };
 
-    const totalPlans = useContractRead({
-        address: "0x14710BDb76743e217C3F936aE3ecb4673F45369c",
-        abi: ABI,
-        functionName: 'totalPlans',
-    })
-
     const addSubscription = async () => {
         if (isLoadingCreatePlan) return;
+        if (!isConnected) {
+            toast.error('Please connect your wallet');
+            return;
+        }
+        const totalPlans = await contract.methods.totalPlans().call();
         if (referral >= 0 && referral <= 100) {
             try {
                 const tx = await createPlan();
@@ -206,7 +207,7 @@ export default function Subscriptions() {
                             merchant_id: user.data.user.id,
                             product_name: subscriptionName,
                             price_in_usd: price,
-                            planID: parseInt(totalPlans.data),
+                            planID: parseInt(totalPlans),
                         });
                     if (error) {
                         toast.error(error.message);
@@ -370,7 +371,7 @@ export default function Subscriptions() {
                                                 <div className="space-y-6 pb-16">
                                                     <div>
                                                         <div className="mt-4">
-                                                            <h2 className='my-4 font-medium'>Subscription Details</h2>
+                                                            <h2 className='my-4 font-medium text-white'>Subscription Details</h2>
                                                             <div>
                                                                 <label htmlFor="name" className="block text-sm font-medium leading-6 text-zinc-300">
                                                                     Subscription name
@@ -383,7 +384,6 @@ export default function Subscriptions() {
                                                                         className="bg-[#18191E] pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-zinc-300 shadow-sm ring-1 ring-inset ring-gray-500/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                                                         placeholder="Name"
                                                                         required
-                                                                        value={subscriptionName}
                                                                         onChange={handleSubscriptionNameChange}
                                                                     />
                                                                 </div>
@@ -407,7 +407,6 @@ export default function Subscriptions() {
                                                                     placeholder="0.00"
                                                                     aria-describedby="price-currency"
                                                                     required
-                                                                    value={price}
                                                                     onChange={handlePriceChange}
                                                                 />
                                                                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
@@ -429,7 +428,6 @@ export default function Subscriptions() {
                                                                     className="bg-[#18191E] pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-zinc-300 shadow-sm ring-1 ring-inset ring-gray-500/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                                                     placeholder="0"
                                                                     required
-                                                                    value={referral}
                                                                     onChange={handleReferralChange}
                                                                 />
                                                                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
@@ -514,7 +512,7 @@ export default function Subscriptions() {
                                                 <div className="space-y-6 pb-16">
                                                     <div>
                                                         <div className="mt-4">
-                                                            <h2 className='my-4 font-medium'>Subscription Details</h2>
+                                                            <h2 className='my-4 font-medium text-white'>Subscription Details</h2>
                                                             <div>
                                                                 <label htmlFor="name" className="block text-sm font-medium leading-6 text-zinc-300">
                                                                     Subscription name
@@ -537,23 +535,23 @@ export default function Subscriptions() {
                                                     <div className="flex justify-between space-x-2">
                                                         <button
                                                             type="button"
-                                                            className="flex-1 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                                            className="flex-1 rounded-md bg-[#18191E] px-3 py-2 text-sm font-semibold text-zinc-300 shadow-sm hover:text-zinc-100 hover:ring-1 hover:ring-gray-500/30"
                                                             onClick={async () => {
                                                                 await updateSubscription(currentID, subscriptionName);
                                                                 setOpenEdit(false);
                                                             }}
                                                         >
-                                                            Update subscription
+                                                            Update
                                                         </button>
                                                         <button
                                                             type="button"
-                                                            className="flex-1 rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                                                            className="flex-1 rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-zinc-300 shadow-sm hover:text-zinc-100 hover:ring-1 hover:ring-red-500"
                                                             onClick={async () => {
                                                                 await deleteSubscription(currentID);
                                                                 setOpenEdit(false);
                                                             }}
                                                         >
-                                                            Delete subscription
+                                                            Delete
                                                         </button>
                                                     </div>
                                                 </div>
@@ -891,9 +889,6 @@ export default function Subscriptions() {
                                                                     $
                                                                 </span>
                                                                 {subscription.price}
-                                                                <span className='text-zinc-300'>
-                                                                    USD
-                                                                </span>
                                                             </td>
                                                             <button
                                                                 className="font-mono whitespace-nowrap px-3 py-4 text-sm text-zinc-300 hover:underline hover:cursor-pointer"

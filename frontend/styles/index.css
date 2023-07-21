@@ -10,3 +10,16 @@ body {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: rgb(212, 212, 216) !important;
+    background: black !important;
+}
+
+.double-gradient {
+    background: linear-gradient(to top, transparent 1%, rgba(256, 256, 256, 0.6), transparent 99%);
+}

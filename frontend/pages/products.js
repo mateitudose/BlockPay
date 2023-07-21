@@ -516,17 +516,17 @@ export default function Products() {
                                                                 setOpenEdit(false);
                                                             }}
                                                         >
-                                                            Update product
+                                                            Update
                                                         </button>
                                                         <button
                                                             type="button"
-                                                            className="flex-1 rounded-md bg-red-700 px-3 py-2 text-sm font-semibold text-zinc-300 shadow-sm hover:text-zinc-100 hover:ring-1 hover:ring-red-500"
+                                                            className="flex-1 rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-zinc-300 shadow-sm hover:text-zinc-100 hover:ring-1 hover:ring-red-500"
                                                             onClick={async () => {
                                                                 await deleteProduct(currentID);
                                                                 setOpenEdit(false);
                                                             }}
                                                         >
-                                                            Delete product
+                                                            Delete
                                                         </button>
                                                     </div>
                                                 </div>
