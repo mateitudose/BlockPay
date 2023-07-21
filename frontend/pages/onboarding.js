@@ -15,7 +15,7 @@ import {
     ChevronRightIcon,
     ChevronDownIcon,
 } from '@heroicons/react/20/solid'
-import { ArrowUpRight, LogOut, MoreHorizontal, Settings2, UserCircle, ListChecks, CheckCircle2, Check } from 'lucide-react';
+import { ArrowUpRight, LogOut, MoreHorizontal, Settings2, UserCircle, ListChecks, CheckCircle2, Check, BadgeCheck } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { supabase } from '@/lib/supabaseClient'
 import logo from "@/public/logo.svg"
@@ -33,7 +33,7 @@ import { Wallet } from 'ethers';
 import web3 from 'web3';
 
 const navigation = [
-    { name: "Quickstart", href: "/quickstart", icon: ListChecks, current: true, shortcut: "Q" },
+    { name: "Onboarding", href: "/onboarding", icon: ListChecks, current: true, shortcut: "O" },
     { name: 'Dashboard', href: '/dashboard', icon: WindowIcon, current: false, shortcut: 'D' },
     { name: 'Products', href: '/products', icon: Square3Stack3DIcon, current: false, shortcut: 'P' },
     { name: 'Subscriptions', href: '/subscriptions', icon: CurrencyDollarIcon, current: false, shortcut: 'S' },
@@ -174,7 +174,6 @@ export default function Dashboard() {
             }
             else {
                 toast.success('Ethereum address saved.');
-                setStep(3);
             }
         } else {
             toast.error('Invalid Ethereum address.');
@@ -581,12 +580,14 @@ export default function Dashboard() {
                     </div>
 
                     <main className="py-10 bg-[#0a0a0a] h-full min-h-screen relative">
-                        <div className='ml-96 flex items-center justify-left'>
-                            <ul role="list" className="space-y-6">
-                                <div class="flex justify-center ml-3 double-gradient absolute top-0 h-[500px] w-px"></div>
+                        <h1 className="ml-[202px] text-white/95 font-semibold text-3xl">Setup your store</h1>
+                        <h2 className='mt-3 ml-[202px] text-zinc-300/80 text-sm'>Follow the steps to setup your store.</h2>
 
-                                <li className="relative flex gap-x-4">
-                                    
+                        <div className ='ml-48 mt-12 flex items-center justify-left'>
+                            <ul role="list" className="space-y-24">
+                                <div class="justify-center ml-3 double-gradient absolute mt-36 top-0 h-[500px] w-px"></div>
+                                <li className="relative flex gap-x-6">
+
                                     <div className="relative flex h-6 w-6 flex-none items-center justify-center bg-[#0a0a0a]">
                                         <div className="relative flex h-3 w-3">
                                             {
@@ -608,7 +609,7 @@ export default function Dashboard() {
                                     </div>
 
                                     <div>
-                                        <label htmlFor="name" className="block text-sm font-medium leading-6 text-zinc-300">
+                                        <label htmlFor="name" className="block text-md font-medium leading-6 text-zinc-300">
                                             Choose a store name
                                         </label>
                                         <div className="mt-2">
@@ -616,7 +617,7 @@ export default function Dashboard() {
                                                 type="text"
                                                 name="name"
                                                 id="Name"
-                                                className="bg-[#18191E] font-medium pl-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-zinc-300 shadow-sm ring-1 ring-inset ring-gray-500/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                                                className="bg-[#18191E] font-medium pl-2.5 py-2 block w-full rounded-md border lg:border-0 text-zinc-300 shadow-sm ring-1 ring-inset ring-gray-500/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                                 required
                                                 onChange={handleStoreNameChange}
                                                 disabled={step !== 1}
@@ -633,19 +634,18 @@ export default function Dashboard() {
                                                 Save
                                             </button>
                                         )}
-
                                     </div>
                                 </li>
-                                <li className={`${step === 2 ? '' : 'opacity-75'} relative flex gap-x-4`}>
-                                    
+                                <li className={`${step === 2 ? '' : 'opacity-75'} fixed flex gap-x-6`}>
+
                                     <div className="relative flex h-6 w-6 flex-none items-center justify-center bg-[#0a0a0a]">
                                         <div className="relative flex h-3 w-3">
                                             {
                                                 step === 2 ?
                                                     (
                                                         <div className='relative flex h-3 w-3'>
-                                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                                            <span className="relative inline-flex rounded-full h-3 w-3 ring-2 ring-green-500 bg-[#0a0a0a]"></span>
+                                                            <span className={`${step == 2 ? '' : 'hidden'} animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75`}></span>
+                                                            <span className={`${step == 2 ? 'ring-green-500' : 'ring-white'} relative inline-flex rounded-full h-3 w-3 ring-2 bg-[#0a0a0a]`}></span>
                                                         </div>
                                                     )
                                                     :
@@ -658,8 +658,8 @@ export default function Dashboard() {
                                         </div>
                                     </div>
 
-                                    <div>
-                                        <label htmlFor="name" className="block text-sm font-medium leading-6 text-zinc-300">
+                                    <div className=''>
+                                        <label htmlFor="name" className="block text-md font-medium leading-6 text-zinc-300">
                                             Enter your Ethereum address
                                         </label>
                                         <div className="mt-2">
@@ -667,11 +667,11 @@ export default function Dashboard() {
                                                 type="text"
                                                 name="name"
                                                 id="Name"
-                                                className="font-mono text-xs bg-[#18191E] px-2.5 block w-full rounded-md border lg:border-0 py-1.5 text-zinc-300 shadow-sm ring-1 ring-inset ring-gray-500/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                                                className="font-mono text-xs bg-[#18191E] px-3.5 block w-96 rounded-md border lg:border-0 py-2 text-zinc-300 shadow-sm ring-1 ring-inset ring-gray-500/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                                 required
                                                 value={ethAddress}
                                                 onChange={handleEthAddressChange}
-                                                placeholder='0x000000000000000000'
+                                                placeholder='0x0000000000000000000000000000000000000000'
                                                 disabled={step !== 2}
                                             />
                                         </div>
@@ -699,68 +699,6 @@ export default function Dashboard() {
                                         )}
 
                                     </div>
-                                </li>
-                                <li className="relative flex gap-x-4">
-                                    
-                                    <div className="relative flex h-6 w-6 flex-none items-center justify-center bg-[#0a0a0a]">
-                                        <div className="h-1.5 w-1.5 rounded-full bg-gray-100 ring-1 ring-gray-300"></div>
-                                    </div>
-                                    <p className="flex-auto py-0.5 text-xs leading-5 text-gray-500">
-                                        <span className="font-medium text-white">Chelsea Hagon</span> sent the
-                                        invoice.
-                                    </p>
-                                    <time
-                                        datetime="2023-01-23T11:24"
-                                        className="flex-none py-0.5 text-xs leading-5 text-gray-500"
-                                    >
-                                        6d ago
-                                    </time>
-                                </li>
-                                <li className="relative flex gap-x-4">
-                                    
-                                    <div className="relative flex h-6 w-6 flex-none items-center justify-center bg-[#0a0a0a]">
-                                        <div className="h-1.5 w-1.5 rounded-full bg-gray-100 ring-1 ring-gray-300"></div>
-                                    </div>
-                                    <p className="flex-auto py-0.5 text-xs leading-5 text-gray-500">
-                                        <span className="font-medium text-white">Alex Curren</span> viewed the
-                                        invoice.
-                                    </p>
-                                    <time
-                                        datetime="2023-01-24T09:12"
-                                        className="flex-none py-0.5 text-xs leading-5 text-gray-500"
-                                    >
-                                        2d ago
-                                    </time>
-                                </li>
-                                <li className="relative flex gap-x-4">
-                                    <div className="h-6 absolute left-0 top-0 flex w-6 justify-center">
-                                        <div className="w-px bg-gray-200"></div>
-                                    </div>
-                                    <div className="relative flex h-6 w-6 flex-none items-center justify-center bg-[#0a0a0a]">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24"
-                                            fill="currentColor"
-                                            aria-hidden="true"
-                                            className="h-6 w-6 text-indigo-600"
-                                        >
-                                            <path
-                                                fill-rule="evenodd"
-                                                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
-                                                clip-rule="evenodd"
-                                            ></path>
-                                        </svg>
-                                    </div>
-                                    <p className="flex-auto py-0.5 text-xs leading-5 text-gray-500">
-                                        <span className="font-medium text-white">Alex Curren</span> paid the
-                                        invoice.
-                                    </p>
-                                    <time
-                                        datetime="2023-01-24T09:20"
-                                        className="flex-none py-0.5 text-xs leading-5 text-gray-500"
-                                    >
-                                        1d ago
-                                    </time>
                                 </li>
                             </ul>
                         </div>
