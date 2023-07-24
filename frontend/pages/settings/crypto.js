@@ -17,7 +17,6 @@ import { supabase } from '@/lib/supabaseClient';
 
 import BitcoinIcon from '@/components/BitcoinIcon';
 import Ethereum from "@/public/Crypto/Ethereum.svg";
-import Solana from "@/public/Crypto/Solana.svg";
 
 import { useRouter } from 'next/router';
 
@@ -194,24 +193,6 @@ export default function Crypto() {
                                     <div className="py-1">
                                         <Menu.Item>
                                             {({ active }) => (
-                                                <a
-                                                    href="/settings"
-                                                    className={classNames(
-                                                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                        'inline-flex items-center gap-x-1.5 block px-4 py-2 text-sm'
-                                                    )}
-                                                >
-                                                    <Cog8ToothIcon
-                                                        className="-ml-0.5 h-5 w-5"
-                                                        aria-hidden="true"
-                                                    />Account settings
-                                                </a>
-                                            )}
-                                        </Menu.Item>
-                                    </div>
-                                    <div className="py-1">
-                                        <Menu.Item>
-                                            {({ active }) => (
                                                 <button
                                                     type="submit"
                                                     className={classNames(
@@ -306,7 +287,7 @@ export default function Crypto() {
                                 </p>
                                 <div className="grid gap-x-3 grid-cols-3 lg:col-span-3 mt-2">
                                     <button
-                                        className="drop-shadow shadow-[#627EEA] mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#627EEA] bg-white px-4 shadow-sm transform transition-transform duration-300 hover:scale-105"
+                                        className="py-3 drop-shadow shadow-[#627EEA] mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#627EEA] bg-white px-4 shadow-sm transform transition-transform duration-300 hover:scale-105"
                                         onClick={() => setOpen(true)}
                                     >
                                         <Image
@@ -318,22 +299,6 @@ export default function Crypto() {
                                         />
                                         <span className='block lg:hidden'>ETH</span>
                                         <span className='hidden lg:block'>Ethereum</span>
-                                    </button>
-                                    <button
-                                        className="opacity-50 drop-shadow shadow-[#14F195] py-2 mt-2 inline-flex items-center justify-start bg-white text-gray-700 font-semibold text-sm rounded-lg border border-[#14F195] bg-white px-4 shadow-sm focus:scale-110 transform transition-transform duration-300 hover:scale-105"
-                                        // onClick={() => setOpen(true)}
-                                        disabled
-                                    >
-                                        <Image
-                                            src={Solana}
-                                            alt="Solana"
-                                            width={18} // Set the image width
-                                            height={18} // Set the image height
-                                            className="mr-2 lg:w-6 lg:h-6"
-                                        />
-
-                                        <span className='block lg:hidden'>SOL</span>
-                                        <span className='hidden lg:block'>Solana</span>
                                     </button>
                                 </div>
                             </div>
@@ -377,7 +342,7 @@ export default function Crypto() {
                                                                 <p className="text-sm text-gray-500">
                                                                     Enter your Ethereum address to receive payments.
                                                                 </p>
-                                                                <a href='https://ethereum.org/en/guides/how-to-register-an-ethereum-account/' target="_blank" className="mt-0.5 mb-1 underline text-sm text-gray-500 flex justify-end">
+                                                                <a href='https://www.myetherwallet.com/wallet/create' target="_blank" className="mt-0.5 mb-1 underline text-sm text-gray-500 flex justify-end">
                                                                     Don't have one?
                                                                 </a>
                                                             </div>
