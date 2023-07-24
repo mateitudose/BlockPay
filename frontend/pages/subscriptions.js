@@ -20,6 +20,7 @@ import {
     MoreHorizontal,
     Edit,
     Settings2,
+    CalendarPlusIcon,
 } from 'lucide-react'
 
 import { useRouter } from 'next/router';
@@ -37,7 +38,7 @@ import ABI from '@/lib/ABI.json';
 const contract = new web3.eth.Contract(ABI, "0x14710BDb76743e217C3F936aE3ecb4673F45369c");
 
 
-import { useContractWrite, useContractRead, useAccount } from 'wagmi'
+import { useContractWrite, useAccount } from 'wagmi'
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
@@ -179,6 +180,20 @@ export default function Subscriptions() {
         if (!user.data.user) {
             router.push('/login');
         }
+        else if (user.data.user !== null) {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', user.data.user.id);
+            if (error) {
+                console.error(error);
+
+            }
+            else if (data[0].eth_address === null || data[0].store_name === null) {
+                router.push('/onboarding');
+            }
+
+        }
         return user.data.user;
     }
 
@@ -242,19 +257,28 @@ export default function Subscriptions() {
     };
 
     const deleteSubscription = async (id) => {
-        const { data, error } = await supabase
-            .from('subscriptions')
-            .select('*')
-            .eq('id', id);
-        if (!error && data.length > 0 && data[0].planID) {
-            setPlanID(data[0].planID);
-            try {
+        try {
+            const { data, error } = await supabase
+                .from('subscriptions')
+                .select('*')
+                .eq('id', id);
+
+            if (!isConnected) {
+                toast.error('Please connect your wallet');
+                return;
+            }
+
+            if (!error && data && data.length > 0 && data[0].planID) {
+                const planID = data[0].planID;
+                setPlanID(planID);
+
                 const tx = await deletePlan();
                 const res = await tx?.wait().then(async () => {
                     const { data, error } = await supabase
                         .from('subscriptions')
                         .delete()
                         .eq('planID', planID);
+
                     if (error) {
                         toast.error(error.message);
                     } else {
@@ -262,18 +286,18 @@ export default function Subscriptions() {
                         router.reload();
                     }
                 });
-            }
-            catch (error) {
-                toast.error(error);
-            }
-        } else {
-            if (error) {
-                toast.error(error.message);
             } else {
-                toast.error('No data found with provided ID or Plan ID is missing');
+                if (error) {
+                    toast.error(error.message);
+                } else {
+                    toast.error('No data found with the provided ID or Plan ID is missing');
+                }
             }
+        } catch (error) {
+            toast.error(error.message);
         }
     };
+
 
     useEffect(() => {
         const runPrecheck = async () => {
@@ -605,7 +629,7 @@ export default function Subscriptions() {
                                         </div>
                                     </Transition.Child>
                                     {/* Sidebar component, swap this element with another sidebar if you like */}
-                                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
+                                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-[#0a0a0a] px-6 pb-4">
                                         <div className="flex h-16 shrink-0 items-center">
                                             <Image
                                                 className="h-8 w-auto"
@@ -623,48 +647,84 @@ export default function Subscriptions() {
                                                                     href={item.href}
                                                                     className={classNames(
                                                                         item.current
-                                                                            ? 'bg-gray-50 text-indigo-600'
-                                                                            : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
-                                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                                                                            ? 'bg-gray-700/40 text-white/90'
+                                                                            : 'text-white/50 hover:text-white/90 hover:bg-gray-700/50',
+                                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-medium'
                                                                     )}
                                                                 >
                                                                     <item.icon
                                                                         className={classNames(
-                                                                            item.current ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600',
+                                                                            item.current ? 'text-white/90' : 'text-white/50 group-hover:text-white/80',
                                                                             'h-6 w-6 shrink-0'
                                                                         )}
                                                                         aria-hidden="true"
                                                                     />
                                                                     {item.name}
-                                                                    <div className='ml-auto hidden group-hover:block opacity-80 items-center'>
-                                                                        <kbd className="font-sans inline-flex h-5 w-5 select-none items-center justify-center rounded text-sm text-white/90 border border-gray-500/30 transition duration-200 ease-in-out">
-                                                                            ⌘
-                                                                        </kbd>
-                                                                        <span>
-                                                                            &nbsp;
-                                                                        </span>
-                                                                        <kbd className="font-sans inline-flex h-5 w-5 select-none items-center justify-center rounded text-sm text-white/90 border border-gray-500/30 transition duration-200 ease-in-out">
-                                                                            {item.shortcut}
-                                                                        </kbd>
-                                                                    </div>
                                                                 </a>
                                                             </li>
                                                         ))}
                                                     </ul>
                                                 </li>
 
-                                                <li className="mt-auto">
-                                                    <a
-                                                        href="/settings/general"
-                                                        className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
+
+                                                <Menu as="div" className="relative inline-block text-left lg:pr-4 mt-auto">
+                                                    <div>
+                                                        <Menu.Button className="inline-flex w-full justify-center items-center gap-x-2 rounded-md bg-[#0a0a0a] px-3 py-2 text-sm font-semibold text-zinc-300/80 shadow-sm hover:bg-[#18191E]">
+                                                            <UserCircle className="h-4 w-4 text-zinc-300/80" aria-hidden="true" />
+                                                            {email}
+                                                            <MoreHorizontal className="-mr-1 h-3 w-3 text-zinc-300/80" aria-hidden="true" />
+                                                        </Menu.Button>
+                                                    </div>
+
+                                                    <Transition
+                                                        as={Fragment}
+                                                        enter="transition ease-out duration-100"
+                                                        enterFrom="transform opacity-0 scale-95"
+                                                        enterTo="transform opacity-100 scale-100"
+                                                        leave="transition ease-in duration-75"
+                                                        leaveFrom="transform opacity-100 scale-100"
+                                                        leaveTo="transform opacity-0 scale-95"
                                                     >
-                                                        <Cog8ToothIcon
-                                                            className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
-                                                            aria-hidden="true"
-                                                        />
-                                                        Settings
-                                                    </a>
-                                                </li>
+                                                        <Menu.Items className="absolute bottom-full mb-2 z-10 w-56 origin-top-right rounded-md bg-[#0a0a0a] shadow-lg ring-1 ring-gray-500/30 ring-opacity-5 focus:outline-none">
+                                                            <div className="py-1">
+                                                                <Menu.Item>
+                                                                    {({ active }) => (
+                                                                        <a
+                                                                            href="/settings/general"
+                                                                            className={classNames(
+                                                                                active ? 'bg-[#18191E] rounded-md inline-block' : '',
+                                                                                'flex text-zinc-300/80 items-center gap-x-1.5 px-4 py-2 text-sm'
+                                                                            )}
+                                                                        >
+                                                                            <Settings2
+                                                                                className="-ml-0.5 h-5 w-5"
+                                                                                aria-hidden="true"
+                                                                            />Account settings
+                                                                        </a>
+                                                                    )}
+                                                                </Menu.Item>
+                                                            </div>
+                                                            <div className="py-1">
+                                                                <Menu.Item>
+                                                                    {({ active }) => (
+                                                                        <a
+                                                                            className={classNames(
+                                                                                active ? ' bg-[#18191E] px-4 rounded-md inline-block' : '',
+                                                                                'flex text-zinc-300/80 items-center gap-x-1.5 px-4 py-2 text-sm'
+                                                                            )}
+                                                                            onClick={handleSignOut}
+                                                                        >
+                                                                            <LogOut
+                                                                                className="-ml-0.5 h-5 w-5"
+                                                                                aria-hidden="true"
+                                                                            />Log out
+                                                                        </a>
+                                                                    )}
+                                                                </Menu.Item>
+                                                            </div>
+                                                        </Menu.Items>
+                                                    </Transition>
+                                                </Menu>
                                             </ul>
                                         </nav>
                                     </div>
@@ -856,67 +916,83 @@ export default function Subscriptions() {
                             <div className="mt-8 flow-root">
                                 <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                     <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                                        <div className="overflow-hidden shadow border border-gray-500/30 ring-opacity-5 sm:rounded-lg">
-                                            <table className="min-w-full divide-y divide-gray-500/30">
-                                                <thead className="bg-[#18191E]">
-                                                    <tr>
-                                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-zinc-300 sm:pl-6">
-                                                            Subscription Name
-                                                        </th>
-                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-300">
-                                                            ID
-                                                        </th>
-                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-300">
-                                                            Price
-                                                        </th>
-                                                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-300">
-                                                            Link
-                                                        </th>
-                                                        <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                                                            <span className="sr-only">Edit</span>
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="divide-y divide-gray-500/30 bg-[#0a0a0a]">
-                                                    {loaded && subscriptions.map((subscription) => (
-                                                        <tr key={subscription.id}>
-                                                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-zinc-300 sm:pl-6">
-                                                                {subscription.name}
-                                                            </td>
-                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-zinc-300 font-mono">{subscription.id_hash}</td>
-                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-zinc-300 font-medium">
-                                                                <span className='text-zinc-300'>
-                                                                    $
-                                                                </span>
-                                                                {subscription.price}
-                                                            </td>
-                                                            <button
-                                                                className="font-mono whitespace-nowrap px-3 py-4 text-sm text-zinc-300 hover:underline hover:cursor-pointer"
-                                                                onClick={() => {
-                                                                    navigator.clipboard.writeText(`http://localhost:3000/s/${subscription.id_hash}`);
-                                                                    toast.success('Copied link to clipboard!');
-                                                                }}
-                                                            >
-                                                                localhost:3000/s/{subscription.id_hash}
-                                                            </button>
-                                                            <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                        {loaded && subscriptions.length > 0 &&
+                                            <div className="rounded-t-md overflow-hidden shadow border border-gray-500/30 ring-opacity-5 sm:rounded-lg">
+
+                                                <table className="min-w-full divide-y divide-gray-500/30">
+                                                    <thead className="bg-[#18191E]">
+                                                        <tr>
+                                                            <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-zinc-300 sm:pl-6">
+                                                                Subscription Name
+                                                            </th>
+                                                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-300">
+                                                                ID
+                                                            </th>
+                                                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-300">
+                                                                Price
+                                                            </th>
+                                                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-zinc-300">
+                                                                Link
+                                                            </th>
+                                                            <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                                                <span className="sr-only">Edit</span>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="divide-y divide-gray-500/30 bg-[#0a0a0a]">
+                                                        {loaded && subscriptions.map((subscription) => (
+                                                            <tr key={subscription.id}>
+                                                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-zinc-300 sm:pl-6">
+                                                                    {subscription.name}
+                                                                </td>
+                                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-zinc-300 font-mono">{subscription.id_hash}</td>
+                                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-zinc-300 font-medium">
+                                                                    <span className='text-zinc-300'>
+                                                                        $
+                                                                    </span>
+                                                                    {subscription.price}
+                                                                </td>
                                                                 <button
-                                                                    className="text-white/80 hover:text-white/90 flex items-center"
+                                                                    className="font-mono whitespace-nowrap px-3 py-4 text-sm text-zinc-300 hover:underline hover:cursor-pointer"
                                                                     onClick={() => {
-                                                                        setCurrentID(subscription.id_hash);
-                                                                        setSubscriptionName(subscription.name);
-                                                                        setPrice(subscription.price);
-                                                                        setOpenEdit(true);
+                                                                        navigator.clipboard.writeText(`http://localhost:3000/s/${subscription.id_hash}`);
+                                                                        toast.success('Copied link to clipboard!');
                                                                     }}
                                                                 >
-                                                                    Edit <Edit className='ml-1 w-3 h-3' aria-hidden="true" />
+                                                                    localhost:3000/s/{subscription.id_hash}
                                                                 </button>
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                                <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                                                    <button
+                                                                        className="text-white/80 hover:text-white/90 flex items-center"
+                                                                        onClick={() => {
+                                                                            setCurrentID(subscription.id_hash);
+                                                                            setSubscriptionName(subscription.name);
+                                                                            setPrice(subscription.price);
+                                                                            setOpenEdit(true);
+                                                                        }}
+                                                                    >
+                                                                        Edit <Edit className='ml-1 w-3 h-3' aria-hidden="true" />
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        }
+                                        {subscriptions && subscriptions.length === 0 &&
+
+                                            <div
+                                                className="mx-4 sm:mx-0 mt-3 relative block rounded-lg border-2 border-dashed border-gray-500/30 p-12 text-center"
+                                            >
+                                                <CalendarPlusIcon
+                                                    className="mx-auto h-8 w-8 text-gray-500"
+                                                    aria-hidden="true"
+                                                />
+                                                <span className="mt-2 block text-sm font-semibold text-gray-500">No subscriptions so far</span>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </div>
