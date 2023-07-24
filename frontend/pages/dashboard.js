@@ -422,7 +422,7 @@ export default function Dashboard() {
                                         </div>
                                     </Transition.Child>
                                     {/* Sidebar component, swap this element with another sidebar if you like */}
-                                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
+                                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-[#0a0a0a] px-6 pb-4">
                                         <a href="/" className="flex h-16 shrink-0 items-center">
                                             <Image
                                                 className="h-8 w-auto"
@@ -440,14 +440,14 @@ export default function Dashboard() {
                                                                     href={item.href}
                                                                     className={classNames(
                                                                         item.current
-                                                                            ? 'bg-gray-50 text-indigo-600'
-                                                                            : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
-                                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                                                                            ? 'bg-gray-700/40 text-white/90'
+                                                                            : 'text-white/50 hover:text-white/90 hover:bg-gray-700/50',
+                                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-medium'
                                                                     )}
                                                                 >
                                                                     <item.icon
                                                                         className={classNames(
-                                                                            item.current ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600',
+                                                                            item.current ? 'text-white/90' : 'text-white/50 group-hover:text-white/80',
                                                                             'h-6 w-6 shrink-0'
                                                                         )}
                                                                         aria-hidden="true"

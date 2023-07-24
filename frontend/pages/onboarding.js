@@ -15,7 +15,7 @@ import {
     ChevronRightIcon,
     ChevronDownIcon,
 } from '@heroicons/react/20/solid'
-import { ArrowUpRight, LogOut, MoreHorizontal, Settings2, UserCircle, ListChecks, CheckCircle2, Check, BadgeCheck } from 'lucide-react';
+import { ArrowUpRight, LogOut, MoreHorizontal, Settings2, UserCircle, ListChecks, CheckCircle2, Check, BadgeCheck, WalletIcon } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { supabase } from '@/lib/supabaseClient'
 import logo from "@/public/logo.svg"
@@ -43,7 +43,6 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 export default function Dashboard() {
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const [shouldRender, setShouldRender] = useState(false);
@@ -173,7 +172,11 @@ export default function Dashboard() {
                 return;
             }
             else {
+                toast.success('Redirecting to dashboard...');
                 toast.success('Ethereum address saved.');
+                setTimeout(() => {
+                    router.push('/dashboard');
+                }, 1000);
             }
         } else {
             toast.error('Invalid Ethereum address.');
@@ -186,11 +189,9 @@ export default function Dashboard() {
         const wallet = Wallet.fromMnemonic(mnemonic.phrase);
 
         setMnemonic(mnemonic.phrase);
+        setOpen(true);
         setEthAddress(wallet.address);
         setPrivateKey(wallet.privateKey);
-
-        console.log(wallet.address, wallet.privateKey);
-        setOpen(true);
     }
 
 
@@ -243,11 +244,11 @@ export default function Dashboard() {
                                     leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                                     leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                                 >
-                                    <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+                                    <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-[#18191E] px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
                                         <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
                                             <button
                                                 type="button"
-                                                className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                className="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"
                                                 onClick={() => setOpen(false)}
                                             >
                                                 <span className="sr-only">Close</span>
@@ -255,34 +256,44 @@ export default function Dashboard() {
                                             </button>
                                         </div>
                                         <div className="sm:flex sm:items-start">
-                                            <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                                <ExclamationTriangleIcon className="h-6 w-6 text-red-600" aria-hidden="true" />
+                                            <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-yellow-400/10 sm:mx-0 sm:h-10 sm:w-10">
+                                                <WalletIcon className="h-6 w-6 text-yellow-400" aria-hidden="true" />
                                             </div>
                                             <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                                                <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
-                                                    Deactivate account
+                                                <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-white">
+                                                    Create Wallet with Mnemonic Phrase
                                                 </Dialog.Title>
+                                                <h2 className=" mb-6 text-sm text-zinc-300">
+                                                    Write down these words in the correct order.
+                                                </h2>
                                                 <div className="mt-2">
-                                                    <p className="text-sm text-gray-500">
-                                                        {mnemonic}
-                                                        {ethAddress}
-                                                        {privateKey}
-                                                    </p>
+                                                    <div className="grid grid-cols-4 grid-rows-3 gap-4 text-xs text-white border border-gray-500/30 p-4 rounded-md">
+                                                        {
+                                                            mnemonic.split(' ').map((word, index) => (
+                                                                <div key={index} className="col-span-1 row-span-1">
+                                                                    {index + 1}. {word}
+                                                                </div>
+                                                            ))
+                                                        }
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                                             <button
                                                 type="button"
-                                                className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                                                className="inline-flex w-full justify-center rounded-md bg-green-500/10 text-green-400 hover:ring-1 hover:ring-green-500/20 px-3 py-2 text-sm font-semibold shadow-sm sm:ml-3 sm:w-auto"
                                                 onClick={() => setOpen(false)}
                                             >
-                                                Deactivate
+                                                Confirm
                                             </button>
                                             <button
                                                 type="button"
-                                                className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                                                onClick={() => setOpen(false)}
+                                                className="mt-3 inline-flex w-full justify-center rounded-md font-semibold text-zinc-300 hover:ring-1 hover:ring-gray-500/30 hover:text-zinc-100 shadow-sm bg-[#0a0a0a] px-3 py-2 text-sm sm:mt-0 sm:w-auto"
+                                                onClick={() => {
+                                                    setOpen(false)
+                                                    setEthAddress('')
+                                                }}
                                             >
                                                 Cancel
                                             </button>
@@ -335,7 +346,7 @@ export default function Dashboard() {
                                         </div>
                                     </Transition.Child>
                                     {/* Sidebar component, swap this element with another sidebar if you like */}
-                                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
+                                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-[#0a0a0a] px-6 pb-4">
                                         <a href="/" className="flex h-16 shrink-0 items-center">
                                             <Image
                                                 className="h-8 w-auto"
@@ -353,14 +364,14 @@ export default function Dashboard() {
                                                                     href={item.href}
                                                                     className={classNames(
                                                                         item.current
-                                                                            ? 'bg-gray-50 text-indigo-600'
-                                                                            : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
-                                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                                                                            ? 'bg-gray-700/40 text-white/90'
+                                                                            : 'text-white/50 hover:text-white/90 hover:bg-gray-700/50',
+                                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-medium'
                                                                     )}
                                                                 >
                                                                     <item.icon
                                                                         className={classNames(
-                                                                            item.current ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600',
+                                                                            item.current ? 'text-white/90' : 'text-white/50 group-hover:text-white/80',
                                                                             'h-6 w-6 shrink-0'
                                                                         )}
                                                                         aria-hidden="true"
@@ -374,7 +385,7 @@ export default function Dashboard() {
 
                                                 <Menu as="div" className="relative inline-block text-left lg:pr-4 mt-auto">
                                                     <div>
-                                                        <Menu.Button className="inline-flex w-full justify-center items-center gap-x-2 rounded-md bg-[#0a0a0a] px-3 py-2 text-sm font-semibold text-zinc-300/80 shadow-sm hover:bg-[#18191E]">
+                                                        <Menu.Button className="inline-flex w-full justify-center items-center gap-x-2 rounded-md bg-[#0a0a0a] px-3 py-2 text-sm font-semibold text-zinc-300/80 shadow-sm">
                                                             <UserCircle className="h-4 w-4 text-zinc-300/80" aria-hidden="true" />
                                                             {email}
                                                             <MoreHorizontal className="-mr-1 h-3 w-3 text-zinc-300/80" aria-hidden="true" />
@@ -565,25 +576,14 @@ export default function Dashboard() {
                                 <span className="sr-only">Open sidebar</span>
                                 <Bars3Icon className="h-6 w-6" aria-hidden="true" />
                             </button>
-
-                            <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6 lg:pl-4">
-                                <form className="relative flex flex-1" action="#" method="GET">
-                                </form>
-                                <Link
-                                    className="mr-6 text-zinc-300 flex items-center hover:bg-white/5 p-5 rounded-full"
-                                    href="/docs"
-                                >
-                                    Docs <ArrowUpRight className='ml-1 w-4 h-4 inline-block' />
-                                </Link>
-                            </div>
                         </div>
                     </div>
 
-                    <main className="py-10 bg-[#0a0a0a] h-full min-h-screen relative">
+                    <main className="hidden sm:block py-10 bg-[#0a0a0a] h-full min-h-screen relative">
                         <h1 className="ml-[202px] text-white/95 font-semibold text-3xl">Setup your store</h1>
                         <h2 className='mt-3 ml-[202px] text-zinc-300/80 text-sm'>Follow the steps to setup your store.</h2>
 
-                        <div className ='ml-48 mt-12 flex items-center justify-left'>
+                        <div className='ml-2 sm:ml-48 mt-12 flex items-center justify-left'>
                             <ul role="list" className="space-y-24">
                                 <div class="justify-center ml-3 double-gradient absolute mt-36 top-0 h-[500px] w-px"></div>
                                 <li className="relative flex gap-x-6">
@@ -636,7 +636,7 @@ export default function Dashboard() {
                                         )}
                                     </div>
                                 </li>
-                                <li className={`${step === 2 ? '' : 'opacity-75'} fixed flex gap-x-6`}>
+                                <li className={`${step === 2 ? '' : 'opacity-75'} relative flex gap-x-6`}>
 
                                     <div className="relative flex h-6 w-6 flex-none items-center justify-center bg-[#0a0a0a]">
                                         <div className="relative flex h-3 w-3">
@@ -668,6 +668,130 @@ export default function Dashboard() {
                                                 name="name"
                                                 id="Name"
                                                 className="font-mono text-xs bg-[#18191E] px-3.5 block w-96 rounded-md border lg:border-0 py-2 text-zinc-300 shadow-sm ring-1 ring-inset ring-gray-500/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                                                required
+                                                value={ethAddress}
+                                                onChange={handleEthAddressChange}
+                                                placeholder='0x0000000000000000000000000000000000000000'
+                                                disabled={step !== 2}
+                                            />
+                                        </div>
+                                        {step === 2 && (
+                                            <div className='space-x-3'>
+                                                <button
+                                                    type="button"
+                                                    className="mt-2 flex-1 rounded-md bg-[#18191E] px-3 py-2 text-sm font-semibold text-zinc-300 shadow-sm hover:text-zinc-100 hover:ring-1 hover:ring-gray-500/30"
+                                                    onClick={async () => {
+                                                        await handleCreateAddress();
+                                                    }}
+                                                >
+                                                    Save
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="mt-2 flex-1 rounded-md bg-white/95 px-3 py-2 text-sm font-semibold text-dark shadow-sm hover:bg-white/90"
+                                                    onClick={async () => {
+                                                        await createEthAddress();
+                                                    }}
+                                                >
+                                                    Generate address
+                                                </button>
+                                            </div>
+                                        )}
+
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </main>
+                    <main className="block sm:hidden py-10 bg-[#0a0a0a] h-full min-h-screen relative">
+                        <h1 className="ml-20 text-white/95 font-semibold text-3xl">Setup your store</h1>
+                        <h2 className='ml-20 mt-2 text-zinc-300/80 text-sm'>Follow the steps to setup your store.</h2>
+
+                        <div className='ml-16 sm:ml-48 mt-6 flex items-center justify-left'>
+                            <ul role="list" className="space-y-24">
+                                <div class="ml-3 justify-center double-gradient absolute mt-36 top-0 h-[450px] w-px"></div>
+                                <li className="relative flex gap-x-6">
+
+                                    <div className="relative flex h-6 w-6 flex-none items-center justify-center bg-[#0a0a0a]">
+                                        <div className="relative flex h-3 w-3">
+                                            {
+                                                step === 1 ?
+                                                    (
+                                                        <div className='relative flex h-3 w-3'>
+                                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                                            <span className="relative inline-flex rounded-full h-3 w-3 ring-2 ring-green-500 bg-[#0a0a0a]"></span>
+                                                        </div>
+                                                    )
+                                                    :
+                                                    (
+                                                        <div className='relative flex h-3 w-3'>
+                                                            <span className="relative inline-flex rounded-full h-3 w-3 ring-2 ring-green-500 bg-[#0a0a0a]"></span>
+                                                        </div>
+                                                    )
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label htmlFor="name" className="block text-sm font-medium leading-6 text-zinc-300">
+                                            Choose a store name
+                                        </label>
+                                        <div className="mt-2">
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                id="Name"
+                                                className="bg-[#18191E] font-medium pl-1.5 py-1 block w-full rounded-md border lg:border-0 text-zinc-300 shadow-sm ring-1 ring-inset ring-gray-500/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                                                required
+                                                onChange={handleStoreNameChange}
+                                                disabled={step !== 1}
+                                            />
+                                        </div>
+                                        {step === 1 && (
+                                            <button
+                                                type="button"
+                                                className="mt-2 flex-1 rounded-md bg-[#18191E] px-3 py-2 text-sm font-semibold text-zinc-300 shadow-sm hover:text-zinc-100 hover:ring-1 hover:ring-gray-500/30"
+                                                onClick={async () => {
+                                                    await handleCreateStore();
+                                                }}
+                                            >
+                                                Save
+                                            </button>
+                                        )}
+                                    </div>
+                                </li>
+                                <li className={`${step === 2 ? '' : 'opacity-75'} relative flex gap-x-6`}>
+
+                                    <div className="relative flex h-6 w-6 flex-none items-center justify-center bg-[#0a0a0a]">
+                                        <div className="relative flex h-3 w-3">
+                                            {
+                                                step === 2 ?
+                                                    (
+                                                        <div className='relative flex h-3 w-3'>
+                                                            <span className={`${step == 2 ? '' : 'hidden'} animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75`}></span>
+                                                            <span className={`${step == 2 ? 'ring-green-500' : 'ring-white'} relative inline-flex rounded-full h-3 w-3 ring-2 bg-[#0a0a0a]`}></span>
+                                                        </div>
+                                                    )
+                                                    :
+                                                    (
+                                                        <div className='relative flex h-3 w-3'>
+                                                            <span className="relative inline-flex rounded-full h-3 w-3 ring-2 ring-white bg-[#0a0a0a]"></span>
+                                                        </div>
+                                                    )
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div className=''>
+                                        <label htmlFor="name" className="block text-md font-medium leading-6 text-zinc-300">
+                                            Enter your Ethereum address
+                                        </label>
+                                        <div className="mt-2">
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                id="Name"
+                                                className="font-mono text-xs bg-[#18191E] px-1.5 block w-full rounded-md border lg:border-0 py-2 text-zinc-300 shadow-sm ring-1 ring-inset ring-gray-500/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                                 required
                                                 value={ethAddress}
                                                 onChange={handleEthAddressChange}
