@@ -37,15 +37,15 @@ function classNames(...classes) {
 
 export default function General() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-    const [username, setUsername] = useState('');
-    const [newUsername, setNewUsername] = useState('');
+    const [store_name, setstore_name] = useState('');
+    const [newstore_name, setNewstore_name] = useState('');
     const [email, setEmail] = useState('');
     const [shouldRender, setShouldRender] = useState(false);
     const router = useRouter();
 
 
-    const handleUsernameChange = (e) => {
-        setNewUsername(e.target.value);
+    const handlestore_nameChange = (e) => {
+        setNewstore_name(e.target.value);
     };
 
     async function handleNotSignedIn() {
@@ -88,9 +88,9 @@ export default function General() {
                     throw error;
                 } else {
                     setEmail(data[0].email);
-                    setUsername(data[0].username);
+                    setstore_name(data[0].store_name);
                 }
-                console.log(username);
+                console.log(store_name);
 
             } catch (error) {
                 console.error(error);
@@ -102,18 +102,18 @@ export default function General() {
     const handleSave = async (e) => {
         e.preventDefault();
         const user = await supabase.auth.getUser();
-        if (newUsername !== '') {
+        if (newstore_name !== '') {
             const { data, error } = await supabase
                 .from('profiles')
                 .update({
-                    username: newUsername,
+                    store_name: newstore_name,
                 })
                 .eq('id', user.data.user.id);
             if (error) {
                 toast.error(error.message);
             } else {
-                toast.success('Username updated successfully!');
-                setUsername(newUsername);
+                toast.success('Store name updated successfully!');
+                setstore_name(newstore_name);
             }
         }
     };
@@ -160,7 +160,7 @@ export default function General() {
                                             <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                                         </svg>
                                     </span>
-                                    {username}
+                                    {store_name}
                                     <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
                                 </Menu.Button>
                             </div>
@@ -178,24 +178,6 @@ export default function General() {
                                     <div className="px-4 py-3">
                                         <p className="text-sm">Signed in as</p>
                                         <p className="truncate text-sm font-medium text-gray-900">{email}</p>
-                                    </div>
-                                    <div className="py-1">
-                                        <Menu.Item>
-                                            {({ active }) => (
-                                                <a
-                                                    href="/settings"
-                                                    className={classNames(
-                                                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                        'inline-flex items-center gap-x-1.5 block px-4 py-2 text-sm'
-                                                    )}
-                                                >
-                                                    <Cog8ToothIcon
-                                                        className="-ml-0.5 h-5 w-5"
-                                                        aria-hidden="true"
-                                                    />Account settings
-                                                </a>
-                                            )}
-                                        </Menu.Item>
                                     </div>
                                     <div className="py-1">
                                         <Menu.Item>
@@ -299,19 +281,19 @@ export default function General() {
                                 <div className="px-4 py-6 sm:p-8">
                                     <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                         <div className="sm:col-span-4">
-                                            <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
-                                                Username
+                                            <label htmlFor="store_name" className="block text-sm font-medium leading-6 text-gray-900">
+                                                Store Name
                                             </label>
                                             <div className="mt-2">
                                                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                                                     <input
                                                         type="text"
-                                                        name="username"
-                                                        id="username"
-                                                        className="pl-2.5 block flex-1 border rounded-md bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                                                        placeholder={username ? username : 'blockpayuser'}
-                                                        value={newUsername}
-                                                        onChange={handleUsernameChange}
+                                                        name="store_name"
+                                                        id="store_name"
+                                                        className="block flex-1 border rounded-md bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                                                        placeholder={store_name ? store_name : 'blockpayuser'}
+                                                        value={newstore_name}
+                                                        onChange={handlestore_nameChange}
                                                     />
                                                 </div>
                                             </div>
