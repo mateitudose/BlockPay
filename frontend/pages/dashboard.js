@@ -16,7 +16,7 @@ import {
     ChevronDownIcon,
 } from '@heroicons/react/20/solid'
 
-import { ArrowUpRight, LogOut, MoreHorizontal, Settings2, UserCircle } from 'lucide-react';
+import { ArrowUpRight, LogOut, MoreHorizontal, ReceiptIcon, Settings2, UserCircle } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { supabase } from '@/lib/supabaseClient'
 import logo from "@/public/logo.svg"
@@ -170,7 +170,7 @@ export default function Dashboard() {
 
     async function getCompletedInvoices() {
         const user = await supabase.auth.getUser();
-        if (user) {
+        if (user.data.user != null) {
             const date = new Date();
             const startOfDate = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
             const endOfDate = startOfDate + 24 * 60 * 60 * 1000
@@ -267,6 +267,9 @@ export default function Dashboard() {
                 if (error) {
                     throw error;
                 } else {
+                    if (data[0].eth_address === null || data[0].store_name === null) {
+                        router.push('/onboarding');
+                    }
                     setEmail(data[0].email);
                     setUsername(data[0].username);
                     setEthAddress(data[0].eth_address);
@@ -287,7 +290,7 @@ export default function Dashboard() {
                 if (error) {
                     throw error;
                 } else {
-                    if (data) {
+                    if (data && data.length > 0) {
                         transactions = [];
                         for (let i = 0; i < data.length; i++) {
                             transactions.push({
@@ -326,9 +329,23 @@ export default function Dashboard() {
         if (!user.data.user) {
             router.push('/login');
         }
+        else if (user.data.user !== null) {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', user.data.user.id);
+            if (error) {
+                console.error(error);
+
+            }
+            else if (data[0].eth_address === null || data[0].store_name === null) {
+                router.push('/onboarding');
+            }
+
+        }
         return user.data.user;
     }
-
+    
     const handleSignOut = async () => {
         await supabase.auth.signOut();
         router.push('/login');
@@ -670,12 +687,6 @@ export default function Dashboard() {
                                         name="search"
                                     /> */}
                                 </form>
-                                <Link
-                                    className="mr-6 text-zinc-300 flex items-center hover:bg-white/5 p-5 rounded-full"
-                                    href="/docs"
-                                >
-                                    Docs <ArrowUpRight className='ml-1 w-4 h-4 inline-block' />
-                                </Link>
                             </div>
                         </div>
                     </div>
@@ -735,127 +746,145 @@ export default function Dashboard() {
 
                                     {/* Activity list (smallest breakpoint only) */}
                                     <div className="shadow sm:hidden">
-                                        <ul role="list" className="mt-2 divide-y divide-gray-200 overflow-hidden shadow sm:hidden">
-                                            {loaded && transactions.slice(page * itemsPerPage, (page + 1) * itemsPerPage).map((transaction) => (
-                                                <li key={transaction.id}>
-                                                    <a href={transaction.href} className="block bg-white px-4 py-4 hover:bg-gray-50">
-                                                        <span className="flex items-center space-x-4">
-                                                            <span className="flex flex-1 space-x-2 truncate">
-                                                                <BanknotesIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                                                                <span className="flex flex-col truncate text-sm text-gray-500">
-                                                                    <span className="truncate">{transaction.name}</span>
-                                                                    <div className='flex items-center justify-end'>
-                                                                        <span className="font-medium text-gray-900">
-                                                                            {parseFloat(parseFloat(transaction.amount).toFixed(8))}
-                                                                        </span>
-                                                                        <Image
-                                                                            src={transaction.currency}
-                                                                            alt={transaction.currency}
-                                                                            width={24}
-                                                                            height={24}
-                                                                            className={`ml-2 inline-block rounded-md ${transaction.background_color}`}
-                                                                        />
-                                                                    </div>
-                                                                    <time dateTime={transaction.date}>{transaction.date}</time>
+                                        {transactions && transactions.length > 0 &&
+                                            <ul role="list" className="border border-gray-500/30 rounded-t-md mt-2 divide-y divide-gray-500/30 overflow-hidden shadow sm:hidden">
+                                                {loaded && transactions.slice(page * itemsPerPage, (page + 1) * itemsPerPage).map((transaction) => (
+                                                    <li key={transaction.id}>
+                                                        <a href={transaction.href} className="block bg-[#18191E] px-4 py-4">
+                                                            <span className="flex items-center space-x-4">
+                                                                <span className="flex flex-1 space-x-2 truncate">
+                                                                    <BanknotesIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
+                                                                    <span className="flex flex-col truncate text-sm text-gray-500">
+                                                                        <span className="truncate">{transaction.name}</span>
+                                                                        <div className='flex items-center justify-end'>
+                                                                            <span className="font-medium text-gray-900">
+                                                                                {parseFloat(parseFloat(transaction.amount).toFixed(8))}
+                                                                            </span>
+                                                                            <Image
+                                                                                src={transaction.currency}
+                                                                                alt={transaction.currency}
+                                                                                width={24}
+                                                                                height={24}
+                                                                                className={`ml-2 inline-block rounded-md ${transaction.background_color}`}
+                                                                            />
+                                                                        </div>
+                                                                        <time dateTime={transaction.date}>{transaction.date}</time>
+                                                                    </span>
                                                                 </span>
+                                                                <ChevronRightIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                                                             </span>
-                                                            <ChevronRightIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                                                        </span>
-                                                    </a>
-                                                </li>
-                                            ))}
-                                        </ul>
+                                                        </a>
+                                                    </li>
+                                                ))}
 
-                                        <nav
-                                            className="flex items-center justify-between border-t border-gray-500/30 bg-white px-4 py-3"
-                                            aria-label="Pagination"
-                                        >
-                                            <div className="flex flex-1 justify-between">
-                                                <button
-                                                    onClick={prevPage}
-                                                    className="relative inline-flex items-center rounded-md bg-[white] px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                                                >
-                                                    Previous
-                                                </button>
-                                                <button
-                                                    onClick={nextPage}
-                                                    className="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                                                >
-                                                    Next
-                                                </button>
+                                            </ul>
+                                        }
+                                        {transactions && transactions.length > 0 &&
+                                            <nav
+                                                className="rounded-b-md flex items-center justify-between border-t border-gray-500/30 bg-[#18191E] px-4 py-3"
+                                                aria-label="Pagination"
+                                            >
+                                                <div className="flex flex-1 justify-between">
+                                                    <button onClick={prevPage} className="relative inline-flex items-center rounded-md bg-[#18191E] px-3 py-2 text-sm font-semibold text-gray-400 ring-1 ring-inset ring-gray-500/30 hover:ring-gray-500">Previous</button>
+                                                    <button onClick={nextPage} className="relative inline-flex items-center rounded-md bg-[#18191E] px-3 py-2 text-sm font-semibold text-gray-400 ring-1 ring-inset ring-gray-500/30 hover:ring-gray-500">Next</button>
+                                                </div>
+                                            </nav>
+                                        }
+                                        {transactions && transactions.length == 0 &&
+                                            <div
+                                                className="mx-4 mt-3 relative block rounded-lg border-2 border-dashed border-gray-500/30 p-12 text-center"
+                                            >
+                                                <ReceiptIcon
+                                                    className="mx-auto h-8 w-8 text-gray-500"
+                                                    aria-hidden="true"
+                                                />
+                                                <span className="mt-2 block text-sm font-semibold text-gray-500">No invoices so far</span>
                                             </div>
-                                        </nav>
+                                        }
                                     </div>
 
                                     {/* Activity table (small breakpoint and up) */}
                                     <div className="hidden sm:block mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                                         <div className="mt-2 flex flex-col min-w-full overflow-hidden overflow-x-auto align-middle shadow sm:rounded-md">
-                                            <div className="border border-gray-500/30 rounded-lg overflow-hidden">
-                                                <table className="min-w-full divide-y divide-gray-500/30 text-gray-200 bg-gray-900 rounded-md">
-                                                    <thead className="bg-[#18191E]">
-                                                        <tr>
-                                                            <th className="px-6 py-3 text-left text-sm font-semibold" scope="col">Customer Email</th>
-                                                            <th className="px-6 py-3 text-center text-sm font-semibold" scope="col">Price</th>
-                                                            <th className="px-6 py-3 text-center text-sm font-semibold" scope="col">Amount</th>
-                                                            <th className="px-6 py-3 text-center text-sm font-semibold" scope="col">Crypto</th>
-                                                            <th className="hidden px-6 py-3 text-center text-sm font-semibold md:table-cell" scope="col">Status</th>
-                                                            <th className="px-6 py-3 text-center text-sm font-semibold" scope="col">Date</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody className="bg-[#0a0a0a] divide-y divide-gray-500/30">
-                                                        {loaded && transactions.slice(page * itemsPerPage, (page + 1) * itemsPerPage).map((transaction) => (
-                                                            <tr key={transaction.id}>
-                                                                <td className="px-6 py-4 text-left text-sm whitespace-nowrap">
-                                                                    <div className="flex">
-                                                                        <a href={transaction.href} className="group inline-flex space-x-2 truncate text-sm">
-                                                                            {/* <BanknotesIcon className="h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500" aria-hidden="true" /> */}
-                                                                            <p className="truncate text-white group-hover:text-gray-500">{transaction.name}</p>
-                                                                        </a>
-                                                                    </div>
-                                                                </td>
-                                                                <td className="hidden px-6 py-4 text-center text-sm md:table-cell">
-                                                                    <div className="text-sm">
-                                                                        <span className='text-white/60'>$</span>{transaction.price}
-                                                                    </div>
-                                                                </td>
-                                                                <td className="px-6 py-4 text-sm text-center whitespace-nowrap">
-                                                                    <div className="flex items-center justify-center">
-                                                                        <span className="font-mono">{parseFloat(transaction.amount).toFixed(8)}</span>
-                                                                    </div>
-                                                                </td>
-                                                                <td className="px-6 py-4 text-sm text-center whitespace-nowrap">
-                                                                    <div className="flex items-center justify-center">
-                                                                        <span className="font-mono">&nbsp; {transaction.crypto_name}</span>
-                                                                        <Image src={transaction.currency} alt={transaction.currency} width={24} height={24} className={`ml-2 inline-block rounded-md ${transaction.background_color}`} />
-                                                                    </div>
-                                                                </td>
-
-
-                                                                <td className="hidden px-6 py-4 text-center text-sm md:table-cell">
-                                                                    <div className="text-sm">
-                                                                        <Badge color={changeStatus(transaction.status)} text={transaction.status} />
-                                                                    </div>
-                                                                </td>
-                                                                <td className="px-6 py-4 text-sm text-center whitespace-nowrap">
-                                                                    <time dateTime={transaction.date}>{transaction.date}</time>
-                                                                </td>
+                                            {loaded && transactions.length > 0 &&
+                                                <div className="border border-gray-500/30 rounded-lg overflow-hidden">
+                                                    <table className="min-w-full divide-y divide-gray-500/30 text-gray-200 bg-gray-900 rounded-md">
+                                                        <thead className="bg-[#18191E]">
+                                                            <tr>
+                                                                <th className="px-6 py-3 text-left text-sm font-semibold" scope="col">Customer Email</th>
+                                                                <th className="px-6 py-3 text-center text-sm font-semibold" scope="col">Price</th>
+                                                                <th className="px-6 py-3 text-center text-sm font-semibold" scope="col">Amount</th>
+                                                                <th className="px-6 py-3 text-center text-sm font-semibold" scope="col">Crypto</th>
+                                                                <th className="hidden px-6 py-3 text-center text-sm font-semibold md:table-cell" scope="col">Status</th>
+                                                                <th className="px-6 py-3 text-center text-sm font-semibold" scope="col">Date</th>
                                                             </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
+                                                        </thead>
+                                                        <tbody className="bg-[#0a0a0a] divide-y divide-gray-500/30">
+                                                            {loaded && transactions.slice(page * itemsPerPage, (page + 1) * itemsPerPage).map((transaction) => (
+                                                                <tr key={transaction.id}>
+                                                                    <td className="px-6 py-4 text-left text-sm whitespace-nowrap">
+                                                                        <div className="flex">
+                                                                            <a href={transaction.href} className="group inline-flex space-x-2 truncate text-sm">
+                                                                                {/* <BanknotesIcon className="h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500" aria-hidden="true" /> */}
+                                                                                <p className="truncate text-white group-hover:text-gray-500">{transaction.name}</p>
+                                                                            </a>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td className="hidden px-6 py-4 text-center text-sm md:table-cell">
+                                                                        <div className="text-sm">
+                                                                            <span className='text-white/60'>$</span>{transaction.price}
+                                                                        </div>
+                                                                    </td>
+                                                                    <td className="px-6 py-4 text-sm text-center whitespace-nowrap">
+                                                                        <div className="flex items-center justify-center">
+                                                                            <span className="font-mono">{parseFloat(transaction.amount).toFixed(8)}</span>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td className="px-6 py-4 text-sm text-center whitespace-nowrap">
+                                                                        <div className="flex items-center justify-center">
+                                                                            <span className="font-mono">&nbsp; {transaction.crypto_name}</span>
+                                                                            <Image src={transaction.currency} alt={transaction.currency} width={24} height={24} className={`ml-2 inline-block rounded-md ${transaction.background_color}`} />
+                                                                        </div>
+                                                                    </td>
 
-                                                <nav className="flex items-center justify-between border-t border-gray-500/30 bg-[#18191E] px-4 py-3 sm:px-6" aria-label="Pagination">
-                                                    <div className="hidden sm:block">
-                                                        <p className="text-sm text-gray-400">
-                                                            Showing <span className="font-medium">1</span> to <span className="font-medium">10</span> of <span className="font-medium">{transactions.length}</span> results
-                                                        </p>
-                                                    </div>
-                                                    <div className="flex flex-1 justify-between gap-x-3 sm:justify-end">
-                                                        <button onClick={prevPage} className="relative inline-flex items-center rounded-md bg-[#18191E] px-3 py-2 text-sm font-semibold text-gray-400 ring-1 ring-inset ring-gray-500/30 hover:ring-gray-500">Previous</button>
-                                                        <button onClick={nextPage} className="relative inline-flex items-center rounded-md bg-[#18191E] px-3 py-2 text-sm font-semibold text-gray-400 ring-1 ring-inset ring-gray-500/30 hover:ring-gray-500">Next</button>
-                                                    </div>
-                                                </nav>
-                                            </div>
+
+                                                                    <td className="hidden px-6 py-4 text-center text-sm md:table-cell">
+                                                                        <div className="text-sm">
+                                                                            <Badge color={changeStatus(transaction.status)} text={transaction.status} />
+                                                                        </div>
+                                                                    </td>
+                                                                    <td className="px-6 py-4 text-sm text-center whitespace-nowrap">
+                                                                        <time dateTime={transaction.date}>{transaction.date}</time>
+                                                                    </td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </table>
+
+                                                    <nav className="flex items-center justify-between border-t border-gray-500/30 bg-[#18191E] px-4 py-3 sm:px-6" aria-label="Pagination">
+                                                        <div className="hidden sm:block">
+                                                            <p className="text-sm text-gray-400">
+                                                                Showing <span className="font-medium">1</span> to <span className="font-medium">10</span> of <span className="font-medium">{transactions.length}</span> results
+                                                            </p>
+                                                        </div>
+                                                        <div className="flex flex-1 justify-between gap-x-3 sm:justify-end">
+                                                            <button onClick={prevPage} className="relative inline-flex items-center rounded-md bg-[#18191E] px-3 py-2 text-sm font-semibold text-gray-400 ring-1 ring-inset ring-gray-500/30 hover:ring-gray-500">Previous</button>
+                                                            <button onClick={nextPage} className="relative inline-flex items-center rounded-md bg-[#18191E] px-3 py-2 text-sm font-semibold text-gray-400 ring-1 ring-inset ring-gray-500/30 hover:ring-gray-500">Next</button>
+                                                        </div>
+                                                    </nav>
+                                                </div>
+                                            }
+                                            {transactions && transactions.length == 0 &&
+                                                <div
+                                                    className="mt-3 relative block rounded-lg border-2 border-dashed border-gray-500/30 p-12 text-center"
+                                                >
+                                                    <ReceiptIcon
+                                                        className="mx-auto h-8 w-8 text-gray-500"
+                                                        aria-hidden="true"
+                                                    />
+                                                    <span className="mt-2 block text-sm font-semibold text-gray-500">No invoices so far</span>
+                                                </div>
+                                            }
                                         </div>
                                     </div>
 
