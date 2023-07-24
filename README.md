@@ -1,3 +1,5 @@
+https://congruous-sphere-fdb.notion.site/Documenta-ie-Blockpay-07a7c54301914b8cbc10900d2cb6fe84?pvs=4
+
 **Documentație Procesor de Plăți Cryptomonede - BlockPay**
 
 **1. Descrierea softului folosit**
