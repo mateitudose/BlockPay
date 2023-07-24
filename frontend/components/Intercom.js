@@ -1,8 +1,11 @@
 import Head from 'next/head';
+import { Partytown } from '@builder.io/partytown/react';
 
 const Intercom = () => (
     <Head>
+        <Partytown debug={true} forward={['dataLayer.push']} />
         <script
+            type="text/partytown"
             dangerouslySetInnerHTML={{
                 __html:
                     `
@@ -14,6 +17,7 @@ const Intercom = () => (
             }}
         />
         <script
+            type="text/partytown"
             dangerouslySetInnerHTML={{
                 __html:
                     `
