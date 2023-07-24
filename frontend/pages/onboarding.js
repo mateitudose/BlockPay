@@ -107,9 +107,17 @@ export default function Dashboard() {
                 if (error) {
                     throw error;
                 } else {
+                    if (data[0].eth_address) {
+                        router.push('/dashboard');
+                    }
                     setEmail(data[0].email);
                     setUsername(data[0].username);
                     setEthAddress(data[0].eth_address);
+                    if (data[0].store_name) {
+                        setStoreName(data[0].store_name);
+                        setStep(2);
+                    }
+
                 }
 
             } catch (error) {
@@ -620,6 +628,7 @@ export default function Dashboard() {
                                                 className="bg-[#18191E] font-medium pl-2.5 py-2 block w-full rounded-md border lg:border-0 text-zinc-300 shadow-sm ring-1 ring-inset ring-gray-500/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                                                 required
                                                 onChange={handleStoreNameChange}
+                                                value={storeName}
                                                 disabled={step !== 1}
                                             />
                                         </div>
@@ -745,6 +754,7 @@ export default function Dashboard() {
                                                 required
                                                 onChange={handleStoreNameChange}
                                                 disabled={step !== 1}
+                                                value={storeName}
                                             />
                                         </div>
                                         {step === 1 && (
