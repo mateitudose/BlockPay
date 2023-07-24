@@ -20,8 +20,19 @@ export default function SignUp() {
 
     async function handleSignedIn() {
         const user = await supabase.auth.getUser();
-        if (user.data.user !== null) {
-            router.push('/dashboard');
+        const { data, error } = await supabase
+            .from('profiles')
+            .select("*")
+            .eq('id', user.data.user.id)
+        if (error)
+            console.log(error)
+        else if (data.length > 0) {
+            if (data[0].store_name !== null && data[0].eth_address !== null && user.data.user !== null) {
+                router.push('/dashboard');
+            }
+            else {
+                router.push('/onboarding');
+            }
         }
         return user.data.user;
     }
