@@ -72,7 +72,7 @@ export default function Login() {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: 'http://localhost:3000/onboarding'
+                redirectTo: 'https://block-pay-sooty.vercel.app//onboarding'
             }
         })
 
@@ -85,7 +85,7 @@ export default function Login() {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'github',
             options: {
-                redirectTo: 'http://localhost:3000/dashboard'
+                redirectTo: 'https://block-pay-sooty.vercel.app//dashboard'
             }
         })
 

@@ -19,6 +19,11 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
+"@builder.io/partytown@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.npmjs.org/@builder.io/partytown/-/partytown-0.8.0.tgz"
+  integrity sha512-M6H7nSMwW2dHd1/MQ+9J1Jqdw22uhl1nKv90kIiL9G7gjFVqqouQp4qSS1oZclmtW1XjAa4Q5UnbHB4iytmxZA==
+
 "@clerk/backend@^0.19.2":
   version "0.19.2"
   resolved "https://registry.npmjs.org/@clerk/backend/-/backend-0.19.2.tgz"

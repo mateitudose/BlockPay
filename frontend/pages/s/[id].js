@@ -230,7 +230,7 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
 
 
 
-                            <a href="http://localhost:3000" target='_blank'>
+                            <a href="https://block-pay-sooty.vercel.app/" target='_blank'>
                                 <div className="hidden lg:block fixed bottom-1/4 opacity-80 grayscale hover:grayscale-0">
                                     Powered by
                                     <Image className='w-auto h-6 inline-block pb-0.5 ml-1' src={logo} />
