@@ -242,7 +242,7 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
 
 
 
-                            <a href="https://block-pay-sooty.vercel.app/" target='_blank'>
+                            <a href="https://onblockpay.com" target='_blank'>
                                 <div className="hidden lg:block fixed bottom-1/4 opacity-80 grayscale hover:grayscale-0">
                                     Powered by
                                     <Image className='w-auto h-6 inline-block pb-0.5 ml-1' src={logo} />
@@ -487,7 +487,7 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                                             'Subscribe now'
                                         )}
                                     </button>
-                                    <a href="https://blockpay.app" target='_blank'>
+                                    <a href="https://onblockpay.com" target='_blank'>
                                         <div className="block lg:hidden opacity-80 mt-24 font-medium">
                                             Powered by
                                             <Image className='w-auto h-6 inline-block pb-0.5 ml-1.5' src={logo} />

@@ -185,7 +185,7 @@ const Checkout = ({ checkout }) => {
                                 <dt className="">Total</dt>
                                 <dd className="">${checkout.price_in_usd}</dd>
                             </div>
-                            <a href="https://blockpay.com" target='_blank'>
+                            <a href="https://onblockpay.com" target='_blank'>
                                 <div className="hidden lg:block fixed bottom-1/4 opacity-80 grayscale hover:grayscale-0">
                                     Powered by
                                     <Image className='w-auto h-6 inline-block pb-0.5 ml-1' src={logo} />
@@ -490,7 +490,7 @@ const Checkout = ({ checkout }) => {
                                             'Pay now'
                                         )}
                                     </button>
-                                    <a href="https://blockpay.app" target='_blank'>
+                                    <a href="https://onblockpay.com" target='_blank'>
                                         <div className="block lg:hidden opacity-80 mt-36 font-medium">
                                             Powered by
                                             <Image className='w-auto h-6 inline-block pb-0.5 ml-1.5' src={logo} />

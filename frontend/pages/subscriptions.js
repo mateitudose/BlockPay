@@ -955,11 +955,11 @@ export default function Subscriptions() {
                                                                 <button
                                                                     className="font-mono whitespace-nowrap px-3 py-4 text-sm text-zinc-300 hover:underline hover:cursor-pointer"
                                                                     onClick={() => {
-                                                                        navigator.clipboard.writeText(`https://block-pay-sooty.vercel.app/s/${subscription.id_hash}`);
+                                                                        navigator.clipboard.writeText(`https://onblockpay.com/s/${subscription.id_hash}`);
                                                                         toast.success('Copied link to clipboard!');
                                                                     }}
                                                                 >
-                                                                    localhost:3000/s/{subscription.id_hash}
+                                                                    onblockpay.com/s/{subscription.id_hash}
                                                                 </button>
                                                                 <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                                                     <button

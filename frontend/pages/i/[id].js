@@ -200,7 +200,7 @@ const Invoice = ({ invoice }) => {
                                     <dd className="">${invoice.price_in_usd}</dd>
                                 </div>
 
-                                <a href="https://blockpay.com" target='_blank'>
+                                <a href="https://onblockpay.com" target='_blank'>
                                     <div className="hidden lg:block fixed bottom-1/4 opacity-80 grayscale hover:grayscale-0">
                                         Powered by
                                         <Image className='w-auto h-6 inline-block pb-0.5 ml-1' src={logo} />
@@ -276,7 +276,7 @@ const Invoice = ({ invoice }) => {
                                     <dt className="">Total</dt>
                                     <dd className="">${invoice.price_in_usd}</dd>
                                 </div>
-                                <a href="https://blockpay.com" target='_blank'>
+                                <a href="https://onblockpay.com" target='_blank'>
                                     <div className="hidden lg:block fixed bottom-1/4 opacity-80 grayscale hover:grayscale-0">
                                         Powered by
                                         <Image className='w-auto h-6 inline-block pb-0.5 ml-1' src={logo} />
@@ -382,7 +382,7 @@ const Invoice = ({ invoice }) => {
                                             <QRCodeGenerator className="flex items-center align-center justify-center" value={address} />
                                             <Image src={crypto.icon} alt={crypto.name} width={62} height={62} className="absolute mr-2" />
                                         </div>
-                                        <a href="https://blockpay.app" target='_blank'>
+                                        <a href="https://onblockpay.com" target='_blank'>
                                             <div className="text-center mb-6 block lg:hidden opacity-80 mt-36 font-medium">
                                                 Powered by
                                                 <Image className='w-auto h-6 inline-block pb-0.5 ml-1.5' src={logo} />
