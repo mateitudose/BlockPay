@@ -55,7 +55,7 @@ export default function Header() {
                     ))}
                 </div>
                 <div className="flex flex-1 items-center justify-end gap-x-4">
-                    <a className="hidden lg:block hover:bg-white/5 text-zinc-300 px-5 py-3 items-center rounded-full text-sm font-semibold " href="/dashboard" >
+                    <a className="hidden lg:block hover:bg-white/5 text-zinc-300 px-5 py-3 items-center rounded-full text-sm font-semibold " href="/signin" >
                         Sign in
                     </a>
                     <div className='relative group transform hover:scale-105 transition duration-200'>
