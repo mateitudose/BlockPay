@@ -28,7 +28,7 @@ import { supabase } from '@/lib/supabaseClient'
 import logo from "@/public/logo.svg"
 import Image from 'next/image'
 const { v4: uuidv4 } = require('uuid');
-import Badge from '@/components/Badge';
+import Badge from '@/components/LightBadge';
 import toast, { Toaster } from 'react-hot-toast';
 
 import Web3 from 'web3';
@@ -955,7 +955,7 @@ export default function Subscriptions() {
                                                                 <button
                                                                     className="font-mono whitespace-nowrap px-3 py-4 text-sm text-zinc-300 hover:underline hover:cursor-pointer"
                                                                     onClick={() => {
-                                                                        navigator.clipboard.writeText(`https://block-pay-sooty.vercel.app//s/${subscription.id_hash}`);
+                                                                        navigator.clipboard.writeText(`https://block-pay-sooty.vercel.app/s/${subscription.id_hash}`);
                                                                         toast.success('Copied link to clipboard!');
                                                                     }}
                                                                 >

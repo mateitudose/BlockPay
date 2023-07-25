@@ -463,7 +463,7 @@ const Checkout = ({ checkout }) => {
                                 <div className="mt-10 font-medium text-center border-t border-gray-200 pt-6 pb-6">
                                     <button
                                         type="submit"
-                                        className="rounded-md border border-transparent bg-[#0a0a0a] shadow-[#0a0a0a]/50 shadow-lg w-full py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                                        className="rounded-md border border-transparent bg-[#0a0a0a] shadow-[#0a0a0a]/50 shadow-lg w-full py-2 text-sm font-medium text-white"
                                         onClick={handleSubmit}
                                         disabled={loading}
                                     >

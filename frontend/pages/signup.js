@@ -61,7 +61,7 @@ export default function SignUp() {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: 'https://block-pay-sooty.vercel.app//dashboard'
+                redirectTo: 'https://block-pay-sooty.vercel.app/dashboard'
             }
         })
 
@@ -74,7 +74,7 @@ export default function SignUp() {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'github',
             options: {
-                redirectTo: 'https://block-pay-sooty.vercel.app//dashboard'
+                redirectTo: 'https://block-pay-sooty.vercel.app/dashboard'
             }
         })
 
@@ -117,7 +117,7 @@ export default function SignUp() {
             email: email,
             password: password,
             options: {
-                emailRedirectTo: 'https://block-pay-sooty.vercel.app//dashboard'
+                emailRedirectTo: 'https://block-pay-sooty.vercel.app/dashboard'
             }
         });
 

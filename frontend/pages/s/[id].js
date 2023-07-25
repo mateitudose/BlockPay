@@ -10,9 +10,9 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Web3 from 'web3';
 const web3 = new Web3(new Web3.providers.HttpProvider("https://rpc.ankr.com/polygon_mumbai"));
 
-import { useContractWrite, useContractRead, useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
+import { useContractWrite, useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
 
-import { ChevronLeftIcon, BuildingStorefrontIcon } from '@heroicons/react/24/outline';
+import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 
 import Ethereum from "@/public/Crypto/Ethereum.svg"
 import Tether from "@/public/Crypto/Tether.svg"
@@ -126,18 +126,30 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
         args: [chain != undefined ? contractAddress[chain.id] : zeroAddress, web3.utils.toWei((subscription.price_in_usd).toString(), 'ether')],
     });
 
-    const allowance = useContractRead({
-        address: chain != undefined ? tokenAddress[chain.id][selectedCrypto] : zeroAddress,
-        abi: TOKEN_ABI,
-        functionName: 'allowance',
-        watch: true,
-        args: [address, chain != undefined ? contractAddress[chain.id] : zeroAddress,],
-    })
+    // const allowance = useContractRead({
+    //     address: chain != undefined ? tokenAddress[chain.id][selectedCrypto] : zeroAddress,
+    //     abi: TOKEN_ABI,
+    //     functionName: 'allowance',
+    //     watch: true,
+    //     args: [address, chain != undefined ? contractAddress[chain.id] : zeroAddress,],
+    // })
+
+
+
 
     const handleSubscribeClick = async () => {
-        if (isLoadingSubscribe || isLoadingApprove) return;
-        if (allowance == undefined) return;
-        if (!(allowance.data).gte(web3.utils.toWei((subscription.price_in_usd).toString(), 'ether'))) {
+        if (isLoadingSubscribe || isLoadingApprove) {
+            return;
+        };
+        const contract = new web3.eth.Contract(TOKEN_ABI, chain != undefined ? tokenAddress[chain.id][selectedCrypto] : zeroAddress);
+        const allowance = await contract.methods.allowance(address, chain != undefined ? contractAddress[chain.id] : zeroAddress).call();
+
+        if (allowance == undefined) {
+            console.log("allowance undefined");
+            return
+        };
+        console.log(allowance);
+        if (!(allowance >= web3.utils.toWei(subscription.price_in_usd.toString(), 'ether'))) {
             try {
                 const tx = await approve();
                 const res = await tx?.wait().then(() => {
@@ -152,13 +164,13 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
         }
     }
 
-    const plans = useContractRead({
-        address: chain != undefined ? contractAddress[chain.id] : zeroAddress,
-        abi: ABI,
-        functionName: 'getManagerPlans',
-        watch: true,
-        args: [merchantEthAddress],
-    });
+    // const plans = useContractRead({
+    //     address: chain != undefined ? contractAddress[chain.id] : zeroAddress,
+    //     abi: ABI,
+    //     functionName: 'getManagerPlans',
+    //     watch: true,
+    //     args: [merchantEthAddress],
+    // });
 
     // function mapPlans() {
     //     if (plans.data == undefined) return;
@@ -217,7 +229,7 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                         </dl>
 
                         <dl className="pt-6 text-sm font-medium">
-                            <p className='opacity-50'>Subscribe to {subscription.store_name}</p>
+                            <p className='opacity-50'>Subscribe to {storeName}</p>
                             <div className="flex items-start mt-2">
                                 <p className="opacity-85 inline-block mr-2 text-4xl">
                                     ${subscription.price_in_usd}
@@ -446,7 +458,7 @@ const Subscription = ({ subscription, referral, merchantEthAddress }) => {
                                 <div className="mt-10 font-medium text-center border-t border-gray-200 pt-6 pb-6">
                                     <button
                                         type="submit"
-                                        className="rounded-md border border-transparent bg-indigo-600 shadow-indigo-600/50 shadow-lg w-full py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                                        className="rounded-md border border-transparent bg-[#0a0a0a] shadow-[#0a0a0a]/50 shadow-lg w-full py-2 text-sm font-medium text-white"
                                         onClick={(e) => {
                                             handleSubmit(e)
                                         }}

@@ -1,9 +1,9 @@
-const { Web3 } = require('web3');
+const Web3 = require('web3');
 const { createClient } = require('@supabase/supabase-js');
 const { Wallet } = require('ethers');
 
-const provider = new Web3.providers.WebsocketProvider('wss://winter-green-moon.matic-testnet.quiknode.pro/a9195176acadcc1ef8b6e4492cca1342aabed9bc/');
-const web3 = new Web3(provider);
+const providerUrl = 'wss://winter-green-moon.matic-testnet.quiknode.pro/a9195176acadcc1ef8b6e4492cca1342aabed9bc/';
+const web3 = new Web3(new Web3.providers.WebsocketProvider(providerUrl));
 
 const supabase = createClient(
     'https://ecozdwjnqcnxnyjfaxlm.supabase.co',
@@ -138,7 +138,6 @@ async function checkConfirmations(address, txHash, callback) {
                     {
                         tx_hash: tx.hash,
                         value_received: tx.value,
-                        confirmed: true,
                         confirmations: confirmations,
                         status: 'Confirmed',
                         confirm_date: new Date().getTime(),

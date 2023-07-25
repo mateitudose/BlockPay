@@ -900,7 +900,7 @@ export default function Products() {
                                                                 <button
                                                                     className="font-mono whitespace-nowrap px-3 py-4 text-sm text-zinc-300 hover:underline hover:cursor-pointer"
                                                                     onClick={() => {
-                                                                        navigator.clipboard.writeText(`https://block-pay-sooty.vercel.app//c/${product.id_hash}`);
+                                                                        navigator.clipboard.writeText(`https://block-pay-sooty.vercel.appc/${product.id_hash}`);
                                                                         toast.success('Copied link to clipboard!');
                                                                     }}
                                                                 >
